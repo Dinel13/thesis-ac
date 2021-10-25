@@ -9,7 +9,7 @@ import (
 )
 
 type CourseHandlers struct {
-	service service.CourseService
+	Service service.CourseService
 }
 
 // GetCourse is handler for GET /course/{id}
@@ -22,7 +22,7 @@ func (h *CourseHandlers) GetCourse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get the course from service
-	course, err := h.service.GetCourse(id)
+	course, err := h.Service.GetCourse(id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return

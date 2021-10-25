@@ -1,4 +1,4 @@
-package rest
+package app
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 
 	"github.com/dinel13/thesis-ac/course/db/driver"
 	"github.com/dinel13/thesis-ac/course/domain"
+	"github.com/dinel13/thesis-ac/course/rest"
 	"github.com/dinel13/thesis-ac/course/service"
 	"github.com/julienschmidt/httprouter"
 )
@@ -22,7 +23,7 @@ func StartRestServer() {
 
 	CourseRepositoryDb := domain.NewCourseRepositoryDb(dbClient.SQL)
 
-	ch := CourseHandlers{service.NewCourseService(CourseRepositoryDb)}
+	ch := rest.CourseHandlers{service.NewCourseService(CourseRepositoryDb)}
 
 	router.HandlerFunc(http.MethodGet, "/course/:id", ch.GetCourse)
 
