@@ -9,37 +9,28 @@ import (
 	"github.com/dinel13/thesis-ac/course/domain"
 	"github.com/dinel13/thesis-ac/course/rest"
 	"github.com/dinel13/thesis-ac/course/service"
-	"github.com/julienschmidt/httprouter"
 )
 
 func StartRestServer() {
-	fmt.Println("Starting REST server")
 	port := ":8080"
+	fmt.Printf("Staring REST server on port %s\n", port)
 
-	router := httprouter.New()
 	dbClient := connectDB()
 
-	fmt.Printf("Staring application on port %s\n", port)
+	// crete course repository db
+	crDb := domain.NewCourseRepositoryDb(dbClient.SQL)
 
-	CourseRepositoryDb := domain.NewCourseRepositoryDb(dbClient.SQL)
+	// create course service
+	cs := rest.CourseHandlers{service.NewCourseService(crDb)}
 
-	ch := rest.CourseHandlers{service.NewCourseService(CourseRepositoryDb)}
-
-	router.HandlerFunc(http.MethodGet, "/course/:id", ch.GetCourse)
-
-	// srv := &http.Server{
-	// 	Addr:    ":8080",
-	// 	Handler: routes(),
-	// }
-
-	// err := srv.ListenAndServe()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	addres := "localhost"
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s%s", addres, port), router))
-
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: rest.Routes(cs),
+	}
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func connectDB() *driver.DB {

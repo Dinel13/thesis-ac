@@ -6,15 +6,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func routes() http.Handler {
+func Routes(ch CourseHandlers) http.Handler {
 	r := httprouter.New()
 
-	r.HandlerFunc("GET", "/", index)
+	r.HandlerFunc(http.MethodGet, "/course/:id", ch.GetCourse)
 
 	return r
-}
-
-// handler for index
-func index(w http.ResponseWriter, r *http.Request) {
-
 }
