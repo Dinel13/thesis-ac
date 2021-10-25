@@ -11,12 +11,12 @@ type CourseService interface {
 }
 
 type DefaultCourseService struct {
-	repo domain.CourseRepository
+	Repo domain.CourseRepository
 }
 
 // GetCourse returns a course by id
 func (s DefaultCourseService) GetCourse(id int) (course *domain.Course, err error) {
-	c, err := s.repo.GetCourse(id)
+	c, err := s.Repo.GetCourse(id)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (s DefaultCourseService) GetCourse(id int) (course *domain.Course, err erro
 
 // 	GetCourses returns all courses
 func (s DefaultCourseService) GetCourses() (courses []domain.Course, err error) {
-	courses, err = s.repo.GetCourseList()
+	courses, err = s.Repo.GetCourseList()
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (s DefaultCourseService) GetCourses() (courses []domain.Course, err error) 
 
 // 	AddCourse adds a new course
 func (s DefaultCourseService) AddCourse(course *domain.Course) (err error) {
-	_, err = s.repo.CreateCourse(course)
+	_, err = s.Repo.CreateCourse(course)
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (s DefaultCourseService) AddCourse(course *domain.Course) (err error) {
 
 // 	UpdateCourse
 func (s DefaultCourseService) UpdateCourse(course *domain.Course) (err error) {
-	err = s.repo.UpdateCourse(course)
+	err = s.Repo.UpdateCourse(course)
 	if err != nil {
 		return err
 	}
@@ -52,13 +52,13 @@ func (s DefaultCourseService) UpdateCourse(course *domain.Course) (err error) {
 
 // 	DeleteCourse
 func (s DefaultCourseService) DeleteCourse(id int) (err error) {
-	err = s.repo.DeleteCourse(id)
+	err = s.Repo.DeleteCourse(id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func NewCourseService(repo domain.CourseRepository) DefaultCourseService {
-	return DefaultCourseService{repo}
+func NewCourseService(Repo domain.CourseRepository) DefaultCourseService {
+	return DefaultCourseService{Repo}
 }

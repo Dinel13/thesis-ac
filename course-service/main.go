@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	app.StartRestServer()
+	// app.StartRestServer()
+	app.StartGRPCServer()
 }
