@@ -2,7 +2,6 @@ package grpc
 
 import (
 	"context"
-	"log"
 
 	"github.com/dinel13/thesis-ac/course/proto"
 	"github.com/dinel13/thesis-ac/course/service"
@@ -13,7 +12,6 @@ type Handler struct {
 }
 
 func (h *Handler) GetCourse(ctx context.Context, req *proto.CourseRequest) (*proto.CourseResponse, error) {
-	log.Printf("Greet function was invoked with %v", req)
 	courseId := req.GetId()
 	id := int(courseId)
 

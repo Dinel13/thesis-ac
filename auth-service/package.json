@@ -4,6 +4,7 @@
   "description": "auth service for my acedemic thesis",
   "main": "index.js",
   "scripts": {
+    "start" : "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -11,5 +12,9 @@
     "url": "github.com/dinel13/thesis-ac"
   },
   "author": "salahuddin",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "google-protobuf": "^3.19.0",
+    "grpc": "^1.24.11"
+  }
 }
