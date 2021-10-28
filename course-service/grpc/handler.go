@@ -7,16 +7,20 @@ import (
 	"github.com/dinel13/thesis-ac/course/service"
 )
 
-type Handler struct {
-	Cs service.CourseService
+type GrpcHandler interface {
+	GetCourse(ctx context.Context, req *proto.CourseRequest) (*proto.CourseResponse, error)
 }
 
-func (h *Handler) GetCourse(ctx context.Context, req *proto.CourseRequest) (*proto.CourseResponse, error) {
+type DefaultGrpcHandler struct {
+	service service.CourseService
+}
+
+func (h *DefaultGrpcHandler) GetCourse(ctx context.Context, req *proto.CourseRequest) (*proto.CourseResponse, error) {
 	courseId := req.GetId()
 	id := int(courseId)
 
 	// parse int32 to int64
-	course, err := h.Cs.GetCourse(id)
+	course, err := h.service.GetCourse(id)
 	if err != nil {
 		return nil, err
 	}
@@ -35,4 +39,8 @@ func (h *Handler) GetCourse(ctx context.Context, req *proto.CourseRequest) (*pro
 	}
 
 	return res, nil
+}
+
+func NewGrpcHandler(s service.CourseService) DefaultGrpcHandler {
+	return DefaultGrpcHandler{s}
 }

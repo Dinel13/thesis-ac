@@ -50,7 +50,7 @@ func StartGRPCServer() {
 	crDb := domain.NewCourseRepositoryDb(dbClient.SQL)
 
 	// create course service
-	cs := mygrpc.Handler{service.NewCourseService(crDb)}
+	cs := mygrpc.NewGrpcHandler(service.NewCourseService(crDb))
 
 	// create gRPC server
 	lis, err := net.Listen("tcp", port)
