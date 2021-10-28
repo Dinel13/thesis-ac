@@ -6,7 +6,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func Routes(ch CourseHandlers) http.Handler {
+func Routes(ch DefaultCourseHandlers) http.Handler {
 	r := httprouter.New()
 
 	r.HandlerFunc(http.MethodGet, "/course/:id", ch.GetCourse)

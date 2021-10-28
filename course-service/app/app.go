@@ -27,7 +27,7 @@ func StartRestServer() {
 	crDb := domain.NewCourseRepositoryDb(dbClient.SQL)
 
 	// create course service
-	cs := rest.CourseHandlers{service.NewCourseService(crDb)}
+	cs := rest.NewCoursRestHandlers(service.NewCourseService(crDb))
 
 	srv := &http.Server{
 		Addr:    ":8080",

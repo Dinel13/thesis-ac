@@ -8,3 +8,6 @@ ab -k -c 900 -n 80000 127.0.0.1:8080/course/1
 
 
 ../ghz/ghz --insecure   --proto ./proto/course.proto   --call  proto.CourseService.GetCourse   -d '{"id":1}' -n 10000 -c 1000   0.0.0.0:8081
+
+
+buat handler grpc dan rest pake interface

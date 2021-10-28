@@ -8,12 +8,16 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-type CourseHandlers struct {
+type CourseHandlers interface {
+	GetCourse(http.ResponseWriter, *http.Request)
+}
+
+type DefaultCourseHandlers struct {
 	Service service.CourseService
 }
 
 // GetCourse is handler for GET /course/{id}
-func (h *CourseHandlers) GetCourse(w http.ResponseWriter, r *http.Request) {
+func (h *DefaultCourseHandlers) GetCourse(w http.ResponseWriter, r *http.Request) {
 	// get the course id from request param
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
@@ -30,4 +34,8 @@ func (h *CourseHandlers) GetCourse(w http.ResponseWriter, r *http.Request) {
 
 	// write the course to response
 	WriteJson(w, http.StatusOK, course, "course")
+}
+
+func NewCoursRestHandlers(s service.CourseService) DefaultCourseHandlers {
+	return DefaultCourseHandlers{s}
 }
