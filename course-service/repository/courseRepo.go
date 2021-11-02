@@ -1,27 +1,31 @@
-package domain
+package repository
 
 import (
 	"context"
 	"database/sql"
-	"time"
 
-	_ "github.com/lib/pq"
+	"github.com/dinel13/thesis-ac/course/domain"
 )
 
-type CourseRepositoryDb struct {
+type CourseRepository interface {
+	GetCourseList(context.Context) ([]domain.Course, error)
+	GetCourse(context.Context, int) (domain.Course, error)
+	CreateCourse(context.Context, *domain.Course) (int, error)
+	UpdateCourse(context.Context, *domain.Course) error
+	DeleteCourse(context.Context, int) error
+}
+
+type CourseRepositoryImpl struct {
 	SQL *sql.DB
 }
 
 // GetCourseList returns a list of courses
-func (m CourseRepositoryDb) GetCourseList() ([]Course, error) {
+func (m CourseRepositoryImpl) GetCourseList(ctx context.Context) ([]domain.Course, error) {
 	tx, err := m.SQL.Begin()
 	if err != nil {
 		return nil, err
 	}
 	defer tx.Rollback()
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
 
 	stmn := "SELECT * FROM courses"
 	rows, err := tx.QueryContext(ctx, stmn)
@@ -30,9 +34,9 @@ func (m CourseRepositoryDb) GetCourseList() ([]Course, error) {
 	}
 	defer rows.Close()
 
-	var courseList []Course
+	var courseList []domain.Course
 	for rows.Next() {
-		var course Course
+		var course domain.Course
 		err := rows.Scan(&course.ID, &course.Name, &course.Description)
 		if err != nil {
 			return nil, err
@@ -43,12 +47,8 @@ func (m CourseRepositoryDb) GetCourseList() ([]Course, error) {
 }
 
 // GetCourse returns a course by id
-func (m CourseRepositoryDb) GetCourse(id int) (Course, error) {
-
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	var course Course
+func (m CourseRepositoryImpl) GetCourse(ctx context.Context, id int) (domain.Course, error) {
+	var course domain.Course
 	row := m.SQL.QueryRowContext(ctx, "SELECT * FROM courses WHERE id = $1", id)
 	err := row.Scan(
 		&course.ID,
@@ -67,9 +67,10 @@ func (m CourseRepositoryDb) GetCourse(id int) (Course, error) {
 }
 
 //	CreateCourse creates a new course
-func (m CourseRepositoryDb) CreateCourse(course *Course) (int, error) {
+func (m CourseRepositoryImpl) CreateCourse(ctx context.Context, course *domain.Course) (int, error) {
 	var id int
-	err := m.SQL.QueryRow("INSERT INTO course (name, description) VALUES ($1, $2) RETURNING id", course.Name, course.Description).Scan(&id)
+	stmn := "INSERT INTO course (name, description) VALUES ($1, $2) RETURNING id"
+	err := m.SQL.QueryRowContext(ctx, stmn, course.Name, course.Description).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
@@ -77,7 +78,7 @@ func (m CourseRepositoryDb) CreateCourse(course *Course) (int, error) {
 }
 
 // UpdateCourse updates an existing course
-func (m CourseRepositoryDb) UpdateCourse(course *Course) error {
+func (m CourseRepositoryImpl) UpdateCourse(ctx context.Context, course *domain.Course) error {
 	_, err := m.SQL.Exec("UPDATE course SET name = $1, description = $2 WHERE id = $3", course.Name, course.Description, course.ID)
 	if err != nil {
 		return err
@@ -87,7 +88,7 @@ func (m CourseRepositoryDb) UpdateCourse(course *Course) error {
 }
 
 // DeleteCourse deletes an existing course
-func (m CourseRepositoryDb) DeleteCourse(id int) error {
+func (m CourseRepositoryImpl) DeleteCourse(ctx context.Context, id int) error {
 	_, err := m.SQL.Exec("DELETE FROM course WHERE id = $1", id)
 	if err != nil {
 		return err
@@ -96,6 +97,6 @@ func (m CourseRepositoryDb) DeleteCourse(id int) error {
 	return nil
 }
 
-func NewCourseRepositoryDb(dbClient *sql.DB) CourseRepositoryDb {
-	return CourseRepositoryDb{SQL: dbClient}
+func NewCourseRepositoryImpl(dbClient *sql.DB) CourseRepositoryImpl {
+	return CourseRepositoryImpl{SQL: dbClient}
 }

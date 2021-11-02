@@ -10,3 +10,11 @@ type Course struct {
 	CreatedAt   string `json:"created_at"`
 	UpdatedAt   string `json:"updated_at"`
 }
+
+type CourseRepository interface {
+	GetCourseList() ([]Course, error)
+	GetCourse(int) (Course, error)
+	CreateCourse(*Course) (int, error)
+	UpdateCourse(*Course) error
+	DeleteCourse(int) error
+}

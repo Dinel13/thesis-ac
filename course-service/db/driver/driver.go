@@ -17,6 +17,7 @@ var dbConn = &DB{}
 const maxOpenDbConn = 10
 const maxIdleDbConn = 5
 const maxDbLifetime = 5 * time.Minute
+const maxIdleTime = 60 * time.Minute
 
 // ConnectSQL creates database pool for Postgres
 func ConnectSQL(dsn string) (*DB, error) {
@@ -25,9 +26,10 @@ func ConnectSQL(dsn string) (*DB, error) {
 		panic(err)
 	}
 
-	d.SetMaxOpenConns(maxOpenDbConn)
-	d.SetMaxIdleConns(maxIdleDbConn)
-	d.SetConnMaxLifetime(maxDbLifetime)
+	d.SetMaxOpenConns(maxOpenDbConn)    // max open connections
+	d.SetMaxIdleConns(maxIdleDbConn)    // koneksi minimum yg dibuat
+	d.SetConnMaxLifetime(maxDbLifetime) // berpa lama koneksi bisa digunakan
+	d.SetConnMaxIdleTime(maxIdleTime)   // berapa lama koneksi yg tidak digunakan akan dihapus
 
 	dbConn.SQL = d
 

@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/dinel13/thesis-ac/course/db/driver"
-	"github.com/dinel13/thesis-ac/course/domain"
+	"github.com/dinel13/thesis-ac/course/repository"
 	"google.golang.org/grpc"
 
 	mygrpc "github.com/dinel13/thesis-ac/course/grpc"
@@ -22,9 +22,10 @@ func StartRestServer() {
 	fmt.Printf("Staring REST server on port %s\n", port)
 
 	dbClient := connectDB()
+	defer dbClient.SQL.Close()
 
 	// crete course repository db
-	crDb := domain.NewCourseRepositoryDb(dbClient.SQL)
+	crDb := repository.NewCourseRepositoryImpl(dbClient.SQL)
 
 	// create course service
 	cs := rest.NewCoursRestHandlers(service.NewCourseService(crDb))
@@ -45,9 +46,10 @@ func StartGRPCServer() {
 	fmt.Printf("Staring gRPC server on port %s\n", port)
 
 	dbClient := connectDB()
+	defer dbClient.SQL.Close()
 
 	// crete course repository db
-	crDb := domain.NewCourseRepositoryDb(dbClient.SQL)
+	crDb := repository.NewCourseRepositoryImpl(dbClient.SQL)
 
 	// create course service
 	cs := mygrpc.NewGrpcHandler(service.NewCourseService(crDb))

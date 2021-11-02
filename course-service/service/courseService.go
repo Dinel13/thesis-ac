@@ -1,6 +1,12 @@
 package service
 
-import "github.com/dinel13/thesis-ac/course/domain"
+import (
+	"context"
+	"time"
+
+	"github.com/dinel13/thesis-ac/course/domain"
+	"github.com/dinel13/thesis-ac/course/repository"
+)
 
 type CourseService interface {
 	GetCourses() ([]domain.Course, error)
@@ -11,12 +17,15 @@ type CourseService interface {
 }
 
 type DefaultCourseService struct {
-	Repo domain.CourseRepository
+	Repo repository.CourseRepository
 }
 
 // GetCourse returns a course by id
 func (s DefaultCourseService) GetCourse(id int) (course *domain.Course, err error) {
-	c, err := s.Repo.GetCourse(id)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	c, err := s.Repo.GetCourse(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +34,10 @@ func (s DefaultCourseService) GetCourse(id int) (course *domain.Course, err erro
 
 // 	GetCourses returns all courses
 func (s DefaultCourseService) GetCourses() (courses []domain.Course, err error) {
-	courses, err = s.Repo.GetCourseList()
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	courses, err = s.Repo.GetCourseList(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +46,10 @@ func (s DefaultCourseService) GetCourses() (courses []domain.Course, err error) 
 
 // 	AddCourse adds a new course
 func (s DefaultCourseService) AddCourse(course *domain.Course) (err error) {
-	_, err = s.Repo.CreateCourse(course)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	_, err = s.Repo.CreateCourse(ctx, course)
 	if err != nil {
 		return err
 	}
@@ -43,7 +58,10 @@ func (s DefaultCourseService) AddCourse(course *domain.Course) (err error) {
 
 // 	UpdateCourse
 func (s DefaultCourseService) UpdateCourse(course *domain.Course) (err error) {
-	err = s.Repo.UpdateCourse(course)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err = s.Repo.UpdateCourse(ctx, course)
 	if err != nil {
 		return err
 	}
@@ -52,13 +70,16 @@ func (s DefaultCourseService) UpdateCourse(course *domain.Course) (err error) {
 
 // 	DeleteCourse
 func (s DefaultCourseService) DeleteCourse(id int) (err error) {
-	err = s.Repo.DeleteCourse(id)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err = s.Repo.DeleteCourse(ctx, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func NewCourseService(Repo domain.CourseRepository) DefaultCourseService {
+func NewCourseService(Repo repository.CourseRepository) DefaultCourseService {
 	return DefaultCourseService{Repo}
 }
