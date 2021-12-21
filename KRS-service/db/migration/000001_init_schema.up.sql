@@ -1,4 +1,4 @@
-CREATE TABLE "courses" (
+CREATE TABLE "krss" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "description" varchar NOT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE "courses" (
 );
 
 
-CREATE INDEX ON "courses" ("id");
+CREATE INDEX ON "krss" ("id");

@@ -7,17 +7,17 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/dinel13/thesis-ac/course/domain"
-	"github.com/dinel13/thesis-ac/course/repository"
+	"github.com/dinel13/thesis-ac/krs/domain"
+	"github.com/dinel13/thesis-ac/krs/repository"
 	"google.golang.org/grpc"
 
 	"github.com/go-redis/redis/v8"
 
-	mygrpc "github.com/dinel13/thesis-ac/course/grpc"
+	mygrpc "github.com/dinel13/thesis-ac/krs/grpc"
 
-	"github.com/dinel13/thesis-ac/course/proto"
-	"github.com/dinel13/thesis-ac/course/rest"
-	"github.com/dinel13/thesis-ac/course/service"
+	"github.com/dinel13/thesis-ac/krs/proto"
+	"github.com/dinel13/thesis-ac/krs/rest"
+	"github.com/dinel13/thesis-ac/krs/service"
 )
 
 // StartRestServer starts the REST server
@@ -26,14 +26,14 @@ func StartRestServer() {
 	fmt.Printf("Staring REST server on port %s\n", port)
 
 	// connect to SQL database
-	// dbClient, courseRepo := startRepoSql()
+	// dbClient, krsRepo := startRepoSql()
 	// defer dbClient.SQL.Close()
 
 	// connect to Reddis database
-	dbClient, courseRepo := startRepoRedis()
+	dbClient, krsRepo := startRepoRedis()
 	defer dbClient.Close()
 
-	cs := rest.NewCoursRestHandlers(service.NewCourseService(courseRepo))
+	cs := rest.NewCoursRestHandlers(service.NewKrsService(krsRepo))
 
 	srv := &http.Server{
 		Addr:    ":8080",
@@ -51,13 +51,13 @@ func StartGRPCServer() {
 	fmt.Printf("Staring gRPC server on port %s\n", port)
 
 	// connect to SQL database
-	// dbClient, courseRepo := startRepoSql()
+	// dbClient, krsRepo := startRepoSql()
 	// defer dbClient.SQL.Close()
 
 	// connect to Reddis database
-	dbClient, courseRepo := startRepoRedis()
+	dbClient, krsRepo := startRepoRedis()
 	defer dbClient.Close()
-	cs := mygrpc.NewGrpcHandler(service.NewCourseService(courseRepo))
+	cs := mygrpc.NewGrpcHandler(service.NewKrsService(krsRepo))
 
 	// create gRPC server
 	lis, err := net.Listen("tcp", port)
@@ -66,22 +66,22 @@ func StartGRPCServer() {
 	}
 
 	s := grpc.NewServer()
-	proto.RegisterCourseServiceServer(s, cs)
+	proto.RegisterKrsServiceServer(s, cs)
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
-// func startRepoSql() (*driver.DB, domain.CourseRepository) {
+// func startRepoSql() (*driver.DB, domain.KrsRepository) {
 // 	dbClient := connectDB()
-// 	crDb := repository.NewCourseRepositoryImpl(dbClient.SQL)
+// 	crDb := repository.NewKrsRepositoryImpl(dbClient.SQL)
 // 	return dbClient, crDb
 // }
 
-func startRepoRedis() (*redis.Client, domain.CourseRepository) {
+func startRepoRedis() (*redis.Client, domain.KrsRepository) {
 	dbClient := connectRedis()
-	crDb := repository.NewCourseRepoRedisImpl(dbClient)
+	crDb := repository.NewKrsRepoRedisImpl(dbClient)
 	return dbClient, crDb
 }
 

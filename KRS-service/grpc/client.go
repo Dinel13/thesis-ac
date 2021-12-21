@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/dinel13/thesis-ac/course/proto"
+	"github.com/dinel13/thesis-ac/krs/proto"
 	"google.golang.org/grpc"
 )
 
@@ -15,19 +15,19 @@ func Create() {
 	}
 
 	defer conn.Close()
-	c := proto.NewCourseServiceClient(conn)
+	c := proto.NewKrsServiceClient(conn)
 
-	r, err := c.Create(context.Background(), &proto.Course{
+	r, err := c.Create(context.Background(), &proto.Krs{
 		Id:          int32(1),
 		Name:        "Go",
 		Description: "Go is a programming language",
 	})
 	if err != nil {
-		log.Fatalf("could not get course: %v", err)
+		log.Fatalf("could not get krs: %v", err)
 	}
 
-	log.Printf("Course: %s", r.Courses.Name)
-	log.Printf("Course: %s", r.Courses.Description)
+	log.Printf("Krs: %s", r.Krss.Name)
+	log.Printf("Krs: %s", r.Krss.Description)
 }
 
 func Read() {
@@ -37,13 +37,13 @@ func Read() {
 	}
 
 	defer conn.Close()
-	c := proto.NewCourseServiceClient(conn)
+	c := proto.NewKrsServiceClient(conn)
 
-	r, err := c.Read(context.Background(), &proto.CourseRequest{Id: int32(1)})
+	r, err := c.Read(context.Background(), &proto.KrsRequest{Id: int32(1)})
 	if err != nil {
-		log.Fatalf("could not get course: %v", err)
+		log.Fatalf("could not get krs: %v", err)
 	}
 
-	log.Printf("Course: %s", r.Courses.Name)
-	log.Printf("Course: %s", r.Courses.Description)
+	log.Printf("Krs: %s", r.Krss.Name)
+	log.Printf("Krs: %s", r.Krss.Description)
 }

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dinel13/thesis-ac/course/grpc"
+import "github.com/dinel13/thesis-ac/krs/grpc"
 
 func main() {
 	// go app.StartRestServer()

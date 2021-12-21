@@ -4,19 +4,19 @@ import (
 	"context"
 	"time"
 
-	"github.com/dinel13/thesis-ac/course/domain"
+	"github.com/dinel13/thesis-ac/krs/domain"
 )
 
-func NewCourseService(Repo domain.CourseRepository) domain.CourseService {
-	return DefaultCourseService{Repo}
+func NewKrsService(Repo domain.KrsRepository) domain.KrsService {
+	return DefaultKrsService{Repo}
 }
 
-type DefaultCourseService struct {
-	Repo domain.CourseRepository
+type DefaultKrsService struct {
+	Repo domain.KrsRepository
 }
 
-// GetCourse returns a course by id
-func (s DefaultCourseService) Read(id int) (*domain.Course, error) {
+// GetKrs returns a krs by id
+func (s DefaultKrsService) Read(id int) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -27,32 +27,32 @@ func (s DefaultCourseService) Read(id int) (*domain.Course, error) {
 	return c, nil
 }
 
-// 	AddCourse adds a new course
-func (s DefaultCourseService) Create(course *domain.Course) (*domain.Course, error) {
+// 	AddKrs adds a new krs
+func (s DefaultKrsService) Create(krs *domain.Krs) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	c, err := s.Repo.Create(ctx, course)
+	c, err := s.Repo.Create(ctx, krs)
 	if err != nil {
 		return nil, err
 	}
 	return c, nil
 }
 
-// 	UpdateCourse
-func (s DefaultCourseService) Update(course *domain.Course) (*domain.Course, error) {
+// 	UpdateKrs
+func (s DefaultKrsService) Update(krs *domain.Krs) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	c, err := s.Repo.Update(ctx, course)
+	c, err := s.Repo.Update(ctx, krs)
 	if err != nil {
 		return nil, err
 	}
 	return c, nil
 }
 
-// 	DeleteCourse
-func (s DefaultCourseService) Delete(id int) error {
+// 	DeleteKrs
+func (s DefaultKrsService) Delete(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
