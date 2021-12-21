@@ -17,7 +17,7 @@ func Main() {
 	defer conn.Close()
 	c := proto.NewCourseServiceClient(conn)
 
-	r, err := c.GetCourse(context.Background(), &proto.CourseRequest{Id: int32(1)})
+	r, err := c.Read(context.Background(), &proto.CourseRequest{Id: int32(1)})
 	if err != nil {
 		log.Fatalf("could not get course: %v", err)
 	}

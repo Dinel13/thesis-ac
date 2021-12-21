@@ -245,13 +245,12 @@ var file_proto_course_proto_rawDesc = []byte{
 	0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x52, 0x07, 0x63, 0x6f, 0x75, 0x72,
 	0x73, 0x65, 0x73, 0x22, 0x1f, 0x0a, 0x0d, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x52, 0x65, 0x71,
 	0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05,
-	0x52, 0x02, 0x69, 0x64, 0x32, 0x49, 0x0a, 0x0d, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x53, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x38, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x75, 0x72,
-	0x73, 0x65, 0x12, 0x14, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6f, 0x75, 0x72, 0x73,
-	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2e, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42,
-	0x08, 0x5a, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x52, 0x02, 0x69, 0x64, 0x32, 0x44, 0x0a, 0x0d, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x53, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x33, 0x0a, 0x04, 0x52, 0x65, 0x61, 0x64, 0x12, 0x14, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6f, 0x75, 0x72, 0x73, 0x65, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6f, 0x75, 0x72,
+	0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x08, 0x5a, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x2f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -274,8 +273,8 @@ var file_proto_course_proto_goTypes = []interface{}{
 }
 var file_proto_course_proto_depIdxs = []int32{
 	0, // 0: proto.CourseResponse.courses:type_name -> proto.Course
-	2, // 1: proto.CourseService.GetCourse:input_type -> proto.CourseRequest
-	1, // 2: proto.CourseService.GetCourse:output_type -> proto.CourseResponse
+	2, // 1: proto.CourseService.Read:input_type -> proto.CourseRequest
+	1, // 2: proto.CourseService.Read:output_type -> proto.CourseResponse
 	2, // [2:3] is the sub-list for method output_type
 	1, // [1:2] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -358,7 +357,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type CourseServiceClient interface {
-	GetCourse(ctx context.Context, in *CourseRequest, opts ...grpc.CallOption) (*CourseResponse, error)
+	Read(ctx context.Context, in *CourseRequest, opts ...grpc.CallOption) (*CourseResponse, error)
 }
 
 type courseServiceClient struct {
@@ -369,9 +368,9 @@ func NewCourseServiceClient(cc grpc.ClientConnInterface) CourseServiceClient {
 	return &courseServiceClient{cc}
 }
 
-func (c *courseServiceClient) GetCourse(ctx context.Context, in *CourseRequest, opts ...grpc.CallOption) (*CourseResponse, error) {
+func (c *courseServiceClient) Read(ctx context.Context, in *CourseRequest, opts ...grpc.CallOption) (*CourseResponse, error) {
 	out := new(CourseResponse)
-	err := c.cc.Invoke(ctx, "/proto.CourseService/GetCourse", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.CourseService/Read", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -380,35 +379,35 @@ func (c *courseServiceClient) GetCourse(ctx context.Context, in *CourseRequest, 
 
 // CourseServiceServer is the server API for CourseService service.
 type CourseServiceServer interface {
-	GetCourse(context.Context, *CourseRequest) (*CourseResponse, error)
+	Read(context.Context, *CourseRequest) (*CourseResponse, error)
 }
 
 // UnimplementedCourseServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedCourseServiceServer struct {
 }
 
-func (*UnimplementedCourseServiceServer) GetCourse(context.Context, *CourseRequest) (*CourseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCourse not implemented")
+func (*UnimplementedCourseServiceServer) Read(context.Context, *CourseRequest) (*CourseResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
 }
 
 func RegisterCourseServiceServer(s *grpc.Server, srv CourseServiceServer) {
 	s.RegisterService(&_CourseService_serviceDesc, srv)
 }
 
-func _CourseService_GetCourse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CourseService_Read_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CourseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CourseServiceServer).GetCourse(ctx, in)
+		return srv.(CourseServiceServer).Read(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.CourseService/GetCourse",
+		FullMethod: "/proto.CourseService/Read",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CourseServiceServer).GetCourse(ctx, req.(*CourseRequest))
+		return srv.(CourseServiceServer).Read(ctx, req.(*CourseRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -418,8 +417,8 @@ var _CourseService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*CourseServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetCourse",
-			Handler:    _CourseService_GetCourse_Handler,
+			MethodName: "Read",
+			Handler:    _CourseService_Read_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -9,6 +9,15 @@ import (
 	"runtime/debug"
 )
 
+func ReadJson(request *http.Request, result interface{}) error {
+	decoder := json.NewDecoder(request.Body)
+	err := decoder.Decode(result)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func WriteJson(w http.ResponseWriter, status int, data interface{}, wrap string) error {
 	wraper := make(map[string]interface{})
 

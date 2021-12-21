@@ -13,3 +13,6 @@ ab -k -c 900 -n 80000 127.0.0.1:8080/course/1
 buat handler grpc dan rest pake interface
 
 Namun hal ini merepotkan jika dilakukan manual, kita bisa meminta Driver MySQL untuk Golang secara otomatis melakukan parsing dengan menambahkan parameter parseDate=true
+
+
+protoc proto/course.proto --go_out=plugins=grpc:.

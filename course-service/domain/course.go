@@ -1,7 +1,14 @@
 package domain
 
+import (
+	"context"
+	"net/http"
+
+	"github.com/dinel13/thesis-ac/course/proto"
+)
+
 type Course struct {
-	ID          int    `json:"id"`
+	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Teacher     int    `json:"teacher"`
@@ -12,9 +19,26 @@ type Course struct {
 }
 
 type CourseRepository interface {
-	GetCourseList() ([]Course, error)
-	GetCourse(int) (Course, error)
-	CreateCourse(*Course) (int, error)
-	UpdateCourse(*Course) error
-	DeleteCourse(int) error
+	Create(context.Context, *Course) (*Course, error)
+	Read(context.Context, int) (*Course, error)
+	Update(context.Context, *Course) (*Course, error)
+	Delete(context.Context, int) error
+}
+
+type CourseService interface {
+	Read(int) (*Course, error)
+	Create(*Course) (*Course, error)
+	Update(*Course) (*Course, error)
+	Delete(int) error
+}
+
+type CourseRestHandlers interface {
+	Read(http.ResponseWriter, *http.Request)
+	Create(http.ResponseWriter, *http.Request)
+	Update(http.ResponseWriter, *http.Request)
+	Delete(http.ResponseWriter, *http.Request)
+}
+
+type CourseGrpcHandler interface {
+	Read(ctx context.Context, req *proto.CourseRequest) (*proto.CourseResponse, error)
 }

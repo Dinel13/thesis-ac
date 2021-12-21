@@ -34,9 +34,8 @@ message CourseRequest {
 
 
 service CourseService {
-   rpc GetCourse(CourseRequest) returns (CourseResponse);
-   // rpc GetCourses(CourseListRequest) returns (CourseListRequest);
-   // rpc CreateCourse(Course) returns (Course);
-   // rpc UpdateCourse(Course) returns (Course);
-   // rpc DeleteCourse(Course) returns (Course);
+   rpc Read(CourseRequest) returns (CourseResponse);
+   // rpc Create(Course) returns (CourseResponse);
+   // rpc Update(Course) returns (CourseResponse);
+   // rpc Delete(CourseRequest) returns (CourseResponse);
 }
