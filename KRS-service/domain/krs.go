@@ -7,15 +7,18 @@ import (
 	"github.com/dinel13/thesis-ac/krs/proto"
 )
 
+type MataKuliah struct {
+	Kode     string `json:"kode"`
+	Nama     string `json:"nama"`
+	Sks      int    `json:"sks"`
+	Dosen    string `json:"dosen"`
+	Semester string `json:"semester"`
+}
+
 type Krs struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Teacher     int    `json:"teacher"`
-	Capacity    int    `json:"capacity"`
-	Remain      int    `json:"remain"`
-	CreatedAt   string `json:"created_at"`
-	UpdatedAt   string `json:"updated_at"`
+	Token       string        `json:"token"`
+	IdMahasiswa int           `json:"id_mahasiswa"`
+	MataKuliahs []*MataKuliah `json:"matakuliahs"`
 }
 
 type KrsRepository interface {

@@ -25,7 +25,7 @@ func (m krsRepositoryRedisImpl) Create(ctx context.Context, krs *domain.Krs) (*d
 		return nil, err
 	}
 
-	err = m.Rds.Set(ctx, strconv.Itoa(krs.Id), krsJson, 24*time.Hour).Err()
+	err = m.Rds.Set(ctx, strconv.Itoa(krs.IdMahasiswa), krsJson, 24*time.Hour).Err()
 	if err != nil {
 		return nil, err
 	}

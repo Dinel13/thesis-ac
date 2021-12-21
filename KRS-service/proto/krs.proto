@@ -15,7 +15,7 @@ message MataKuliah {
 message CreateUpdateKRSRequest {
    string token = 1;
    int32 id_mahasiswa = 2;
-   repeated int32 id_mata_kuliah = 3;
+   repeated MataKuliah mata_kuliahs = 3;
 }
 
 message ReadKRSRequest {
@@ -30,7 +30,7 @@ message DeleteKRSRequest {
 }
 
 message KRSResponse {
-   repeated  MataKuliah matakuliah = 3;
+   repeated  MataKuliah mata_kuliahs = 3;
 }
 
 service KrsService {

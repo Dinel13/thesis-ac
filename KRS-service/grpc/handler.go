@@ -2,8 +2,8 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"log"
-	"time"
 
 	"github.com/dinel13/thesis-ac/krs/domain"
 	"github.com/dinel13/thesis-ac/krs/proto"
@@ -18,44 +18,49 @@ type grpcHandler struct {
 }
 
 // read is a method that implements the Read method of the KrsGrpcHandler interface
-func (h grpcHandler) Read(ctx context.Context, req *proto.KrsRequest) (*proto.KrsResponse, error) {
-	krsId := req.GetId()
-	id := int(krsId)
+func (h grpcHandler) Read(ctx context.Context, req *proto.ReadKRSRequest) (*proto.KRSResponse, error) {
+	token := req.GetToken()
+	id_mahasiswa := req.GetIdMahasiswa()
+	idMahasiswa := int(id_mahasiswa)
+
+	fmt.Println("token: ", token)
+	fmt.Println("idMahasiswa: ", idMahasiswa)
 
 	// parse int32 to int64
-	krs, err := h.service.Read(id)
+	krs, err := h.service.Read(idMahasiswa)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	res := &proto.KrsResponse{
-		Krss: &proto.Krs{
-			Id:          int32(krs.Id),
-			Name:        krs.Name,
-			Description: krs.Description,
-			// Teacher:     int32(krs.Teacher),
-			// Capacity:    int32(krs.Capacity),
-			// Remain:      int32(krs.Remain),
-			// CreatedAt:   krs.CreatedAt,
-			// UpdatedAt:   krs.UpdatedAt,
-		},
-	}
+	res := &proto.KRSResponse{
+		Matakuliah: []*proto.MataKuliah{
+			&proto.MataKuliah{
+				Kode:     krs.MataKuliah[0].Kode,
+				Nama:     krs.MataKuliah[0].Nama,
+				Sks:      int32(krs.MataKuliah[0].Sks),
+				Dosen:    krs.MataKuliah[0].Dosen,
+				Semester: krs.MataKuliah[0].Semester,
+			},
+		}}
 
 	return res, nil
 }
 
 // Create is a method that implements the Create method of the KrsGrpcHandler interface
-func (h grpcHandler) Create(ctx context.Context, req *proto.Krs) (*proto.KrsResponse, error) {
+func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSRequest) (*proto.KRSResponse, error) {
 	krs := &domain.Krs{
-		Id:          int(req.GetId()),
-		Name:        req.GetName(),
-		Description: req.GetDescription(),
-		Teacher:     int(1),
-		Capacity:    int(2),
-		Remain:      int(3),
-		CreatedAt:   time.Now().String(),
-		UpdatedAt:   time.Now().String(),
+		Token:       req.GetToken(),
+		IdMahasiswa: int(req.GetIdMahasiswa()),
+		MataKuliah: []*domain.MataKuliah{
+			&domain.MataKuliah{
+				Kode:     req.GetMataKuliah().GetKode(),
+				Nama:     req.GetMataKuliah().GetNama(),
+				Sks:      int(req.GetMataKuliah().GetSks()),
+				Dosen:    req.GetMataKuliah().GetDosen(),
+				Semester: req.GetMataKuliah().GetSemester(),
+			},
+		},
 	}
 
 	// parse int32 to int64
@@ -65,16 +70,15 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.Krs) (*proto.KrsResp
 		return nil, err
 	}
 
-	res := &proto.KrsResponse{
-		Krss: &proto.Krs{
-			Id:          int32(krs.Id),
-			Name:        krs.Name,
-			Description: krs.Description,
-			// Teacher:     int32(krs.Teacher),
-			// Capacity:    int32(krs.Capacity),
-			// Remain:      int32(krs.Remain),
-			// CreatedAt:   krs.CreatedAt,
-			// UpdatedAt:   krs.UpdatedAt,
+	res := &proto.KRSResponse{
+		MataKuliahs: []*proto.MataKuliah{
+			&proto.MataKuliah{
+				Kode:     krs.MataKuliah[0].Kode,
+				Nama:     krs.MataKuliah[0].Nama,
+				Sks:      int32(krs.MataKuliah[0].Sks),
+				Dosen:    krs.MataKuliah[0].Dosen,
+				Semester: krs.MataKuliah[0].Semester,
+			},
 		},
 	}
 
