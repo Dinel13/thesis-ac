@@ -30,12 +30,16 @@ message DeleteKRSRequest {
 }
 
 message KRSResponse {
-   repeated  MataKuliah mata_kuliahs = 3;
+   repeated  MataKuliah mata_kuliahs = 1;
+}
+
+message DeleteKRSResponse {
+   string status = 1;
 }
 
 service KrsService {
    rpc Read(ReadKRSRequest) returns (KRSResponse);
    rpc Create(CreateUpdateKRSRequest) returns (KRSResponse);
    rpc Update(CreateUpdateKRSRequest) returns (KRSResponse);
-   rpc Delete(DeleteKRSRequest) returns (KRSResponse);
+   rpc Delete(DeleteKRSRequest) returns (DeleteKRSResponse);
 }

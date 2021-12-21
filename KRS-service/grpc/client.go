@@ -1,49 +1,69 @@
 package grpc
 
-// import (
-// 	"context"
-// 	"log"
+import (
+	"context"
+	"log"
 
-// 	"github.com/dinel13/thesis-ac/krs/proto"
-// 	"google.golang.org/grpc"
-// )
+	"github.com/dinel13/thesis-ac/krs/proto"
+	"google.golang.org/grpc"
+)
 
-// func Create() {
-// 	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
-// 	if err != nil {
-// 		log.Fatalf("did not connect: %v", err)
-// 	}
+func Create() {
+	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
 
-// 	defer conn.Close()
-// 	c := proto.NewKrsServiceClient(conn)
+	defer conn.Close()
+	c := proto.NewKrsServiceClient(conn)
 
-// 	r, err := c.Create(context.Background(), &proto.Krs{
-// 		Id:          int32(1),
-// 		Name:        "Go",
-// 		Description: "Go is a programming language",
-// 	})
-// 	if err != nil {
-// 		log.Fatalf("could not get krs: %v", err)
-// 	}
+	r, err := c.Create(context.Background(), &proto.CreateUpdateKRSRequest{
+		Token:       "ffdafa",
+		IdMahasiswa: int32(1),
+		MataKuliahs: []*proto.MataKuliah{
+			{
+				Kode:     "IF-101",
+				Nama:     "Pemrograman Script",
+				Sks:      int32(3),
+				Dosen:    "Dina",
+				Semester: "Semester 7",
+			},
+			{
+				Kode:     "IF-102",
+				Nama:     "Pemrograman Berbasis Objek",
+				Sks:      int32(3),
+				Dosen:    "udin",
+				Semester: "Semester 7",
+			},
+		},
+	})
 
-// 	log.Printf("Krs: %s", r.Krss.Name)
-// 	log.Printf("Krs: %s", r.Krss.Description)
-// }
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
 
-// func Read() {
-// 	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
-// 	if err != nil {
-// 		log.Fatalf("did not connect: %v", err)
-// 	}
+	log.Printf("Krs: %s", r.GetMataKuliahs()[0].GetNama())
 
-// 	defer conn.Close()
-// 	c := proto.NewKrsServiceClient(conn)
+}
 
-// 	r, err := c.Read(context.Background(), &proto.KrsRequest{Id: int32(1)})
-// 	if err != nil {
-// 		log.Fatalf("could not get krs: %v", err)
-// 	}
+func Read() {
+	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
 
-// 	log.Printf("Krs: %s", r.Krss.Name)
-// 	log.Printf("Krs: %s", r.Krss.Description)
-// }
+	defer conn.Close()
+	c := proto.NewKrsServiceClient(conn)
+
+	r, err := c.Read(context.Background(), &proto.ReadKRSRequest{
+		Token:       "ffdafa",
+		IdMahasiswa: int32(1),
+	})
+
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+	log.Printf("Krs: %s", r.GetMataKuliahs()[0].GetNama())
+
+}

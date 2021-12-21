@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/dinel13/thesis-ac/krs/domain"
@@ -16,7 +17,7 @@ type DefaultKrsService struct {
 }
 
 // GetKrs returns a krs by id
-func (s DefaultKrsService) Read(id int) (*domain.Krs, error) {
+func (s DefaultKrsService) Read(token string, id int) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -32,6 +33,8 @@ func (s DefaultKrsService) Create(krs *domain.Krs) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
+	log.Println(krs.Token)
+
 	c, err := s.Repo.Create(ctx, krs)
 	if err != nil {
 		return nil, err
@@ -44,6 +47,8 @@ func (s DefaultKrsService) Update(krs *domain.Krs) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
+	log.Println(krs.Token)
+
 	c, err := s.Repo.Update(ctx, krs)
 	if err != nil {
 		return nil, err
@@ -52,7 +57,7 @@ func (s DefaultKrsService) Update(krs *domain.Krs) (*domain.Krs, error) {
 }
 
 // 	DeleteKrs
-func (s DefaultKrsService) Delete(id int) error {
+func (s DefaultKrsService) Delete(token string, id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 

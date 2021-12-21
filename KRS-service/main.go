@@ -1,6 +1,6 @@
 package main
 
-import "github.com/dinel13/thesis-ac/krs/app"
+import "github.com/dinel13/thesis-ac/krs/grpc"
 
 func main() {
 	// go app.StartRestServer()
@@ -11,6 +11,6 @@ func main() {
 	// Printed after sleep is over
 	// fmt.Println("Sleep Over.....")
 	// grpc.Create()
-	// grpc.Read()
-	app.StartGRPCServer()
+	grpc.Read()
+	// app.StartGRPCServer()
 }

@@ -25,8 +25,11 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 	}
 
+	// GET TOKEN FROM HEADER USE BEARER TOKEN
+	token := r.Header.Get("Authorization")
+
 	// get the krs from service
-	krs, err := h.service.Read(id)
+	krs, err := h.service.Read(token, id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
@@ -38,6 +41,9 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 
 // Create is handler for POST /krs to create COurse
 func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
+	// GET TOKEN FROM HEADER USE BEARER TOKEN
+	token := r.Header.Get("Authorization")
+
 	// get the krs from request body
 	krs := &domain.Krs{}
 	err := ReadJson(r, krs)
@@ -45,6 +51,7 @@ func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
+	krs.Token = token
 
 	// create the krs
 	c, err := h.service.Create(krs)
@@ -59,6 +66,9 @@ func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
 
 // Update is handler for PUT /krs to update Krs
 func (h krsHandlers) Update(w http.ResponseWriter, r *http.Request) {
+	// GET TOKEN FROM HEADER USE BEARER TOKEN
+	token := r.Header.Get("Authorization")
+
 	// get the krs from request body
 	krs := &domain.Krs{}
 	err := ReadJson(r, krs)
@@ -66,6 +76,8 @@ func (h krsHandlers) Update(w http.ResponseWriter, r *http.Request) {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
+
+	krs.Token = token
 
 	// update the krs
 	c, err := h.service.Update(krs)
@@ -88,8 +100,11 @@ func (h krsHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// GET TOKEN FROM HEADER USE BEARER TOKEN
+	token := r.Header.Get("Authorization")
+
 	// delete the krs
-	err = h.service.Delete(id)
+	err = h.service.Delete(token, id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return

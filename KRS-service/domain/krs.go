@@ -29,10 +29,10 @@ type KrsRepository interface {
 }
 
 type KrsService interface {
-	Read(int) (*Krs, error)
+	Read(string, int) (*Krs, error)
 	Create(*Krs) (*Krs, error)
 	Update(*Krs) (*Krs, error)
-	Delete(int) error
+	Delete(string, int) error
 }
 
 type KrsRestHandlers interface {
@@ -46,5 +46,5 @@ type KrsGrpcHandler interface {
 	Read(context.Context, *proto.ReadKRSRequest) (*proto.KRSResponse, error)
 	Create(context.Context, *proto.CreateUpdateKRSRequest) (*proto.KRSResponse, error)
 	Update(context.Context, *proto.CreateUpdateKRSRequest) (*proto.KRSResponse, error)
-	Delete(context.Context, *proto.DeleteKRSRequest) (*proto.KRSResponse, error)
+	Delete(context.Context, *proto.DeleteKRSRequest) (*proto.DeleteKRSResponse, error)
 }
