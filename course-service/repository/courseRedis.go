@@ -20,7 +20,12 @@ type courseRepositoryRedisImpl struct {
 
 //	CreateCourse creates a new course
 func (m courseRepositoryRedisImpl) Create(ctx context.Context, course *domain.Course) (*domain.Course, error) {
-	err := m.Rds.Set(ctx, strconv.Itoa(course.Id), course, 24*time.Hour).Err()
+	courseJson, err := json.Marshal(course)
+	if err != nil {
+		return nil, err
+	}
+
+	err = m.Rds.Set(ctx, strconv.Itoa(course.Id), courseJson, 24*time.Hour).Err()
 	if err != nil {
 		return nil, err
 	}

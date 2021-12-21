@@ -8,7 +8,29 @@ import (
 	"google.golang.org/grpc"
 )
 
-func Main() {
+func Create() {
+	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+
+	defer conn.Close()
+	c := proto.NewCourseServiceClient(conn)
+
+	r, err := c.Create(context.Background(), &proto.Course{
+		Id:          int32(1),
+		Name:        "Go",
+		Description: "Go is a programming language",
+	})
+	if err != nil {
+		log.Fatalf("could not get course: %v", err)
+	}
+
+	log.Printf("Course: %s", r.Courses.Name)
+	log.Printf("Course: %s", r.Courses.Description)
+}
+
+func Read() {
 	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -24,6 +46,4 @@ func Main() {
 
 	log.Printf("Course: %s", r.Courses.Name)
 	log.Printf("Course: %s", r.Courses.Description)
-	log.Printf("Course: %s", r.Courses.UpdatedAt)
-
 }

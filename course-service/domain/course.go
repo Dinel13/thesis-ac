@@ -40,5 +40,6 @@ type CourseRestHandlers interface {
 }
 
 type CourseGrpcHandler interface {
-	Read(ctx context.Context, req *proto.CourseRequest) (*proto.CourseResponse, error)
+	Read(context.Context, *proto.CourseRequest) (*proto.CourseResponse, error)
+	Create(context.Context, *proto.Course) (*proto.CourseResponse, error)
 }

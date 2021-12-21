@@ -8,11 +8,11 @@ message Course {
    int32 id = 1;
    string name = 2;
    string description = 3;
-   int32 teacher = 4;
-   int32 capacity = 5;
-   int32 remain = 6;
-   string created_at = 7;
-   string updated_at = 8;
+   // int32 teacher = 4;
+   // int32 capacity = 5;
+   // int32 remain = 6;
+   // string created_at = 7;
+   // string updated_at = 8;
 }
 
 message CourseResponse {
@@ -35,7 +35,7 @@ message CourseRequest {
 
 service CourseService {
    rpc Read(CourseRequest) returns (CourseResponse);
-   // rpc Create(Course) returns (CourseResponse);
+   rpc Create(Course) returns (CourseResponse);
    // rpc Update(Course) returns (CourseResponse);
    // rpc Delete(CourseRequest) returns (CourseResponse);
 }
