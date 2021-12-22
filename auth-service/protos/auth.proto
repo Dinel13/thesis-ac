@@ -19,7 +19,7 @@ message VerifyResponse {
   bool is_auth = 1;
 }
 
-service FooService {
-  rpc Login(LoginRequest) returns (LoginResponse);
-  rpc Verify(VerifyRequest) returns (VerifyResponse);
+service AuthService {
+  rpc Login(LoginRequest) returns (LoginResponse){};
+  rpc Verify(VerifyRequest) returns (VerifyResponse){};
 }
