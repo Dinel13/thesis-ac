@@ -19,7 +19,7 @@ message PaymentResponse {
 }
 
 service PaymentService {
-   rpc CreatePayment (CreatePaymentRequest) returns (PaymentResponse);
-   rpc VerifyPayment (VerifyPaymentRequest) returns (PaymentResponse);
+   rpc Create(CreatePaymentRequest) returns (PaymentResponse);
+   rpc Verify(VerifyPaymentRequest) returns (PaymentResponse);
 }
 

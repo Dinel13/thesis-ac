@@ -23,12 +23,12 @@ type PaymentResponse struct {
 
 type PaymentRepository interface {
 	Create(context.Context, *PaymentRequest) (*PaymentResponse, error)
-	Verify(context.Context, *VerifyRequest) (*PaymentResponse, error)
+	Verify(context.Context, int) (*PaymentResponse, error)
 }
 
 type PaymentService interface {
 	Create(*PaymentRequest) (*PaymentResponse, error)
-	Verify(string, int) (*PaymentResponse, error)
+	Verify(int) (*PaymentResponse, error)
 }
 
 type PaymentRestHandlers interface {
