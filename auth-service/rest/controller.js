@@ -1,33 +1,89 @@
 const jwt = require("jsonwebtoken");
+const redis = require("../database/redis");
+
+const signup = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const token = jwt.sign({ username }, "secretKey@123");
+    await redis.set(
+      username,
+      JSON.stringify({ username, password }),
+      "EX",
+      60 * 60 * 24
+    );
+    res.status(201).json({ token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: error,
+    });
+  }
+};
 
 const login = async (req, res) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  if (!user) {
-    return res.status(400).send("Invalid username or password");
+  try {
+    const { username, password } = req.body;
+    let user = await redis.get(username);
+    if (!user) {
+      return res.status(400).json({
+        message: "Username tidak ditemukan",
+      });
+    }
+    user = JSON.parse(user);
+    if (password !== user.password) {
+      return res.status(400).json({
+        message: "Password salah",
+      });
+    }
+    token = jwt.sign(
+      {
+        username,
+      },
+      "secretKey@123",
+      { expiresIn: "1d" }
+    );
+    res.status(200).json({
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: error,
+    });
   }
-  const isMatch = await user.comparePassword(password);
-  if (!isMatch) {
-    return res.status(400).send("Invalid username or password");
-  }
-  const token = jwt.sign({ _id: user._id }, process.env.SECRET);
-  res.header("auth-token", token).send(token);
 };
 
 const verify = async (req, res) => {
-  const token = req.headers["Authorization"];
-
-  if (!token) return res.status(401).send("Access denied. No token provided.");
   try {
-    const decoded = jwt.verify(token, process.env.SECRET);
-    req.user = decoded;
-    next();
-  } catch (ex) {
-    res.status(400).send("Invalid token.");
+    const token = req.headers.authorization.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        isAuth: false,
+        message: "Token tidak ditemukan",
+      });
+    }
+
+    const decoded = jwt.verify(token, "secretKey@123");
+    if (!decoded.username) {
+      return res.status(401).json({
+        isAuth: false,
+        message: "Token tidak valid",
+      });
+    }
+    res.status(200).json({
+      isAuth: true,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      isAuth: false,
+      message: err,
+    });
   }
 };
 
 module.exports = {
+  signup,
   login,
   verify,
 };
