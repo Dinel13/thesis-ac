@@ -48,10 +48,23 @@ func (m krsRepositoryRedisImpl) Read(ctx context.Context, id int) (*domain.Krs, 
 
 // UpdateKrs updates an existing krs
 func (m krsRepositoryRedisImpl) Update(ctx context.Context, krs *domain.Krs) (*domain.Krs, error) {
+	krsJson, err := json.Marshal(krs)
+	if err != nil {
+		return nil, err
+	}
+
+	err = m.Rds.Set(ctx, strconv.Itoa(krs.IdMahasiswa), krsJson, 24*time.Hour).Err()
+	if err != nil {
+		return nil, err
+	}
 	return krs, nil
 }
 
 // DeleteKrs deletes an existing krs
 func (m krsRepositoryRedisImpl) Delete(ctx context.Context, id int) error {
+	err := m.Rds.Del(ctx, strconv.Itoa(id)).Err()
+	if err != nil {
+		return err
+	}
 	return nil
 }

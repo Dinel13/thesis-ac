@@ -11,6 +11,8 @@ func main() {
 	// Printed after sleep is over
 	// fmt.Println("Sleep Over.....")
 	// grpc.Create()
-	grpc.Read()
+	// grpc.Read()
+	// grpc.Update()
+	grpc.Delete()
 	// app.StartGRPCServer()
 }
