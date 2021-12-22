@@ -4,7 +4,7 @@
   "description": "auth service for my acedemic thesis",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,7 +14,9 @@
   "author": "salahuddin",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.2",
     "google-protobuf": "^3.19.0",
-    "grpc": "^1.24.11"
+    "grpc": "^1.24.11",
+    "jsonwebtoken": "^8.5.1"
   }
 }
