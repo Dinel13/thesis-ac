@@ -2,10 +2,24 @@ syntax = "proto3";
 
 package proto;
 
-message Foo {
-  string bar = 1;
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message VerifyRequest {
+  string token = 1;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message VerifyResponse {
+  bool is_auth = 1;
 }
 
 service FooService {
-  rpc Bar(Foo) returns (Foo) {}
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Verify(VerifyRequest) returns (VerifyResponse);
 }
