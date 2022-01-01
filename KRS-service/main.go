@@ -1,9 +1,9 @@
 package main
 
-import "github.com/dinel13/thesis-ac/krs/grpc"
+import "github.com/dinel13/thesis-ac/krs/app"
 
 func main() {
-	// go app.StartRestServer()
+	app.StartRestServer()
 	// go app.StartGRPCServer()
 	// Calling Sleep method
 	// time.Sleep(8 * time.Second)
@@ -13,6 +13,6 @@ func main() {
 	// grpc.Create()
 	// grpc.Read()
 	// grpc.Update()
-	grpc.Delete()
+	// grpc.Delete()
 	// app.StartGRPCServer()
 }

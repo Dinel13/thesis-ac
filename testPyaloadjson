@@ -1,0 +1,20 @@
+{
+	"Token":       "ffdafa",
+	"IdMahasiswa":1,
+	"MataKuliah" : [
+	 	{
+			"Kode":     "IF-101",
+			"Nama":     "Pemrograman Script",
+			"Sks":      3,
+			"Dosen":    "Dina",
+			"Semester": "Semester 7",
+		},
+		{
+			"Kode":     "IF-101",
+			"Nama":     "Pemrograman Script",
+			"Sks":      3,
+			"Dosen":    "Dina",
+			"Semester": "Semester 7",
+		}
+	]
+}
