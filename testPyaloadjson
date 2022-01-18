@@ -1,20 +1,20 @@
 {
-	"Token":       "ffdafa",
-	"IdMahasiswa":1,
-	"MataKuliah" : [
+	"token":       "ffdafa",
+	"id_mahasiswa":1,
+	"mata_kuliahs" : [
 	 	{
-			"Kode":     "IF-101",
-			"Nama":     "Pemrograman Script",
-			"Sks":      3,
-			"Dosen":    "Dina",
-			"Semester": "Semester 7",
+			"kode":     "IF-141",
+			"nama":     "Pemrograman Script",
+			"sks":      3,
+			"dosen":    "Dina",
+			"semester": "Semester 7"
 		},
 		{
-			"Kode":     "IF-101",
-			"Nama":     "Pemrograman Script",
-			"Sks":      3,
-			"Dosen":    "Dina",
-			"Semester": "Semester 7",
+			"kode":     "IF-101",
+			"nama":     "Pemrograman Script",
+			"sks":      3,
+			"dosen":    "Dina",
+			"semester": "Semester 7"
 		}
 	]
 }

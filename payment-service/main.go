@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
+	"time"
 
 	"google.golang.org/grpc"
 
@@ -15,32 +17,33 @@ import (
 	mygrpc "github.com/dinel13/thesis-ac/payment/grpc"
 
 	"github.com/dinel13/thesis-ac/payment/proto"
+	"github.com/dinel13/thesis-ac/payment/rest"
 	"github.com/dinel13/thesis-ac/payment/service"
 )
 
 // StartRestServer starts the REST server
-// func StartRestServer() {
-// 	port := ":8080"
-// 	fmt.Printf("Staring REST server on port %s\n", port)
+func StartRestServer() {
+	port := ":8082"
+	fmt.Printf("Staring REST server on port %s\n", port)
 
-// 	dbClient, paymentRepo := startRepoRedis()
-// 	defer dbClient.Close()
+	dbClient, paymentRepo := startRepoRedis()
+	defer dbClient.Close()
 
-// 	cs := rest.NewCoursRestHandlers(service.NewPaymentService(paymentRepo))
+	cs := rest.NewPaymentRestHandlers(service.NewPaymentService(paymentRepo))
 
-// 	srv := &http.Server{
-// 		Addr:    ":8080",
-// 		Handler: rest.Routes(cs),
-// 	}
-// 	err := srv.ListenAndServe()
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: rest.Routes(cs),
+	}
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 // StartGRPCServer starts the gRPC server
 func StartGRPCServer() {
-	port := ":8081"
+	port := ":9092"
 	fmt.Printf("Staring gRPC server on port %s\n", port)
 
 	dbClient, paymentRepo := startRepoRedis()
@@ -82,8 +85,7 @@ func connectRedis() *redis.Client {
 }
 
 func main() {
-	// StartRestServer()
-	// StartGRPCServer()
-	// mygrpc.Create()
-	mygrpc.Read()
+	go StartRestServer()
+	go StartGRPCServer()
+	time.Sleep(10 * time.Minute)
 }

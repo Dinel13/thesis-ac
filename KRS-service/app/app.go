@@ -47,7 +47,7 @@ func StartRestServer() {
 
 // StartGRPCServer starts the gRPC server
 func StartGRPCServer() {
-	port := ":8081"
+	port := ":9090"
 	fmt.Printf("Staring gRPC server on port %s\n", port)
 
 	// connect to SQL database

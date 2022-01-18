@@ -16,3 +16,13 @@ Namun hal ini merepotkan jika dilakukan manual, kita bisa meminta Driver MySQL u
 
 
 protoc proto/krs.proto --go_out=plugins=grpc:.
+/home/din/.local/bin/protoc proto/krs.proto --go_out=plugins=grpc:.
+
+../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Create   -d '{"token":       "ffdafa","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 10000 -c 1000   0.0.0.0:8081
+
+./bin/jmeter  -g grpc.jtl -o reportt
+
+protoc --proto_path=proto --java_out=. proto/krs.proto
+
+
+./bin/jmeter -n -t krs.jmx -l testresults.jtl

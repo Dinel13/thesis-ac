@@ -1,5 +1,5 @@
 const grpc = require("@grpc/grpc-js");
-const PROTO_PATH = __dirname + "/../protos/auth.proto";
+const PROTO_PATH = __dirname + "/../proto/auth.proto";
 const protoLoader = require("@grpc/proto-loader");
 const { Login, Verify } = require("./controller");
 
@@ -22,10 +22,15 @@ server.addService(authservice.AuthService.service, {
   Verify: Verify,
 });
 
-server.bindAsync(
-  "0.0.0.0:50051",
-  grpc.ServerCredentials.createInsecure(),
-  () => {
-    server.start();
-  }
-);
+const startGrpcServer = () => {
+  server.bindAsync(
+    "0.0.0.0:9091",
+    grpc.ServerCredentials.createInsecure(),
+    () => {
+      server.start();
+      console.log("GRPC server running at port 9091");
+    }
+  );
+};
+
+module.exports = startGrpcServer;
