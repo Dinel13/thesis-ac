@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/dinel13/thesis-ac/krs/domain"
@@ -21,6 +22,15 @@ func (h grpcHandler) Read(ctx context.Context, req *proto.ReadKRSRequest) (*prot
 	token := req.GetToken()
 	id_mahasiswa := req.GetIdMahasiswa()
 	idMahasiswa := int(id_mahasiswa)
+
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if !isAuth {
+		return nil, errors.New("token is not valid")
+	}
 
 	// parse int32 to int64
 	krs, err := h.service.Read(token, idMahasiswa)
