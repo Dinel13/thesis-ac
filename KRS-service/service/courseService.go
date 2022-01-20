@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/dinel13/thesis-ac/krs/domain"
@@ -33,8 +32,6 @@ func (s DefaultKrsService) Create(krs *domain.Krs) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	log.Println(krs.Token)
-
 	c, err := s.Repo.Create(ctx, krs)
 	if err != nil {
 		return nil, err
@@ -46,8 +43,6 @@ func (s DefaultKrsService) Create(krs *domain.Krs) (*domain.Krs, error) {
 func (s DefaultKrsService) Update(krs *domain.Krs) (*domain.Krs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-
-	log.Println(krs.Token)
 
 	c, err := s.Repo.Update(ctx, krs)
 	if err != nil {

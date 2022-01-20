@@ -41,3 +41,7 @@ protoc --proto_path=proto --java_out=. proto/krs.proto
 
 
 ./bin/jmeter -n -t krs.jmx -l testresults.jtl
+
+//todo
+delete krs by id juga mendelete pay by id karena pake sama id di redis
+

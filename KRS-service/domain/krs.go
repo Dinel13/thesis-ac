@@ -16,9 +16,8 @@ type MataKuliah struct {
 }
 
 type Krs struct {
-	Token       string        `json:"token"`
 	IdMahasiswa int           `json:"id_mahasiswa"`
-	MataKuliahs []*MataKuliah `json:"matakuliahs"`
+	MataKuliahs []*MataKuliah `json:"mata_kuliahs"`
 }
 
 type KrsRepository interface {

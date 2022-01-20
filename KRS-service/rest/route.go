@@ -12,7 +12,7 @@ func Routes(ch domain.KrsRestHandlers) http.Handler {
 
 	r.HandlerFunc(http.MethodGet, "/krs/:id", ch.Read)
 	r.HandlerFunc(http.MethodPost, "/krs", ch.Create)
-	r.HandlerFunc(http.MethodPut, "/krs", ch.Update)
+	r.HandlerFunc(http.MethodPut, "/krs/:id", ch.Update)
 	r.HandlerFunc(http.MethodDelete, "/krs/:id", ch.Delete)
 
 	return r

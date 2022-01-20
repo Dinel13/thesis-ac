@@ -83,7 +83,6 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 	}
 
 	krs := &domain.Krs{
-		Token:       token,
 		IdMahasiswa: idMahasiswa,
 		MataKuliahs: nil,
 	}
@@ -149,7 +148,6 @@ func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSReque
 
 	// parse proto.KRS to domain.Krs
 	krs := &domain.Krs{
-		Token:       token,
 		IdMahasiswa: idMahasiswa,
 		MataKuliahs: nil,
 	}

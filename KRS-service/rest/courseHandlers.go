@@ -63,17 +63,35 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 
 // Create is handler for POST /krs to create COurse
 func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
-	// GET TOKEN FROM HEADER USE BEARER TOKEN
 	token := r.Header.Get("Authorization")
+
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusBadRequest)
+		return
+	}
+	if !isAuth {
+		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
+		return
+	}
 
 	// get the krs from request body
 	krs := &domain.Krs{}
-	err := ReadJson(r, krs)
+	err = ReadJson(r, krs)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
-	krs.Token = token
+
+	isPay, err := VerifyPayment(krs.IdMahasiswa)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
+	}
+	if !isPay {
+		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
+		return
+	}
 
 	// create the krs
 	c, err := h.service.Create(krs)
@@ -88,18 +106,44 @@ func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
 
 // Update is handler for PUT /krs to update Krs
 func (h krsHandlers) Update(w http.ResponseWriter, r *http.Request) {
-	// GET TOKEN FROM HEADER USE BEARER TOKEN
-	token := r.Header.Get("Authorization")
-
-	// get the krs from request body
-	krs := &domain.Krs{}
-	err := ReadJson(r, krs)
+	// get the krs id from request param
+	params := httprouter.ParamsFromContext(r.Context())
+	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	krs.Token = token
+	token := r.Header.Get("Authorization")
+
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusBadRequest)
+		return
+	}
+	if !isAuth {
+		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
+		return
+	}
+
+	isPay, err := VerifyPayment(id)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
+	}
+	if !isPay {
+		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
+		return
+	}
+
+	// get the krs from request body
+	krs := &domain.Krs{}
+	err = ReadJson(r, krs)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
+	}
+	krs.IdMahasiswa = id
 
 	// update the krs
 	c, err := h.service.Update(krs)
@@ -122,8 +166,26 @@ func (h krsHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// GET TOKEN FROM HEADER USE BEARER TOKEN
 	token := r.Header.Get("Authorization")
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusBadRequest)
+		return
+	}
+	if !isAuth {
+		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
+		return
+	}
+
+	isPay, err := VerifyPayment(id)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
+	}
+	if !isPay {
+		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
+		return
+	}
 
 	// delete the krs
 	err = h.service.Delete(token, id)
