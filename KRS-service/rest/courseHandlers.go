@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -23,10 +24,31 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
 	}
 
 	// GET TOKEN FROM HEADER USE BEARER TOKEN
 	token := r.Header.Get("Authorization")
+
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusBadRequest)
+		return
+	}
+	if !isAuth {
+		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
+		return
+	}
+
+	isPay, err := VerifyPayment(id)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
+	}
+	if !isPay {
+		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
+		return
+	}
 
 	// get the krs from service
 	krs, err := h.service.Read(token, id)

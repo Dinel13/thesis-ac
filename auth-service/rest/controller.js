@@ -56,11 +56,9 @@ const login = async (req, res) => {
 const verify = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-
     if (!token) {
       return res.status(401).json({
         isAuth: false,
-        message: "Token tidak ditemukan",
       });
     }
 
@@ -68,7 +66,6 @@ const verify = async (req, res) => {
     if (!decoded.username) {
       return res.status(401).json({
         isAuth: false,
-        message: "Token tidak valid",
       });
     }
     res.status(200).json({
@@ -77,7 +74,6 @@ const verify = async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       isAuth: false,
-      message: err,
     });
   }
 };

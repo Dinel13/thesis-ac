@@ -10,8 +10,8 @@ import (
 func Routes(ph domain.PaymentRestHandlers) http.Handler {
 	r := httprouter.New()
 
-	r.HandlerFunc(http.MethodGet, "/krs/:id", ph.Verify)
-	r.HandlerFunc(http.MethodPost, "/krs", ph.Create)
+	r.HandlerFunc(http.MethodGet, "/verify/:id", ph.Verify)
+	r.HandlerFunc(http.MethodPost, "/pay", ph.Create)
 
 	return r
 }

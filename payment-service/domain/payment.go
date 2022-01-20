@@ -18,7 +18,7 @@ type VerifyRequest struct {
 }
 
 type PaymentResponse struct {
-	IsPay bool `json:"is_pay"`
+	IsPay bool `json:"isPay"`
 }
 
 type PaymentRepository interface {

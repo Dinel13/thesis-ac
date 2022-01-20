@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -39,7 +38,6 @@ func (m paymentRepositoryImpl) Verify(ctx context.Context, id int) (*domain.Paym
 	err := m.Rds.Get(ctx, strconv.Itoa(id)).Err()
 	if err != nil {
 		if err.Error() == "redis: nil" {
-			fmt.Print("gg")
 			return &domain.PaymentResponse{
 				IsPay: false,
 			}, nil
