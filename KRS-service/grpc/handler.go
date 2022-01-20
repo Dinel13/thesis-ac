@@ -126,10 +126,31 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 
 // Update is a method that implements the Update method of the KrsGrpcHandler interface
 func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSRequest) (*proto.KRSResponse, error) {
+	token := req.GetToken()
+	idMahasiswa := int(req.GetIdMahasiswa())
+
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if !isAuth {
+		return nil, errors.New("token is not valid")
+	}
+
+	isPay, err := VerifyPayment(idMahasiswa)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if !isPay {
+		return nil, errors.New("belum melakukan pembayaran")
+	}
+
 	// parse proto.KRS to domain.Krs
 	krs := &domain.Krs{
-		Token:       req.GetToken(),
-		IdMahasiswa: int(req.GetIdMahasiswa()),
+		Token:       token,
+		IdMahasiswa: idMahasiswa,
 		MataKuliahs: nil,
 	}
 
@@ -145,7 +166,7 @@ func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSReque
 	}
 
 	// parse int32 to int64
-	krs, err := h.service.Update(krs)
+	krs, err = h.service.Update(krs)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -173,10 +194,27 @@ func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSReque
 // Delete is a method that implements the Delete method of the KrsGrpcHandler interface
 func (h grpcHandler) Delete(ctx context.Context, req *proto.DeleteKRSRequest) (*proto.DeleteKRSResponse, error) {
 	token := req.GetToken()
-	// parse int32 to int64
-	id_mahasiswa := int(req.GetIdMahasiswa())
+	idMahasiswa := int(req.GetIdMahasiswa())
 
-	err := h.service.Delete(token, id_mahasiswa)
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if !isAuth {
+		return nil, errors.New("token is not valid")
+	}
+
+	isPay, err := VerifyPayment(idMahasiswa)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if !isPay {
+		return nil, errors.New("belum melakukan pembayaran")
+	}
+
+	err = h.service.Delete(token, idMahasiswa)
 	if err != nil {
 		log.Println(err)
 		return nil, err

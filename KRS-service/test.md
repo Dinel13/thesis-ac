@@ -18,9 +18,22 @@ Namun hal ini merepotkan jika dilakukan manual, kita bisa meminta Driver MySQL u
 protoc proto/krs.proto --go_out=plugins=grpc:.
 /home/din/.local/bin/protoc proto/krs.proto --go_out=plugins=grpc:.
 
-../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Create   -d '{"token":       "ffdafa","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 10000 -c 1000   0.0.0.0:9090
+// create krs
+../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Create   -d '{"token":       "ffdafa","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 1 -c 1  0.0.0.0:9090
 
+//kreate payment
 ../ghz/ghz --insecure   --proto ./proto/payment.proto   --call  proto.PaymentService.Create   -d '{"id_mahasiswa":1,"jumlah" : 2345, "metode" : "bri"}' -n 1 -c 1   0.0.0.0:9092
+
+//update krs
+../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Update   -d '{"token":       "ffdafa","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 1 -c 1   0.0.0.0:9090
+
+//read krs
+../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Read   -d '{"token":       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDI2ODE5OTJ9.hMVVyeZyWg5Jq7gLiM3uKyV5jA_GbwZastQ2CWJzqek","id_mahasiswa":1}' -n 1 -c 1   0.0.0.0:9090
+
+
+// delete krs
+../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Delete   -d '{"token":       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDI2ODE5OTJ9.hMVVyeZyWg5Jq7gLiM3uKyV5jA_GbwZastQ2CWJzqek","id_mahasiswa":1}' -n 1 -c 1   0.0.0.0:9090
+
 
 ./bin/jmeter  -g grpc.jtl -o reportt
 
