@@ -61,14 +61,34 @@ func (h grpcHandler) Read(ctx context.Context, req *proto.ReadKRSRequest) (*prot
 // Create is a method that implements the Create method of the KrsGrpcHandler interface
 func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSRequest) (*proto.KRSResponse, error) {
 
-	// parse proto.KRS to domain.Krs
+	token := req.GetToken()
+	idMahasiswa := int(req.GetIdMahasiswa())
+
+	isAuth, err := VerifyToken(token)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if !isAuth {
+		return nil, errors.New("token is not valid")
+	}
+
+	isPay, err := VerifyPayment(idMahasiswa)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	if !isPay {
+		return nil, errors.New("belum melakukan pembayaran")
+	}
+
 	krs := &domain.Krs{
-		Token:       req.GetToken(),
-		IdMahasiswa: int(req.GetIdMahasiswa()),
+		Token:       token,
+		IdMahasiswa: idMahasiswa,
 		MataKuliahs: nil,
 	}
 
-	// loop proto.MataKuliah to convert to domain.MataKuliah
+	// loop proto.MataKuliah to convert to domain.MataKuliah untuk ambil data yg dikirm
 	for _, mataKuliah := range req.GetMataKuliahs() {
 		krs.MataKuliahs = append(krs.MataKuliahs, &domain.MataKuliah{
 			Kode:     mataKuliah.Kode,
@@ -79,8 +99,7 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 		})
 	}
 
-	// parse int32 to int64
-	krs, err := h.service.Create(krs)
+	krs, err = h.service.Create(krs)
 	if err != nil {
 		log.Println(err)
 		return nil, err

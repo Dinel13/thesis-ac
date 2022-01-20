@@ -32,7 +32,7 @@ func StartRestServer() {
 	cs := rest.NewPaymentRestHandlers(service.NewPaymentService(paymentRepo))
 
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    port,
 		Handler: rest.Routes(cs),
 	}
 	err := srv.ListenAndServe()

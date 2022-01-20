@@ -2,16 +2,18 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/dinel13/thesis-ac/krs/proto"
 	"google.golang.org/grpc"
 )
 
-func VerifyPayment(userId int) bool {
+func VerifyPayment(userId int) (bool, error) {
 	conn, err := grpc.Dial("localhost:9092", grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		fmt.Println(err)
+		return false, err
 	}
 
 	defer conn.Close()
@@ -22,9 +24,10 @@ func VerifyPayment(userId int) bool {
 	})
 
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		fmt.Println(err)
+		return false, err
 	}
-	return r.IsPay
+	return r.IsPay, nil
 }
 
 func Pay(userId int, jummlah float64, metode string) bool {
