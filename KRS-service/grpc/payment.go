@@ -4,13 +4,16 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/dinel13/thesis-ac/krs/proto"
 	"google.golang.org/grpc"
 )
 
 func VerifyPayment(userId int) (bool, error) {
-	conn, err := grpc.Dial("localhost:9092", grpc.WithInsecure())
+	ip := os.Getenv("IP")
+
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", ip), grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 		return false, err
@@ -31,7 +34,9 @@ func VerifyPayment(userId int) (bool, error) {
 }
 
 func Pay(userId int, jummlah float64, metode string) bool {
-	conn, err := grpc.Dial("localhost:9092", grpc.WithInsecure())
+	ip := os.Getenv("IP")
+
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", ip), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

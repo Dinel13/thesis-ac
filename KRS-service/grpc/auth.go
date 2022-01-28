@@ -3,13 +3,16 @@ package grpc
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/dinel13/thesis-ac/krs/proto"
 	"google.golang.org/grpc"
 )
 
 func VerifyToken(token string) (bool, error) {
-	conn, err := grpc.Dial("localhost:9091", grpc.WithInsecure())
+	ip := os.Getenv("IP")
+
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", ip), grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 		return false, err

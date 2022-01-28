@@ -2,7 +2,9 @@ package rest
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
 )
 
 type resData struct {
@@ -10,7 +12,9 @@ type resData struct {
 }
 
 func VerifyToken(token string) (bool, error) {
-	request, err := http.NewRequest("POST", "http://localhost:8081/verify", nil)
+	ip := os.Getenv("IP")
+
+	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8081/verify", ip), nil)
 	if err != nil {
 		return false, err
 	}

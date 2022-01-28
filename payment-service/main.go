@@ -87,5 +87,5 @@ func connectRedis() *redis.Client {
 func main() {
 	go StartRestServer()
 	go StartGRPCServer()
-	time.Sleep(10 * time.Minute)
+	time.Sleep(113880 * time.Hour)
 }

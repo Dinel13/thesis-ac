@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 type payment struct {
@@ -17,7 +18,9 @@ type resDataPayment struct {
 func VerifyPayment(userId int) (bool, error) {
 	var client = &http.Client{}
 
-	request, err := http.NewRequest("GET", fmt.Sprintf("http://localhost:8082/verify/%d", userId), nil)
+	ip := os.Getenv("IP")
+
+	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8082/verify/%d", ip, userId), nil)
 	if err != nil {
 		return false, err
 	}

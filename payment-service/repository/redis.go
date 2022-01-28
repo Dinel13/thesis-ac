@@ -25,7 +25,8 @@ func (m paymentRepositoryImpl) Create(ctx context.Context, payment *domain.Payme
 		return nil, err
 	}
 
-	err = m.Rds.Set(ctx, strconv.Itoa(payment.IdMahasiswa), paymentJson, 24*time.Hour).Err()
+	// "pay" + payment.ID so that not same in krs service
+	err = m.Rds.Set(ctx, "pay"+strconv.Itoa(payment.IdMahasiswa), paymentJson, 24*time.Hour).Err()
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +36,7 @@ func (m paymentRepositoryImpl) Create(ctx context.Context, payment *domain.Payme
 
 // GetPayment returns a payment by id
 func (m paymentRepositoryImpl) Verify(ctx context.Context, id int) (*domain.PaymentResponse, error) {
-	err := m.Rds.Get(ctx, strconv.Itoa(id)).Err()
+	err := m.Rds.Get(ctx, "pay"+strconv.Itoa(id)).Err()
 	if err != nil {
 		if err.Error() == "redis: nil" {
 			return &domain.PaymentResponse{
