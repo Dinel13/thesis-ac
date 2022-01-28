@@ -11,7 +11,7 @@ import (
 )
 
 func VerifyPayment(userId int) (bool, error) {
-	ip := os.Getenv("IP")
+	ip := os.Getenv("IP_PAYMENT")
 
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", ip), grpc.WithInsecure())
 	if err != nil {
@@ -34,7 +34,7 @@ func VerifyPayment(userId int) (bool, error) {
 }
 
 func Pay(userId int, jummlah float64, metode string) bool {
-	ip := os.Getenv("IP")
+	ip := os.Getenv("IP_PAYMENT")
 
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", ip), grpc.WithInsecure())
 	if err != nil {

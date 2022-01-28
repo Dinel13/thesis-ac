@@ -18,7 +18,7 @@ type resDataPayment struct {
 func VerifyPayment(userId int) (bool, error) {
 	var client = &http.Client{}
 
-	ip := os.Getenv("IP")
+	ip := os.Getenv("IP_PAYMENT")
 
 	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8082/verify/%d", ip, userId), nil)
 	if err != nil {
@@ -39,27 +39,3 @@ func VerifyPayment(userId int) (bool, error) {
 
 	return dataPayment.Payment.IsPay, nil
 }
-
-// func Pay(userId int, jummlah float64, metode string) bool {
-// 	conn, err := grpc.Dial("localhost:9092", grpc.WithInsecure())
-// 	if err != nil {
-// 		log.Fatalf("did not connect: %v", err)
-// 	}
-
-// 	defer conn.Close()
-// 	c := proto.NewPaymentServiceClient(conn)
-
-// 	r, err := c.Create(context.Background(), &proto.CreatePaymentRequest{
-// 		IdMahasiswa: int32(1),
-// 		Jumlah:      float32(jummlah),
-// 		Metode:      metode,
-// 	},
-// 	)
-
-// 	if err != nil {
-// 		log.Fatalf("could not greet: %v", err)
-// 	}
-
-// 	return r.IsPay
-
-// }

@@ -10,7 +10,7 @@ import (
 )
 
 func VerifyToken(token string) (bool, error) {
-	ip := os.Getenv("IP")
+	ip := os.Getenv("IP_AUTH")
 
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", ip), grpc.WithInsecure())
 	if err != nil {
