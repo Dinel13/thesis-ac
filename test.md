@@ -21,6 +21,9 @@ protoc proto/krs.proto --go_out=plugins=grpc:.
 // create krs
 ../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Create   -d '{"token":       "ffdafa","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 1 -c 1  0.0.0.0:9090
 
+./ghz/ghz --insecure   --proto ./proto/krs/krs.proto   --call  proto.KrsService.Create   -d '{"token":       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDM0NDgxMTcsImV4cCI6MTY0MzUzNDUxN30.sxU6PoCzsezqQ3tM0vu0TvkZWjy2_a2mbfNLE-oiYKk","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 10 -c 1 -O html  172.31.30.48:9090 > report/ghz2.html
+
+
 //kreate payment
 ../ghz/ghz --insecure   --proto ./proto/payment.proto   --call  proto.PaymentService.Create   -d '{"id_mahasiswa":1,"jumlah" : 2345, "metode" : "bri"}' -n 1 -c 1   0.0.0.0:9092
 
