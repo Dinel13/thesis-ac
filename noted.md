@@ -48,3 +48,35 @@ protoc --proto_path=proto --java_out=. proto/krs.proto
 //todo
 delete krs by id juga mendelete pay by id karena pake sama id di redis
 
+// exmaple data
+{
+	"token":       "ffdafa",
+	"id_mahasiswa":1,
+	"mata_kuliahs" : [
+	 	{
+			"kode":     "IF-141",
+			"nama":     "Pemrograman Script",
+			"sks":      3,
+			"dosen":    "Dina",
+			"semester": "Semester 7"
+		},
+		{
+			"kode":     "IF-101",
+			"nama":     "Pemrograman Script",
+			"sks":      3,
+			"dosen":    "Dina",
+			"semester": "Semester 7"
+		}
+	]
+}
+
+
+// install redis
+reddis https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-id
+
+sudo apt update
+sudo apt install redis-server
+sudo nano /etc/redis/redis.conf
+supervised systemd
+sudo systemctl restart redis.service
+sudo systemctl status redis
