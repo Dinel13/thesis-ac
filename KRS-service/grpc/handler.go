@@ -70,6 +70,7 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 		return nil, err
 	}
 	if !isAuth {
+		log.Println("token is not valid")
 		return nil, errors.New("token is not valid")
 	}
 
@@ -79,6 +80,7 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 		return nil, err
 	}
 	if !isPay {
+		log.Println("belum melakukan pembayaran")
 		return nil, errors.New("belum melakukan pembayaran")
 	}
 

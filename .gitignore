@@ -4,3 +4,5 @@ auth-service/node_modules/
 auth-service/node_modules/*
 auth-service/node_modules/**/*
 .vscode
+
+.env

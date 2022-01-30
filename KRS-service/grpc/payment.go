@@ -10,10 +10,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-func VerifyPayment(userId int) (bool, error) {
-	ip := os.Getenv("IP_PAYMENT")
+var urlPay = os.Getenv("URL_PAYMENT")
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", ip), grpc.WithInsecure())
+func VerifyPayment(userId int) (bool, error) {
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 		return false, err
@@ -34,9 +34,7 @@ func VerifyPayment(userId int) (bool, error) {
 }
 
 func Pay(userId int, jummlah float64, metode string) bool {
-	ip := os.Getenv("IP_PAYMENT")
-
-	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", ip), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

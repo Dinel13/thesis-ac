@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 )
 
 type payment struct {
@@ -15,12 +16,13 @@ type resDataPayment struct {
 	Payment payment `json:"payment"`
 }
 
+var urlPay = os.Getenv("URL_PAYMENT")
+
 func VerifyPayment(userId int) (bool, error) {
-	var client = &http.Client{}
-
-	ip := os.Getenv("IP_PAYMENT")
-
-	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8082/verify/%d", ip, userId), nil)
+	var client = &http.Client{
+		Timeout: time.Second * 30,
+	}
+	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8082/verify/%d", urlPay, userId), nil)
 	if err != nil {
 		return false, err
 	}

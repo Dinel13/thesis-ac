@@ -9,12 +9,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-func VerifyToken(token string) (bool, error) {
-	ip := os.Getenv("IP_AUTH")
+var url = os.Getenv("URL_AUTH")
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", ip), grpc.WithInsecure())
+func VerifyToken(token string) (bool, error) {
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", url), grpc.WithInsecure())
 	if err != nil {
-		fmt.Println(err)
 		return false, err
 	}
 
