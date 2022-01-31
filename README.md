@@ -47,13 +47,13 @@ $ KRS-service/main
 #### Use nodejs
 
 ```bash
-$  cd auth-service && npm install && npm start
+$  cd auth-service-nodejs && npm install && npm start
 ```
 
 #### Use golang
 
 ```bash
-$ auth-service/main
+$ auth-service-go/main
 ```
 
 <br>
