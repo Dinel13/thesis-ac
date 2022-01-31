@@ -1,0 +1,24 @@
+{
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "auth service for my acedemic thesis",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/dinel13/thesis-ac"
+  },
+  "author": "salahuddin",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.4.5",
+    "@grpc/proto-loader": "^0.6.7",
+    "express": "^4.17.2",
+    "google-protobuf": "^3.19.0",
+    "ioredis": "^4.28.2",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
