@@ -80,3 +80,14 @@ sudo nano /etc/redis/redis.conf
 supervised systemd
 sudo systemctl restart redis.service
 sudo systemctl status redis
+
+
+DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=ab267e5d46d37d32c7d4b3fad17a0efe DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+
+sudo service datadog-agent status
+
+
+ K6_STATSD_ENABLE_TAGS=true  k6 run --out statsd --tag test_run_id=2 k6/rest/krs/create.js 
+
+
+ tekan g di dashbord untuk lihat metric cpu

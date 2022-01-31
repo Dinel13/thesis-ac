@@ -39,6 +39,7 @@
 	&quot;token&quot;:       &quot;ffdafa&quot;,
 	&quot;id_mahasiswa&quot;:1
 }</stringProp>
+          <boolProp name="GRPCSampler.tlsDisableVerification">false</boolProp>
         </vn.zalopay.benchmark.GRPCSampler>
         <hashTree>
           <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">

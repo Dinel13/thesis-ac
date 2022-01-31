@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "proto/";
+
+message CreatePaymentRequest {
+   int32 id_mahasiswa = 1;
+   float jumlah = 2; 
+   string metode = 3;
+}
+
+message VerifyPaymentRequest {
+   int32 id_mahasiswa = 1;
+}
+
+message PaymentResponse {
+   bool is_pay = 1;
+}
+
+service PaymentService {
+   rpc Create(CreatePaymentRequest) returns (PaymentResponse);
+   rpc Verify(VerifyPaymentRequest) returns (PaymentResponse);
+}
+
