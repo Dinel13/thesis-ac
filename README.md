@@ -1,6 +1,6 @@
-# thesis-ac
+# Thesis-ac
 
-My becholor thesis in [Hasanuddin University](https://unhas.ac.id/v2/) as informatics engineer.
+My bachelor thesis in [Hasanuddin University](https://unhas.ac.id/v2/) as an informatics engineer.
 <br>
 
 ## Table of contents
@@ -10,17 +10,17 @@ My becholor thesis in [Hasanuddin University](https://unhas.ac.id/v2/) as inform
 - [Run service](#run-service)
 - [Run test](#run-test)
 - [Result](#result)
-<br>
+  <br>
 
 ## General info
 
-The main purpose of this thesis is to **Comparing the performance of microservice use gRPC and REST APIs for acedemic management system**. So this project have 3 services:
+The main purpose of this thesis is to **Compare the performance of microservice use gRPC and REST APIs for academic management system**. So this project has 3 services:
 
 1. **KRS Service** use golang.
-2. **Auth Service** use nodejs and also golang.
+2. **Auth Service** uses nodejs and also golang.
 3. **Payment Service** use golang.
 
-To store data in database, I use **Redis**. Then use **k6** to test the performance of each service and use **datadog** to monitor the performance. All the services are deploy in diffent **ec2 aws** as well as the test agent then use private ip to comunicate.
+To store data in the database, I use **Redis**. Then use **k6** to test the performance of each service and use **Datadog** to monitor the performance. All the services are deployed in different **EC2 AWS** as well as the test agent then use private IP to communicate.
 <br>
 
 ## Technologies
@@ -32,7 +32,7 @@ To store data in database, I use **Redis**. Then use **k6** to test the performa
 - **K6**
 - **Datadog 0.36.0**
 - **Linux ubuntu 20.4**
-<br>
+  <br>
 
 ## Run service
 
@@ -41,19 +41,21 @@ To store data in database, I use **Redis**. Then use **k6** to test the performa
 ```bash
 $ KRS-service/main
 ```
-<br>
 
-### 2. **Auth Service** use nodejs.
+### 2. **Auth Service**
 
 #### Use nodejs
+
 ```bash
 $  cd auth-service && npm install && npm start
 ```
 
 #### Use golang
+
 ```bash
 $ auth-service/main
 ```
+
 <br>
 
 ### 3. **Payment Service** use golang.
@@ -61,6 +63,7 @@ $ auth-service/main
 ```bash
 $ payment-service/main
 ```
+
 <br>
 
 ## Run test
@@ -80,15 +83,20 @@ sudo docker run -d \
     -p 8125:8125/udp \
     datadog/agent:latest
 ```
-dont forget to replace *<YOUR_DATADOG_API_KEY>* with your datadog api key
 
+Don't forget to replace _<YOUR_DATADOG_API_KEY>_ with your datadog api key
 <br>
+
 ### 2. Run the test
-   
-   All test file are in k6 directory. for example if you want to test grpc-krs-create in 100 request use the command below.
+
+All test files are in k6 directory. For example, if you want to test grpc-krs-create in 100 request use the command below.
+
 ```bash
  K6_STATSD_ENABLE_TAGS=true  k6 run --out statsd k6/100/grpc/krs/create.js
 ```
+
 <br>
 
 ## Result
+
+Stil develop
