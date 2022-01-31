@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -30,26 +29,6 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 	// GET TOKEN FROM HEADER USE BEARER TOKEN
 	token := r.Header.Get("Authorization")
 
-	isAuth, err := VerifyToken(token)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
-		return
-	}
-	if !isAuth {
-		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
-		return
-	}
-
-	isPay, err := VerifyPayment(id)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
-		return
-	}
-	if !isPay {
-		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
-		return
-	}
-
 	// get the krs from service
 	krs, err := h.service.Read(token, id)
 	if err != nil {
@@ -63,33 +42,13 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 
 // Create is handler for POST /krs to create COurse
 func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
-	token := r.Header.Get("Authorization")
-
-	isAuth, err := VerifyToken(token)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
-		return
-	}
-	if !isAuth {
-		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
-		return
-	}
+	_ = r.Header.Get("Authorization")
 
 	// get the krs from request body
 	krs := &domain.Krs{}
-	err = ReadJson(r, krs)
+	err := ReadJson(r, krs)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
-		return
-	}
-
-	isPay, err := VerifyPayment(krs.IdMahasiswa)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
-		return
-	}
-	if !isPay {
-		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
 		return
 	}
 
@@ -114,27 +73,7 @@ func (h krsHandlers) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := r.Header.Get("Authorization")
-
-	isAuth, err := VerifyToken(token)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
-		return
-	}
-	if !isAuth {
-		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
-		return
-	}
-
-	isPay, err := VerifyPayment(id)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
-		return
-	}
-	if !isPay {
-		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
-		return
-	}
+	_ = r.Header.Get("Authorization")
 
 	// get the krs from request body
 	krs := &domain.Krs{}
@@ -167,25 +106,6 @@ func (h krsHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := r.Header.Get("Authorization")
-	isAuth, err := VerifyToken(token)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
-		return
-	}
-	if !isAuth {
-		WriteJsonError(w, errors.New("token tidak valid"), http.StatusBadRequest)
-		return
-	}
-
-	isPay, err := VerifyPayment(id)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
-		return
-	}
-	if !isPay {
-		WriteJsonError(w, errors.New("belum melakukan pembayaran"), http.StatusBadRequest)
-		return
-	}
 
 	// delete the krs
 	err = h.service.Delete(token, id)
