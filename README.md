@@ -1,6 +1,6 @@
 # Thesis-ac
 
-My bachelor thesis in [Hasanuddin University](https://unhas.ac.id/v2/) as an informatics engineer.
+My bachelor thesis in [Hasanuddin University](https://unhas.ac.id/v2/) as an Informatics Engineer Student.
 <br>
 
 ## Table of contents
@@ -89,10 +89,10 @@ Don't forget to replace _<YOUR_DATADOG_API_KEY>_ with your datadog api key
 
 ### 2. Run the test
 
-All test files are in k6 directory. For example, if you want to test grpc-krs-create in 100 request use the command below.
+All test files are in **test** directory. For example, if you want to test grpc-krs-create in 100 request use the command below.
 
 ```bash
- K6_STATSD_ENABLE_TAGS=true  k6 run --out statsd k6/100/grpc/krs/create.js
+ K6_STATSD_ENABLE_TAGS=true  k6 run --out statsd test/100/grpc/krs/create.js
 ```
 
 <br>
