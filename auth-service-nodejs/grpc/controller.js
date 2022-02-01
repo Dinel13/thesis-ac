@@ -12,7 +12,7 @@ async function Login(_, callback) {
   }
   token = jwt.sign(
     {
-      username,
+      username: userExits.username,
     },
     "secretKey@123",
     { expiresIn: "1d" }
