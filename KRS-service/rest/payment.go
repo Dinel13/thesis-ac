@@ -18,9 +18,9 @@ type resDataPayment struct {
 
 var urlPay = os.Getenv("URL_PAYMENT")
 
-func VerifyPayment(userId int) (bool, error) {
+func verifyPayment(userId int) (bool, error) {
 	var client = &http.Client{
-		Timeout: time.Second * 30,
+		Timeout: time.Duration(15) * time.Second,
 	}
 	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8082/verify/%d", urlPay, userId), nil)
 	if err != nil {

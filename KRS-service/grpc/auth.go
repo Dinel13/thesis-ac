@@ -11,7 +11,7 @@ import (
 
 var url = os.Getenv("URL_AUTH")
 
-func VerifyToken(token string) (bool, error) {
+func verifyToken(token string) (bool, error) {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", url), grpc.WithInsecure())
 	if err != nil {
 		return false, err

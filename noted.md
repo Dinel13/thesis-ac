@@ -91,3 +91,5 @@ sudo service datadog-agent status
 
 
  tekan g di dashbord untuk lihat metric cpu
+
+ k6 run --vus 10  -e IP=127.0.0.1 test/rest/krs/create.js 

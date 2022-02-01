@@ -14,7 +14,7 @@ type resData struct {
 
 var url = os.Getenv("URL_AUTH")
 
-func VerifyToken(token string) (bool, error) {
+func verifyToken(token string) (bool, error) {
 	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8081/verify", url), nil)
 	if err != nil {
 		return false, err
@@ -23,7 +23,7 @@ func VerifyToken(token string) (bool, error) {
 
 	// send req
 	client := &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Duration(15) * time.Second,
 	}
 	response, err := client.Do(request)
 	if err != nil {

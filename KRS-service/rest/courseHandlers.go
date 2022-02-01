@@ -30,7 +30,7 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 	// GET TOKEN FROM HEADER USE BEARER TOKEN
 	token := r.Header.Get("Authorization")
 
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -40,7 +40,7 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isPay, err := VerifyPayment(id)
+	isPay, err := verifyPayment(id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
@@ -65,7 +65,7 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -83,7 +83,7 @@ func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isPay, err := VerifyPayment(krs.IdMahasiswa)
+	isPay, err := verifyPayment(krs.IdMahasiswa)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
@@ -116,7 +116,7 @@ func (h krsHandlers) Update(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Header.Get("Authorization")
 
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -126,7 +126,7 @@ func (h krsHandlers) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isPay, err := VerifyPayment(id)
+	isPay, err := verifyPayment(id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
@@ -167,7 +167,7 @@ func (h krsHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := r.Header.Get("Authorization")
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -177,7 +177,7 @@ func (h krsHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isPay, err := VerifyPayment(id)
+	isPay, err := verifyPayment(id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return

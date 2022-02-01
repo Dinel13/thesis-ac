@@ -23,7 +23,7 @@ func (h grpcHandler) Read(ctx context.Context, req *proto.ReadKRSRequest) (*prot
 	id_mahasiswa := req.GetIdMahasiswa()
 	idMahasiswa := int(id_mahasiswa)
 
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -64,7 +64,7 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 	token := req.GetToken()
 	idMahasiswa := int(req.GetIdMahasiswa())
 
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -74,7 +74,7 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 		return nil, errors.New("token is not valid")
 	}
 
-	isPay, err := VerifyPayment(idMahasiswa)
+	isPay, err := verifyPayment(idMahasiswa)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -130,7 +130,7 @@ func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSReque
 	token := req.GetToken()
 	idMahasiswa := int(req.GetIdMahasiswa())
 
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -139,7 +139,7 @@ func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSReque
 		return nil, errors.New("token is not valid")
 	}
 
-	isPay, err := VerifyPayment(idMahasiswa)
+	isPay, err := verifyPayment(idMahasiswa)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -196,7 +196,7 @@ func (h grpcHandler) Delete(ctx context.Context, req *proto.DeleteKRSRequest) (*
 	token := req.GetToken()
 	idMahasiswa := int(req.GetIdMahasiswa())
 
-	isAuth, err := VerifyToken(token)
+	isAuth, err := verifyToken(token)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -205,7 +205,7 @@ func (h grpcHandler) Delete(ctx context.Context, req *proto.DeleteKRSRequest) (*
 		return nil, errors.New("token is not valid")
 	}
 
-	isPay, err := VerifyPayment(idMahasiswa)
+	isPay, err := verifyPayment(idMahasiswa)
 	if err != nil {
 		log.Println(err)
 		return nil, err
