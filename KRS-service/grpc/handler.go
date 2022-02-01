@@ -17,19 +17,48 @@ type grpcHandler struct {
 	service domain.KrsService
 }
 
+type IsAuth struct {
+	IsAuth bool
+	Err    error
+}
+
+type IsPay struct {
+	IsPay bool
+	Err   error
+}
+
 // read is a method that implements the Read method of the KrsGrpcHandler interface
 func (h grpcHandler) Read(ctx context.Context, req *proto.ReadKRSRequest) (*proto.KRSResponse, error) {
 	token := req.GetToken()
 	id_mahasiswa := req.GetIdMahasiswa()
 	idMahasiswa := int(id_mahasiswa)
 
-	isAuth, err := verifyToken(token)
-	if err != nil {
-		log.Println(err)
-		return nil, err
+	authChanel := make(chan IsAuth)
+	go func() {
+		authChanel <- verifyToken(token)
+	}()
+	resAuth := <-authChanel
+	if resAuth.Err != nil {
+		log.Println(resAuth.Err)
+		return nil, resAuth.Err
 	}
-	if !isAuth {
+	if !resAuth.IsAuth {
+		log.Println("token is not valid")
 		return nil, errors.New("token is not valid")
+	}
+
+	payChanel := make(chan IsPay)
+	go func() {
+		payChanel <- verifyPayment(idMahasiswa)
+	}()
+	resPay := <-payChanel
+	if resPay.Err != nil {
+		log.Println(resPay.Err)
+		return nil, resPay.Err
+	}
+	if !resPay.IsPay {
+		log.Println("belum melakukan pembayaran")
+		return nil, errors.New("belum melakukan pembayaran")
 	}
 
 	// parse int32 to int64
@@ -60,26 +89,32 @@ func (h grpcHandler) Read(ctx context.Context, req *proto.ReadKRSRequest) (*prot
 
 // Create is a method that implements the Create method of the KrsGrpcHandler interface
 func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSRequest) (*proto.KRSResponse, error) {
-
 	token := req.GetToken()
 	idMahasiswa := int(req.GetIdMahasiswa())
-
-	isAuth, err := verifyToken(token)
-	if err != nil {
-		log.Println(err)
-		return nil, err
+	authChanel := make(chan IsAuth)
+	go func() {
+		authChanel <- verifyToken(token)
+	}()
+	resAuth := <-authChanel
+	if resAuth.Err != nil {
+		log.Println(resAuth.Err)
+		return nil, resAuth.Err
 	}
-	if !isAuth {
+	if !resAuth.IsAuth {
 		log.Println("token is not valid")
 		return nil, errors.New("token is not valid")
 	}
 
-	isPay, err := verifyPayment(idMahasiswa)
-	if err != nil {
-		log.Println(err)
-		return nil, err
+	payChanel := make(chan IsPay)
+	go func() {
+		payChanel <- verifyPayment(idMahasiswa)
+	}()
+	resPay := <-payChanel
+	if resPay.Err != nil {
+		log.Println(resPay.Err)
+		return nil, resPay.Err
 	}
-	if !isPay {
+	if !resPay.IsPay {
 		log.Println("belum melakukan pembayaran")
 		return nil, errors.New("belum melakukan pembayaran")
 	}
@@ -100,7 +135,7 @@ func (h grpcHandler) Create(ctx context.Context, req *proto.CreateUpdateKRSReque
 		})
 	}
 
-	krs, err = h.service.Create(krs)
+	krs, err := h.service.Create(krs)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -130,21 +165,31 @@ func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSReque
 	token := req.GetToken()
 	idMahasiswa := int(req.GetIdMahasiswa())
 
-	isAuth, err := verifyToken(token)
-	if err != nil {
-		log.Println(err)
-		return nil, err
+	authChanel := make(chan IsAuth)
+	go func() {
+		authChanel <- verifyToken(token)
+	}()
+	resAuth := <-authChanel
+	if resAuth.Err != nil {
+		log.Println(resAuth.Err)
+		return nil, resAuth.Err
 	}
-	if !isAuth {
+	if !resAuth.IsAuth {
+		log.Println("token is not valid")
 		return nil, errors.New("token is not valid")
 	}
 
-	isPay, err := verifyPayment(idMahasiswa)
-	if err != nil {
-		log.Println(err)
-		return nil, err
+	payChanel := make(chan IsPay)
+	go func() {
+		payChanel <- verifyPayment(idMahasiswa)
+	}()
+	resPay := <-payChanel
+	if resPay.Err != nil {
+		log.Println(resPay.Err)
+		return nil, resPay.Err
 	}
-	if !isPay {
+	if !resPay.IsPay {
+		log.Println("belum melakukan pembayaran")
 		return nil, errors.New("belum melakukan pembayaran")
 	}
 
@@ -166,7 +211,7 @@ func (h grpcHandler) Update(ctx context.Context, req *proto.CreateUpdateKRSReque
 	}
 
 	// parse int32 to int64
-	krs, err = h.service.Update(krs)
+	krs, err := h.service.Update(krs)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -196,25 +241,35 @@ func (h grpcHandler) Delete(ctx context.Context, req *proto.DeleteKRSRequest) (*
 	token := req.GetToken()
 	idMahasiswa := int(req.GetIdMahasiswa())
 
-	isAuth, err := verifyToken(token)
-	if err != nil {
-		log.Println(err)
-		return nil, err
+	authChanel := make(chan IsAuth)
+	go func() {
+		authChanel <- verifyToken(token)
+	}()
+	resAuth := <-authChanel
+	if resAuth.Err != nil {
+		log.Println(resAuth.Err)
+		return nil, resAuth.Err
 	}
-	if !isAuth {
+	if !resAuth.IsAuth {
+		log.Println("token is not valid")
 		return nil, errors.New("token is not valid")
 	}
 
-	isPay, err := verifyPayment(idMahasiswa)
-	if err != nil {
-		log.Println(err)
-		return nil, err
+	payChanel := make(chan IsPay)
+	go func() {
+		payChanel <- verifyPayment(idMahasiswa)
+	}()
+	resPay := <-payChanel
+	if resPay.Err != nil {
+		log.Println(resPay.Err)
+		return nil, resPay.Err
 	}
-	if !isPay {
+	if !resPay.IsPay {
+		log.Println("belum melakukan pembayaran")
 		return nil, errors.New("belum melakukan pembayaran")
 	}
 
-	err = h.service.Delete(token, idMahasiswa)
+	err := h.service.Delete(token, idMahasiswa)
 	if err != nil {
 		log.Println(err)
 		return nil, err

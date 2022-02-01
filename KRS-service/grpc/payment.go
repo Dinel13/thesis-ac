@@ -11,11 +11,14 @@ import (
 
 var urlPay = os.Getenv("URL_PAYMENT")
 
-func verifyPayment(userId int) (bool, error) {
+func verifyPayment(userId int) IsPay {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
-		return false, err
+		return IsPay{
+			IsPay: false,
+			Err:   err,
+		}
 	}
 
 	defer conn.Close()
@@ -27,9 +30,15 @@ func verifyPayment(userId int) (bool, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return false, err
+		return IsPay{
+			IsPay: false,
+			Err:   err,
+		}
 	}
-	return r.IsPay, nil
+	return IsPay{
+		IsPay: r.IsPay,
+		Err:   nil,
+	}
 }
 
 // func pay(userId int, jummlah float64, metode string) bool {

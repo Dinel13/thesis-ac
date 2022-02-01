@@ -11,10 +11,13 @@ import (
 
 var url = os.Getenv("URL_AUTH")
 
-func verifyToken(token string) (bool, error) {
+func verifyToken(token string) IsAuth {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", url), grpc.WithInsecure())
 	if err != nil {
-		return false, err
+		return IsAuth{
+			IsAuth: false,
+			Err:    err,
+		}
 	}
 
 	defer conn.Close()
@@ -26,7 +29,13 @@ func verifyToken(token string) (bool, error) {
 
 	if err != nil {
 		fmt.Println(err)
-		return false, err
+		return IsAuth{
+			IsAuth: false,
+			Err:    err,
+		}
 	}
-	return r.IsAuth, nil
+	return IsAuth{
+		IsAuth: r.IsAuth,
+		Err:    nil,
+	}
 }
