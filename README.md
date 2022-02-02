@@ -39,7 +39,7 @@ To store data in the database, I use **Redis**. Then use **k6** to test the perf
 ### 1. **KRS Service**
 
 ```bash
-$ URL_AUTH=172.31.24.28 PAYMENT_AUTH=172.31.28.177 KRS-service/main
+$ URL_AUTH=172.31.24.28 URL_PAYMENT=172.31.28.177 KRS-service/main
 ```
 
 ### 2. **Auth Service**

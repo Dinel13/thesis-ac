@@ -54,5 +54,6 @@ export default () => {
   };
 
   client.invoke("proto.KrsService/Create", data);
+  client.close();
   sleep(1)
 };
