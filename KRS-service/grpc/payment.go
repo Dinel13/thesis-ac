@@ -41,6 +41,20 @@ func verifyPayment(userId int) IsPay {
 	}
 }
 
+func VerifyPayment(ctx context.Context, c proto.PaymentServiceClient, userId int) (bool, error) {
+	r, err := c.Verify(ctx, &proto.VerifyPaymentRequest{
+		IdMahasiswa: int32(userId),
+	})
+
+	if err != nil {
+		fmt.Println(err)
+		return false, err
+
+	}
+	return r.IsPay, nil
+
+}
+
 // func pay(userId int, jummlah float64, metode string) bool {
 // 	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
 // 	if err != nil {

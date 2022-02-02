@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dinel13/thesis-ac/krs/domain"
@@ -19,6 +20,8 @@ import (
 	mygrpc "github.com/dinel13/thesis-ac/krs/grpc"
 )
 
+var url = os.Getenv("URL_AUTH")
+
 // startRestServer starts the REST server
 func startRestServer() {
 	port := ":8080"
@@ -30,15 +33,36 @@ func startRestServer() {
 
 	// connect to Reddis database
 	dbClient, krsRepo := startRepoRedis()
-	defer dbClient.Close()
 
-	cs := rest.NewCoursRestHandlers(service.NewKrsService(krsRepo))
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", url), grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	connPayment, err := grpc.Dial(fmt.Sprintf("%s:9092", url), grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer func() {
+		dbClient.Close()
+		conn.Close()
+		connPayment.Close()
+	}()
+
+	clientAuth := proto.NewAuthServiceClient(conn)
+	clientPayment := proto.NewPaymentServiceClient(connPayment)
+
+	// cs := rest.NewCoursRestHandlers(service.NewKrsService(krsRepo))
+	ks := service.NewKrsService(krsRepo)
+	cs := rest.NewCoursRestHandlers(ks)
+	csg := rest.NewCoursRestGrpcHandlers(clientAuth, clientPayment, ks)
 
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: rest.Routes(cs),
+		Handler: rest.Routes(cs, csg),
 	}
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}

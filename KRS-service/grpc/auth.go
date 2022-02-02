@@ -39,3 +39,16 @@ func verifyToken(token string) IsAuth {
 		Err:    nil,
 	}
 }
+
+func VerifyToken(ctx context.Context, c proto.AuthServiceClient, token string) (bool, error) {
+	token = token[7:]
+	r, err := c.Verify(ctx, &proto.VerifyRequest{
+		Token: token,
+	})
+
+	if err != nil {
+		fmt.Println(err, "ver")
+		return false, err
+	}
+	return r.IsAuth, nil
+}
