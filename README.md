@@ -39,7 +39,7 @@ To store data in the database, I use **Redis**. Then use **k6** to test the perf
 ### 1. **KRS Service**
 
 ```bash
-$ KRS-service/main
+$ URL_AUTH=172.31.24.28 PAYMENT_AUTH=172.31.28.177 KRS-service/main
 ```
 
 ### 2. **Auth Service**
@@ -89,10 +89,10 @@ Don't forget to replace _<YOUR_DATADOG_API_KEY>_ with your datadog api key
 
 ### 2. Run the test
 
-All test files are in **test** directory. For example, if you want to test grpc-krs-create in 100 request use the command below.
+All test files are in **test** directory. For example, if you want to test grpc-krs-create in 200vurtual user in 5 second use the command below.
 
 ```bash
- K6_STATSD_ENABLE_TAGS=true  k6 run -e IP=127.0.0.1 --out statsd test/100/grpc/krs/create.js
+ K6_STATSD_ENABLE_TAGS=true  k6 run --vus 200 --duration 5s -e IP=127.0.0.1 test/grpc/krs/create.js
 ```
 
 <br>
