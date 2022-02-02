@@ -1,6 +1,19 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
 
+--no-connection-reuse 
+
+When running the test, you can use iftop in the terminal to view in real-time the amount of network traffic generated. If the traffic is constant at 1Gbit/s, your test is probably limited by the network card. Consider upgrading to a different EC2 instance.
+
+const res = http.get('https://test.k6.io');
+const checkRes = check(res, {
+  'Homepage body size is 11026 bytes': (r) => r.body && r.body.length === 11026,
+});
+COPY
+Code like this runs fine when the system under test (SUT) is not overloaded and returns proper responses. When the system starts to fail, the above check won't work as expected.
+
+The issue here is that the check assumes that there's always a body in a response. The r.body may not exist if server is failing. In such case, the check itself won't work as expected and error similar to the one below will be returned:
+
 // default option tidak pelru ketik di terminal
 export const options = {
    vus: 10,
