@@ -20,7 +20,8 @@ import (
 	mygrpc "github.com/dinel13/thesis-ac/krs/grpc"
 )
 
-var url = os.Getenv("URL_AUTH")
+var urlAuth = os.Getenv("URL_AUTH")
+var urlPay = os.Getenv("URL_PAYMENT")
 
 // startRestServer starts the REST server
 func startRestServer() {
@@ -34,12 +35,12 @@ func startRestServer() {
 	// connect to Reddis database
 	dbClient, krsRepo := startRepoRedis()
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", url), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", urlAuth), grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	connPayment, err := grpc.Dial(fmt.Sprintf("%s:9092", url), grpc.WithInsecure())
+	connPayment, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -79,8 +80,29 @@ func startGRPCServer() {
 
 	// connect to Reddis database
 	dbClient, krsRepo := startRepoRedis()
-	defer dbClient.Close()
-	cs := mygrpc.NewGrpcHandler(service.NewKrsService(krsRepo))
+
+	connAuth, err := grpc.Dial(fmt.Sprintf("%s:9091", urlAuth), grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	connPayment, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer func() {
+		dbClient.Close()
+		connAuth.Close()
+		connPayment.Close()
+	}()
+
+	clientAuth := proto.NewAuthServiceClient(connAuth)
+	clientPayment := proto.NewPaymentServiceClient(connPayment)
+
+	ks := service.NewKrsService(krsRepo)
+
+	cs := mygrpc.NewGrpcHandler(clientAuth, clientPayment, ks)
 
 	// create gRPC server
 	lis, err := net.Listen("tcp", port)

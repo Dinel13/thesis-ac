@@ -3,43 +3,51 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/dinel13/thesis-ac/krs/proto"
-	"google.golang.org/grpc"
 )
 
-var urlPay = os.Getenv("URL_PAYMENT")
+// var urlPay = os.Getenv("URL_PAYMENT")
 
-func verifyPayment(userId int) IsPay {
-	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
-	if err != nil {
-		fmt.Println(err)
-		return IsPay{
-			IsPay: false,
-			Err:   err,
-		}
-	}
+// type IsPay struct {
+// 	IsPay bool
+// 	Err   error
+// }
 
-	defer conn.Close()
-	c := proto.NewPaymentServiceClient(conn)
+// type IsAuth struct {
+// 	IsAuth bool
+// 	Err    error
+// }
 
-	r, err := c.Verify(context.Background(), &proto.VerifyPaymentRequest{
-		IdMahasiswa: int32(userId),
-	})
+// func verifyPayment(userId int) IsPay {
+// 	conn, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return IsPay{
+// 			IsPay: false,
+// 			Err:   err,
+// 		}
+// 	}
 
-	if err != nil {
-		fmt.Println(err)
-		return IsPay{
-			IsPay: false,
-			Err:   err,
-		}
-	}
-	return IsPay{
-		IsPay: r.IsPay,
-		Err:   nil,
-	}
-}
+// 	defer conn.Close()
+// 	c := proto.NewPaymentServiceClient(conn)
+
+// 	r, err := c.Verify(context.Background(), &proto.VerifyPaymentRequest{
+// 		IdMahasiswa: int32(userId),
+// 	})
+
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return IsPay{
+// 			IsPay: false,
+// 			Err:   err,
+// 		}
+// 	}
+// 	return IsPay{
+// 		IsPay: r.IsPay,
+// 		Err:   nil,
+// 	}
+// }
 
 func VerifyPayment(ctx context.Context, c proto.PaymentServiceClient, userId int) (bool, error) {
 	r, err := c.Verify(ctx, &proto.VerifyPaymentRequest{

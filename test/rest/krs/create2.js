@@ -1,17 +1,14 @@
 import { sleep } from "k6";
+import http from "k6/http";
 import grpc from "k6/net/grpc";
 
 const client = new grpc.Client();
 client.load(["./"], "krs.proto");
 
-export default () => {
-  client.connect(`${__ENV.IP}:9090`, {
-    plaintext: true,
-  });
 
-  client.invoke("proto.KrsService/Create", {
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDM2NzkzNzd9.CrsUKuqK9EEvwWeCVfexHGXi0sN-fauX5wmw1WnNtY8",
+export default function () {
+  const url = `http://${__ENV.IP}:8080/v2/krs`;
+  const payload = JSON.stringify({
     id_mahasiswa: 1,
     mata_kuliahs: [
       {
@@ -51,6 +48,15 @@ export default () => {
       },
     ],
   });
-  client.close();
+
+  const params = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDM2NzkzNzd9.CrsUKuqK9EEvwWeCVfexHGXi0sN-fauX5wmw1WnNtY8",
+    },
+  };
+
+  http.post(url, payload, params);
   sleep(1);
-};
+}
