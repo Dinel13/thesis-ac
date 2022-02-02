@@ -3,15 +3,8 @@ import grpc from "k6/net/grpc";
 const client = new grpc.Client();
 client.load(["./"], "auth.proto");
 
-export const options = {
-  stages: [
-    { duration: "1s", target: 100 },
-    { duration: "1s", target: 100 },
-  ],
-};
-
 export default () => {
-  client.connect("127.0.0.1:9092", {
+  client.connect(`${__ENV.IP}:9092`, {
     plaintext: true,
   });
 
@@ -20,4 +13,6 @@ export default () => {
   };
 
   client.invoke("proto.PaymentService/Verify", data);
+
+  sleep(1)
 };

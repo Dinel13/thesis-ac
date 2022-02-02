@@ -4,7 +4,7 @@ const client = new grpc.Client();
 client.load(["./"], "auth.proto");
 
 export default () => {
-  client.connect("127.0.0.1:9091", {
+  client.connect(`${__ENV.IP}:9091`, {
     plaintext: true,
   });
 
@@ -13,5 +13,5 @@ export default () => {
   };
   
   client.invoke("proto.AuthService/Verify", data);
-  sleep(0.2);
+  sleep(1);
 };

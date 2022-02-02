@@ -1,9 +1,5 @@
 import { sleep } from "k6";
 import http from "k6/http";
-import grpc from "k6/net/grpc";
-
-const client = new grpc.Client();
-client.load(["./"], "auth.proto");
 
 export default function () {
   const url = `http://${__ENV.IP}:8081/login`;
@@ -19,6 +15,6 @@ export default function () {
   };
 
   const res = http.post(url, payload, params);
-  console.log(res.body);
-  sleep(0.2);
+  // console.log(res.status);
+  sleep(1);
 }

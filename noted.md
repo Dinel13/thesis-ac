@@ -1,3 +1,11 @@
+protoc --proto_path=. --python_out=. auth.proto
+
+// generate 2 file py
+virtualenv -p python3 env
+source env/bin/activate
+pip install grpcio grpcio-tools
+python -m grpc_tools.protoc --proto_path=. ./auth.proto --python_out=. --grpc_python_out=.
+
 ab -k -c 900 -n 80000 127.0.0.1:8080/krs/1
 
 -c: ("Concurrency"). Indicates how many clients (people/users) will be hitting the site at the same time. While ab runs, there will be -c clients hitting the site. This is what actually decides the amount of stress your site will suffer during the benchmark.

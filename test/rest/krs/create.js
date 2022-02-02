@@ -53,5 +53,5 @@ export default function () {
   };
 
   http.post(url, payload, params);
-  sleep(0.2);
+  sleep(1);
 }

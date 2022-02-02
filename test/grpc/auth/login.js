@@ -15,6 +15,6 @@ export default () => {
   };
 
   const res = client.invoke("proto.AuthService/Login", data);
-  // console.log(JSON.stringify(res.message));
-  sleep(0.2);
+  // console.log(JSON.stringify(res.status));
+  sleep(1);
 };

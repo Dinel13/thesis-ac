@@ -92,7 +92,7 @@ Don't forget to replace _<YOUR_DATADOG_API_KEY>_ with your datadog api key
 All test files are in **test** directory. For example, if you want to test grpc-krs-create in 100 request use the command below.
 
 ```bash
- K6_STATSD_ENABLE_TAGS=true  k6 run --out statsd test/100/grpc/krs/create.js
+ K6_STATSD_ENABLE_TAGS=true  k6 run -e IP=127.0.0.1 --out statsd test/100/grpc/krs/create.js
 ```
 
 <br>

@@ -1,14 +1,8 @@
+import { sleep } from "k6";
 import http from "k6/http";
 
-export const options = {
-  stages: [
-    { duration: "1s", target: 100 }, 
-    { duration: "1s", target: 100 }, 
-  ],
-};
-
 export default function () {
-  const url = "http://127.0.0.1:8080/krs/1";
+  const url = `http://${__ENV.IP}:8080/krs/1`;
   const payload = JSON.stringify({});
 
   const params = {
@@ -20,4 +14,6 @@ export default function () {
   };
 
   http.del(url, payload, params);
+
+  sleep(1)
 }

@@ -21,37 +21,36 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    let user = await redis.get(username);
-    if (!user) {
-      return res.status(400).json({
-        message: "Username tidak ditemukan",
+    try {
+      const { username, password } = req.body;
+      let user = await redis.get(username);
+      if (!user) {
+        return res.status(400).json({
+          message: "Username tidak ditemukan",
+        });
+      }
+      user = JSON.parse(user);
+      if (password !== user.password) {
+        return res.status(400).json({
+          message: "Password salah",
+        });
+      }
+      token = jwt.sign(
+        {
+          username,
+        },
+        "secretKey@123",
+        { expiresIn: "1d" }
+      );
+      res.status(200).json({
+        token,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: error,
       });
     }
-    user = JSON.parse(user);
-    if (password !== user.password) {
-      return res.status(400).json({
-        message: "Password salah",
-      });
-    }
-    token = jwt.sign(
-      {
-        username,
-      },
-      "secretKey@123",
-      { expiresIn: "1d" }
-    );
-    res.status(200).json({
-      token,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: error,
-    });
-  }
 };
 
 const verify = async (req, res) => {
