@@ -1,10 +1,5 @@
 import { sleep } from "k6";
 import http from "k6/http";
-import grpc from "k6/net/grpc";
-
-const client = new grpc.Client();
-client.load(["./"], "krs.proto");
-
 
 export default function () {
   const url = `http://${__ENV.IP}:8080/krs`;

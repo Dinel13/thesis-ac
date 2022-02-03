@@ -1,5 +1,7 @@
 protoc --proto_path=. --python_out=. auth.proto
 
+URL_AUTH=127.0.0.1 PAYMENT_AUTH=127.0.0.1 go run main.go 
+
 // generate 2 file py
 virtualenv -p python3 env
 source env/bin/activate
