@@ -1,3 +1,4 @@
+import { sleep } from "k6";
 import http from "k6/http";
 
 export default function () {
@@ -15,4 +16,5 @@ export default function () {
 
   const res = http.post(url, payload, params);
   console.log(res.body);
+  sleep(1)
 }

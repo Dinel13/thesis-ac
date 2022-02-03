@@ -23,6 +23,9 @@ The main purpose of this thesis is to **Compare the performance of microservice 
 To store data in the database, I use **Redis**. Then use **k6** to test the performance of each service and use **Datadog** to monitor the performance. All the services are deployed in different **EC2 AWS** as well as the test agent then use private IP to communicate.
 <br>
 
+**System design**
+![sistem design](https://github.com/dinel13/thesis-ac/blob/main/design.jpg?raw=true)
+
 ## Technologies
 
 - **Golang 1.17.1**
@@ -89,14 +92,27 @@ Don't forget to replace _<YOUR_DATADOG_API_KEY>_ with your datadog api key
 
 ### 2. Run the test
 
-All test files are in **test** directory. For example, if you want to test grpc-krs-create in 200vurtual user in 5 second use the command below.
+All test files are in **test** directory. For example, if you want to test grpc-krs-create in 100 vurtual user in 30 second use the command below.
 
 ```bash
- K6_STATSD_ENABLE_TAGS=true  k6 run --vus 200 --duration 5s -e IP=127.0.0.1 test/grpc/krs/create.js
+ K6_STATSD_ENABLE_TAGS=true k6 run --vus 100 --durations 30s --out statsd --tag test_run_id=1 -e IP=172.31.30.48 test/grpc/krs/create.js
+
 ```
 
 <br>
 
 ## Result
 
-Stil develop
+**Grpc**
+![grpc](https://github.com/dinel13/thesis-ac/blob/main/100.png?raw=true)
+<br>
+
+**Rest**
+![rest](https://github.com/dinel13/thesis-ac/blob/main/100r.png?raw=true)
+<br>
+
+**Datadog**
+![datadog](https://github.com/dinel13/thesis-ac/blob/main/datadog.png?raw=true)
+
+
+

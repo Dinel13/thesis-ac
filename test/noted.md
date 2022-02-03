@@ -51,3 +51,5 @@ sudo docker run -d \
 sudo docker stop newrelic-statsd 
 sudo docker rm newrelic-statsd 
 sudo docker logs newrelic-statsd 
+
+k6 run --vus 1 --duration 1s -e IP=172.31.24.28 test/rest/auth/signup.js
