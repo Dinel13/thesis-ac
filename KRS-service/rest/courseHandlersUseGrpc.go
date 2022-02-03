@@ -34,6 +34,7 @@ func (h krsGrpcHandlers) Read(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 	ctx := r.Context()
 
+	token = token[7:]
 	isAuth, err := grpc.VerifyToken(ctx, h.clientAuth, token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
@@ -68,6 +69,8 @@ func (h krsGrpcHandlers) Read(w http.ResponseWriter, r *http.Request) {
 // Create is handler for POST /krs to create COurse
 func (h krsGrpcHandlers) Create(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
+	token = token[7:]
+
 	ctx := r.Context()
 	isAuth, err := grpc.VerifyToken(ctx, h.clientAuth, token)
 	if err != nil {
@@ -120,6 +123,7 @@ func (h krsGrpcHandlers) Update(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Header.Get("Authorization")
 	ctx := r.Context()
+	token = token[7:]
 
 	isAuth, err := grpc.VerifyToken(ctx, h.clientAuth, token)
 	if err != nil {
@@ -173,6 +177,7 @@ func (h krsGrpcHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Header.Get("Authorization")
 	ctx := r.Context()
+	token = token[7:]
 
 	isAuth, err := grpc.VerifyToken(ctx, h.clientAuth, token)
 	if err != nil {
