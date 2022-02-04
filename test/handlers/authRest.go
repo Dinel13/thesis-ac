@@ -25,7 +25,7 @@ func (a *AuthRestHandlers) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJson(w, http.StatusOK, resBody.Token, "auth")
+	WriteJson(w, http.StatusOK, resBody.Token, "token")
 
 }
 
