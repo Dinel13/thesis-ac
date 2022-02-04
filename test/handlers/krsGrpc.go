@@ -5,18 +5,17 @@ import (
 	"strconv"
 
 	"github.com/dinel13/thesis-ac/test/domain"
-	"github.com/dinel13/thesis-ac/test/rest"
 	"github.com/julienschmidt/httprouter"
 )
 
-func NewGrpcKrsHandlers(ip string) domain.KrsHandlers {
+func NewGrpcKrsHandlers(kgc domain.KrsGrpcClients) domain.KrsHandlers {
 	return &grpcKrs{
-		ip: ip,
+		kgc,
 	}
 }
 
 type grpcKrs struct {
-	ip string
+	kgc domain.KrsGrpcClients
 }
 
 func (k *grpcKrs) Read(w http.ResponseWriter, r *http.Request) {
@@ -27,9 +26,9 @@ func (k *grpcKrs) Read(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := r.Header.Get("Authorization")
+	token := r.Header.Get("Authorization")[7:]
 
-	krs, err := rest.ReadKrs(k.ip, token, id)
+	krs, err := k.kgc.ReadKrs(id, token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -45,9 +44,9 @@ func (k *grpcKrs) Create(w http.ResponseWriter, r *http.Request) {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
-	token := r.Header.Get("Authorization")
+	token := r.Header.Get("Authorization")[7:]
 
-	createdkrs, err := rest.CreateKrs(krs, k.ip, token)
+	createdkrs, err := k.kgc.CreateKrs(krs, token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -70,9 +69,9 @@ func (k *grpcKrs) Update(w http.ResponseWriter, r *http.Request) {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
-	token := r.Header.Get("Authorization")
+	token := r.Header.Get("Authorization")[7:]
 
-	updatedkrs, err := rest.UpdateKrs(krs, k.ip, token, id)
+	updatedkrs, err := k.kgc.UpdateKrs(krs, id, token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -93,9 +92,9 @@ func (k *grpcKrs) Delete(w http.ResponseWriter, r *http.Request) {
 		WriteJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
-	token := r.Header.Get("Authorization")
+	token := r.Header.Get("Authorization")[7:]
 
-	err = rest.DeleteKrs(k.ip, token, id)
+	err = k.kgc.DeleteKrs(id, token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return

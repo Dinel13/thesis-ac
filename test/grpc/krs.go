@@ -1,122 +1,147 @@
 package rest
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"time"
+	"context"
+	"errors"
 
 	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/proto"
 )
 
-func ReadKrs(ip, token string, id int) (*domain.Krs, error) {
-	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
-	if err != nil {
-		return nil, err
-	}
-	request.Header.Add("Authorization", token)
-
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
-	response, err := client.Do(request)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	defer response.Body.Close()
-
-	krs := &domain.Krs{}
-	err = json.NewDecoder(response.Body).Decode(krs)
-	if err != nil {
-		return nil, err
-	}
-
-	return krs, nil
+type krsGrpcClient struct {
+	s proto.KrsServiceClient
 }
 
-func CreateKrs(krs *domain.Krs, ip, token string) (*domain.Krs, error) {
-	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8080/krs", ip), nil)
-	if err != nil {
-		return nil, err
-	}
-	request.Header.Add("Authorization", token)
-
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
-	response, err := client.Do(request)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	defer response.Body.Close()
-
-	createdKrs := &domain.Krs{}
-	err = json.NewDecoder(response.Body).Decode(createdKrs)
-	if err != nil {
-		return nil, err
-	}
-
-	return createdKrs, nil
+func NewKrsGrpcClient(s proto.KrsServiceClient) domain.KrsGrpcClients {
+	return &krsGrpcClient{s: s}
 }
 
-func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.Krs, error) {
-	request, err := http.NewRequest("PUT", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
-	if err != nil {
-		return nil, err
-	}
-	request.Header.Add("Authorization", token)
+func (k *krsGrpcClient) ReadKrs(id int, token string) (*domain.Krs, error) {
+	r, err := k.s.Read(context.Background(), &proto.ReadKRSRequest{
+		Token:       token,
+		IdMahasiswa: int32(id),
+	})
 
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
-	response, err := client.Do(request)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	defer response.Body.Close()
-
-	updatedKrs := &domain.Krs{}
-	err = json.NewDecoder(response.Body).Decode(updatedKrs)
 	if err != nil {
 		return nil, err
 	}
 
-	return updatedKrs, nil
+	// get krs
+	var mataKuliahs []*domain.MataKuliah
+	for _, mataKuliah := range r.GetMataKuliahs() {
+		mataKuliahs = append(mataKuliahs, &domain.MataKuliah{
+			Kode:     mataKuliah.GetKode(),
+			Nama:     mataKuliah.GetNama(),
+			Sks:      int(mataKuliah.GetSks()),
+			Dosen:    mataKuliah.GetDosen(),
+			Semester: mataKuliah.GetSemester(),
+		})
+	}
+
+	return &domain.Krs{
+		IdMahasiswa: id,
+		MataKuliahs: mataKuliahs,
+	}, nil
+
 }
 
-func DeleteKrs(ip, token string, id int) error {
-	request, err := http.NewRequest("DELETE", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
+func (k *krsGrpcClient) CreateKrs(krs *domain.Krs, token string) (*domain.Krs, error) {
+	// convert to proto
+	var mataKuliahsProto []*proto.MataKuliah
+	for _, mataKuliah := range krs.MataKuliahs {
+		mataKuliahsProto = append(mataKuliahsProto, &proto.MataKuliah{
+			Kode:     mataKuliah.Kode,
+			Nama:     mataKuliah.Nama,
+			Sks:      int32(mataKuliah.Sks),
+			Dosen:    mataKuliah.Dosen,
+			Semester: mataKuliah.Semester,
+		})
+	}
+
+	r, err := k.s.Create(context.Background(), &proto.CreateUpdateKRSRequest{
+		Token:       "ffdafa",
+		IdMahasiswa: int32(krs.IdMahasiswa),
+		MataKuliahs: mataKuliahsProto,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// get krs
+	var mataKuliahs []*domain.MataKuliah
+	for _, mataKuliah := range r.GetMataKuliahs() {
+		mataKuliahs = append(mataKuliahs, &domain.MataKuliah{
+			Kode:     mataKuliah.GetKode(),
+			Nama:     mataKuliah.GetNama(),
+			Sks:      int(mataKuliah.GetSks()),
+			Dosen:    mataKuliah.GetDosen(),
+			Semester: mataKuliah.GetSemester(),
+		})
+	}
+
+	return &domain.Krs{
+		IdMahasiswa: krs.IdMahasiswa,
+		MataKuliahs: mataKuliahs,
+	}, nil
+}
+
+func (k *krsGrpcClient) UpdateKrs(krs *domain.Krs, id int, token string) (*domain.Krs, error) {
+	// convert to proto
+	var mataKuliahsProto []*proto.MataKuliah
+	for _, mataKuliah := range krs.MataKuliahs {
+		mataKuliahsProto = append(mataKuliahsProto, &proto.MataKuliah{
+			Kode:     mataKuliah.Kode,
+			Nama:     mataKuliah.Nama,
+			Sks:      int32(mataKuliah.Sks),
+			Dosen:    mataKuliah.Dosen,
+			Semester: mataKuliah.Semester,
+		})
+	}
+
+	r, err := k.s.Create(context.Background(), &proto.CreateUpdateKRSRequest{
+		Token:       "ffdafa",
+		IdMahasiswa: int32(id),
+		MataKuliahs: mataKuliahsProto,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// get krs
+	var mataKuliahs []*domain.MataKuliah
+	for _, mataKuliah := range r.GetMataKuliahs() {
+		mataKuliahs = append(mataKuliahs, &domain.MataKuliah{
+			Kode:     mataKuliah.GetKode(),
+			Nama:     mataKuliah.GetNama(),
+			Sks:      int(mataKuliah.GetSks()),
+			Dosen:    mataKuliah.GetDosen(),
+			Semester: mataKuliah.GetSemester(),
+		})
+	}
+
+	return &domain.Krs{
+		IdMahasiswa: id,
+		MataKuliahs: mataKuliahs,
+	}, nil
+}
+
+func (k *krsGrpcClient) DeleteKrs(id int, token string) error {
+	r, err := k.s.Delete(context.Background(), &proto.DeleteKRSRequest{
+		Token:       token,
+		IdMahasiswa: int32(id),
+	})
+
 	if err != nil {
 		return err
 	}
-	request.Header.Add("Authorization", token)
 
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
-	response, err := client.Do(request)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	defer response.Body.Close()
-
-	delKrs := &domain.ResKrsDelete{}
-	err = json.NewDecoder(response.Body).Decode(delKrs)
-	if err != nil {
-		return err
+	status := r.GetStatus()
+	if status != "success" {
+		return errors.New("failed to delete krs")
 	}
 
 	return nil
+
 }

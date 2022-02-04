@@ -27,3 +27,10 @@ type KrsHandlers interface {
 	Update(http.ResponseWriter, *http.Request)
 	Delete(http.ResponseWriter, *http.Request)
 }
+
+type KrsGrpcClients interface {
+	ReadKrs(id int, token string) (*Krs, error)
+	CreateKrs(krs *Krs, token string) (*Krs, error)
+	UpdateKrs(krs *Krs, id int, token string) (*Krs, error)
+	DeleteKrs(id int, token string) error
+}
