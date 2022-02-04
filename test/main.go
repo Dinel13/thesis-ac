@@ -23,29 +23,39 @@ var ipAuth string = os.Getenv("IP_AUTH")
 func main() {
 
 	// krs
-	conn, err := grpc.Dial(fmt.Sprintf("%s:9090", ipKrs), grpc.WithTransportCredentials(
+	connKrs, err := grpc.Dial(fmt.Sprintf("%s:9090", ipKrs), grpc.WithTransportCredentials(
 		insecure.NewCredentials(),
 	))
 	if err != nil {
 		log.Fatalf("can't connect grpc: %v", err)
 	}
 
-	gksc := proto.NewKrsServiceClient(conn) // create grpc client from proto
-	gkc := mygrpc.NewKrsGrpcClient(gksc)    // create grpc client from grpc to other services
+	gksc := proto.NewKrsServiceClient(connKrs) // create grpc client from proto
+	gkc := mygrpc.NewKrsGrpcClient(gksc)       // create grpc client from grpc to other services
 
 	rkh := handlers.NewRestKrsHandlers(ipKrs)
 	gkh := handlers.NewGrpcKrsHandlers(gkc)
 
 	// auth
+	connAuth, err := grpc.Dial(fmt.Sprintf("%s:9091", ipAuth), grpc.WithTransportCredentials(
+		insecure.NewCredentials(),
+	))
+	if err != nil {
+		log.Fatalf("can't connect grpc: %v", err)
+	}
+
+	gasc := proto.NewAuthServiceClient(connAuth)
+	gac := mygrpc.NewAuthGrpcClient(gasc)
+	guh := handlers.NewGrpcAuthHandlers(gac)
 	ruh := handlers.NewRestAuthHandlers(ipAuth)
 
 	defer func() {
-		conn.Close()
+		connKrs.Close()
 	}()
 
 	server := http.Server{
 		Addr:    port,
-		Handler: routes(rkh, gkh, ruh),
+		Handler: routes(rkh, gkh, ruh, guh),
 	}
 
 	fmt.Println("Server is running on port", port)
@@ -58,7 +68,7 @@ func main() {
 	}
 }
 
-func routes(rkh, gkh domain.KrsHandlers, ruh domain.AuthHandlers) http.Handler {
+func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers) http.Handler {
 	r := httprouter.New()
 
 	// krs rest
@@ -75,7 +85,11 @@ func routes(rkh, gkh domain.KrsHandlers, ruh domain.AuthHandlers) http.Handler {
 
 	// auth rest
 	r.HandlerFunc(http.MethodPost, "/rest/auth/login", ruh.Login)
-	r.HandlerFunc(http.MethodPost, "/rest/auth/verify", ruh.Verify)
+	r.HandlerFunc(http.MethodPost, "/rest/auth/verify", ruh.VerifyToken)
+
+	// auth grpc
+	r.HandlerFunc(http.MethodPost, "/grpc/auth/login", guh.Login)
+	r.HandlerFunc(http.MethodPost, "/grpc/auth/verify", guh.VerifyToken)
 
 	return r
 }
