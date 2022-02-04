@@ -18,13 +18,16 @@ var ipKrs string = os.Getenv("IP_KRS")
 func main() {
 
 	rkh := handlers.NewRestKrsHandlers(ipKrs)
+	gkh := handlers.NewGrpcKrsHandlers(ipKrs)
 
 	server := http.Server{
 		Addr:    port,
-		Handler: routes(rkh),
+		Handler: routes(rkh, gkh),
 	}
 
 	fmt.Println("Server is running on port", port)
+	fmt.Println("Endpoint for rest : /rest")
+	fmt.Println("Endpoint for grpc : /grpc")
 	// http.ListenAndServe(port, router)
 	err := server.ListenAndServe()
 	if err != nil {
@@ -32,20 +35,20 @@ func main() {
 	}
 }
 
-func routes(rkh domain.KrsRestHandlers) http.Handler {
+func routes(rkh, gkh domain.KrsHandlers) http.Handler {
 	r := httprouter.New()
 
 	// krs rest
-	r.HandlerFunc(http.MethodGet, "/krs/:id", rkh.KrsRestRead)
-	r.HandlerFunc(http.MethodPost, "/krs", rkh.KrsRestCreate)
-	r.HandlerFunc(http.MethodPut, "/krs/:id", rkh.KrsRestUpdate)
-	r.HandlerFunc(http.MethodDelete, "/krs/:id", rkh.KrsRestDelete)
+	r.HandlerFunc(http.MethodGet, "/rest/krs/:id", rkh.Read)
+	r.HandlerFunc(http.MethodPost, "/rest/krs", rkh.Create)
+	r.HandlerFunc(http.MethodPut, "/rest/krs/:id", rkh.Update)
+	r.HandlerFunc(http.MethodDelete, "/rest/krs/:id", rkh.Delete)
 
 	// krs grpc
-	r.HandlerFunc(http.MethodGet, "/v2/krs/:id", chg.Read)
-	r.HandlerFunc(http.MethodPost, "/v2/krs", chg.Create)
-	r.HandlerFunc(http.MethodPut, "/v2/krs/:id", chg.Update)
-	r.HandlerFunc(http.MethodDelete, "/v2/krs/:id", chg.Delete)
+	r.HandlerFunc(http.MethodGet, "/grpc/krs/:id", rkh.Read)
+	r.HandlerFunc(http.MethodPost, "/grpc/krs", rkh.Create)
+	r.HandlerFunc(http.MethodPut, "/grpc/krs/:id", rkh.Update)
+	r.HandlerFunc(http.MethodDelete, "/grpc/krs/:id", rkh.Delete)
 
 	return r
 }

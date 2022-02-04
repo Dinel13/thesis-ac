@@ -9,17 +9,17 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func NewRestKrsHandlers(ip string) domain.KrsRestHandlers {
-	return RestKrs{
+func NewGrpcKrsHandlers(ip string) domain.KrsHandlers {
+	return &grpcKrs{
 		ip: ip,
 	}
 }
 
-type RestKrs struct {
+type grpcKrs struct {
 	ip string
 }
 
-func (k *RestKrs) RestKrsRead(w http.ResponseWriter, r *http.Request) {
+func (k *grpcKrs) Read(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
@@ -38,7 +38,7 @@ func (k *RestKrs) RestKrsRead(w http.ResponseWriter, r *http.Request) {
 	WriteJson(w, http.StatusOK, krs, "krs")
 }
 
-func (k *RestKrs) RestKrsCreate(w http.ResponseWriter, r *http.Request) {
+func (k *grpcKrs) Create(w http.ResponseWriter, r *http.Request) {
 	krs := &domain.Krs{}
 	err := ReadJson(r, krs)
 	if err != nil {
@@ -56,7 +56,7 @@ func (k *RestKrs) RestKrsCreate(w http.ResponseWriter, r *http.Request) {
 	WriteJson(w, http.StatusOK, createdkrs, "krs")
 }
 
-func (k *RestKrs) RestKrsUpdate(w http.ResponseWriter, r *http.Request) {
+func (k *grpcKrs) Update(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
@@ -81,7 +81,7 @@ func (k *RestKrs) RestKrsUpdate(w http.ResponseWriter, r *http.Request) {
 	WriteJson(w, http.StatusOK, updatedkrs, "krs")
 }
 
-func (k *RestKrs) RestKrsDelete(w http.ResponseWriter, r *http.Request) {
+func (k *grpcKrs) Delete(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {

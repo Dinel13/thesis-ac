@@ -21,9 +21,9 @@ type ResKrsDelete struct {
 	Krs interface{} `json:"krs"`
 }
 
-type KrsRestHandlers interface {
-	RestKrsRead(http.ResponseWriter, *http.Request)
-	RestKrsCreate(http.ResponseWriter, *http.Request)
-	RestKrsUpdate(http.ResponseWriter, *http.Request)
-	RestKrsDelete(http.ResponseWriter, *http.Request)
+type KrsHandlers interface {
+	Read(http.ResponseWriter, *http.Request)
+	Create(http.ResponseWriter, *http.Request)
+	Update(http.ResponseWriter, *http.Request)
+	Delete(http.ResponseWriter, *http.Request)
 }
