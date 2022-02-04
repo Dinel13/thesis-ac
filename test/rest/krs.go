@@ -73,7 +73,11 @@ func CreateKrs(krs *domain.Krs, ip, token string) (*domain.KrsResponse, error) {
 }
 
 func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.KrsResponse, error) {
-	request, err := http.NewRequest("PUT", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
+	body, err := json.Marshal(krs)
+	if err != nil {
+		return nil, err
+	}
+	request, err := http.NewRequest("PUT", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
