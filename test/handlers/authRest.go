@@ -19,26 +19,26 @@ func (a *AuthRestHandlers) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := rest.Login(loginSignupRequest, a.ip)
+	resBody, err := rest.Login(loginSignupRequest, a.ip)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, token.Token, "auth")
+	WriteJson(w, http.StatusOK, resBody, "auth")
 
 }
 
-func (a *AuthRestHandlers) Verify(w http.ResponseWriter, r *http.Request) {
+func (a *AuthRestHandlers) VerifyToken(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 
-	isAuth, err := rest.VerifyToken(a.ip, token)
+	resBody, err := rest.VerifyToken(a.ip, token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, isAuth.IsAuth, "isAuth")
+	WriteJson(w, http.StatusOK, resBody, "isAuth")
 }
 
 func NewRestAuthHandlers(ip string) domain.AuthHandlers {
