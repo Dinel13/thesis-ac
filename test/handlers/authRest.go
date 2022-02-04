@@ -25,7 +25,7 @@ func (a *AuthRestHandlers) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJson(w, http.StatusOK, resBody, "auth")
+	WriteJson(w, http.StatusOK, resBody.Token, "auth")
 
 }
 
@@ -38,7 +38,7 @@ func (a *AuthRestHandlers) VerifyToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJson(w, http.StatusOK, resBody, "isAuth")
+	WriteJson(w, http.StatusOK, resBody.IsAuth, "isAuth")
 }
 
 func NewRestAuthHandlers(ip string) domain.AuthHandlers {
