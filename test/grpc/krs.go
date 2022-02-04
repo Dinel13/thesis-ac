@@ -59,7 +59,7 @@ func (k *krsGrpcClient) CreateKrs(krs *domain.Krs, token string) (*domain.Krs, e
 	}
 
 	r, err := k.s.Create(context.Background(), &proto.CreateUpdateKRSRequest{
-		Token:       "ffdafa",
+		Token:       token,
 		IdMahasiswa: int32(krs.IdMahasiswa),
 		MataKuliahs: mataKuliahsProto,
 	})
@@ -100,7 +100,7 @@ func (k *krsGrpcClient) UpdateKrs(krs *domain.Krs, id int, token string) (*domai
 	}
 
 	r, err := k.s.Create(context.Background(), &proto.CreateUpdateKRSRequest{
-		Token:       "ffdafa",
+		Token:       token,
 		IdMahasiswa: int32(id),
 		MataKuliahs: mataKuliahsProto,
 	})

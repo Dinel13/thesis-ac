@@ -17,6 +17,10 @@ type Krs struct {
 	MataKuliahs []*MataKuliah `json:"mata_kuliahs"`
 }
 
+type KrsResponse struct {
+	Krs Krs `json:"krs"`
+}
+
 type ResKrsDelete struct {
 	Krs interface{} `json:"krs"`
 }

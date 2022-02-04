@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 	"github.com/dinel13/thesis-ac/test/domain"
 )
 
-func ReadKrs(ip, token string, id int) (*domain.Krs, error) {
+func ReadKrs(ip, token string, id int) (*domain.KrsResponse, error) {
 	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
 	if err != nil {
 		return nil, err
@@ -28,20 +29,26 @@ func ReadKrs(ip, token string, id int) (*domain.Krs, error) {
 
 	defer response.Body.Close()
 
-	krs := &domain.Krs{}
-	err = json.NewDecoder(response.Body).Decode(krs)
+	resBody := &domain.KrsResponse{}
+	err = json.NewDecoder(response.Body).Decode(resBody)
 	if err != nil {
 		return nil, err
 	}
 
-	return krs, nil
+	return resBody, nil
 }
 
-func CreateKrs(krs *domain.Krs, ip, token string) (*domain.Krs, error) {
-	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8080/krs", ip), nil)
+func CreateKrs(krs *domain.Krs, ip, token string) (*domain.KrsResponse, error) {
+	body, err := json.Marshal(krs)
 	if err != nil {
 		return nil, err
 	}
+
+	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8080/krs", ip), bytes.NewBuffer(body))
+	if err != nil {
+		return nil, err
+	}
+	request.Header.Set("Content-Type", "application/json")
 	request.Header.Add("Authorization", token)
 
 	// send req
@@ -56,16 +63,16 @@ func CreateKrs(krs *domain.Krs, ip, token string) (*domain.Krs, error) {
 
 	defer response.Body.Close()
 
-	createdKrs := &domain.Krs{}
-	err = json.NewDecoder(response.Body).Decode(createdKrs)
+	resBody := &domain.KrsResponse{}
+	err = json.NewDecoder(response.Body).Decode(resBody)
 	if err != nil {
 		return nil, err
 	}
 
-	return createdKrs, nil
+	return resBody, nil
 }
 
-func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.Krs, error) {
+func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.KrsResponse, error) {
 	request, err := http.NewRequest("PUT", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
 	if err != nil {
 		return nil, err
@@ -84,13 +91,13 @@ func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.Krs, error) {
 
 	defer response.Body.Close()
 
-	updatedKrs := &domain.Krs{}
-	err = json.NewDecoder(response.Body).Decode(updatedKrs)
+	resBody := &domain.KrsResponse{}
+	err = json.NewDecoder(response.Body).Decode(resBody)
 	if err != nil {
 		return nil, err
 	}
 
-	return updatedKrs, nil
+	return resBody, nil
 }
 
 func DeleteKrs(ip, token string, id int) error {
@@ -112,8 +119,8 @@ func DeleteKrs(ip, token string, id int) error {
 
 	defer response.Body.Close()
 
-	delKrs := &domain.ResKrsDelete{}
-	err = json.NewDecoder(response.Body).Decode(delKrs)
+	resBody := &domain.KrsResponse{}
+	err = json.NewDecoder(response.Body).Decode(resBody)
 	if err != nil {
 		return err
 	}

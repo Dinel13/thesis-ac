@@ -35,7 +35,7 @@ func (k *RestKrs) Read(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJson(w, http.StatusOK, krs, "krs")
+	WriteJson(w, http.StatusOK, krs.Krs, "krs")
 }
 
 func (k *RestKrs) Create(w http.ResponseWriter, r *http.Request) {
@@ -53,7 +53,7 @@ func (k *RestKrs) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJson(w, http.StatusOK, createdkrs, "krs")
+	WriteJson(w, http.StatusOK, createdkrs.Krs, "krs")
 }
 
 func (k *RestKrs) Update(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +78,7 @@ func (k *RestKrs) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJson(w, http.StatusOK, updatedkrs, "krs")
+	WriteJson(w, http.StatusOK, updatedkrs.Krs, "krs")
 }
 
 func (k *RestKrs) Delete(w http.ResponseWriter, r *http.Request) {
