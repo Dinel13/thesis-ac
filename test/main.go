@@ -51,6 +51,16 @@ func main() {
 	ruh := handlers.NewRestAuthHandlers(ipAuth)
 
 	// payment
+	connPay, err := grpc.Dial(fmt.Sprintf("%s:9092", ipPay), grpc.WithTransportCredentials(
+		insecure.NewCredentials(),
+	))
+	if err != nil {
+		log.Fatalf("can't connect grpc: %v", err)
+	}
+
+	gpsc := proto.NewPaymentServiceClient(connPay)
+	gpc := mygrpc.NewPaymentGrpcClient(gpsc)
+	gph := handlers.NewGrpcPaymentHandlers(gpc)
 	rph := handlers.NewRestPaymentHandlers(ipPay)
 
 	defer func() {
@@ -60,7 +70,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    port,
-		Handler: routes(rkh, gkh, ruh, guh, rph),
+		Handler: routes(rkh, gkh, ruh, guh, rph, gph),
 	}
 
 	fmt.Println("Server is running on port", port)
@@ -73,7 +83,7 @@ func main() {
 	}
 }
 
-func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers, rph domain.PaymentHandlers) http.Handler {
+func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers, rph, gph domain.PaymentHandlers) http.Handler {
 	r := httprouter.New()
 
 	// krs rest
@@ -99,6 +109,10 @@ func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers, rph domai
 	// auth rest
 	r.HandlerFunc(http.MethodPost, "/rest/pay", rph.Pay)
 	r.HandlerFunc(http.MethodGet, "/rest/verify-pay/:id", rph.VerifyPayment)
+
+	// auth rest
+	r.HandlerFunc(http.MethodPost, "/grpc/pay", gph.Pay)
+	r.HandlerFunc(http.MethodGet, "/grpc/verify-pay/:id", gph.VerifyPayment)
 
 	return r
 }

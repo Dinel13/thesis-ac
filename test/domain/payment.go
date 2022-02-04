@@ -28,6 +28,6 @@ type PaymentHandlers interface {
 }
 
 type PaymentGrpcClients interface {
-	Pay(req *LoginSignupRequest) (*LoginSignupResponse, error)
-	VerifyPayment(token string) (*VerifyTokenResponse, error)
+	Pay(req *PaymentRequest) (*PaymentResponse, error)
+	VerifyPayment(id int) (*PaymentResponse, error)
 }
