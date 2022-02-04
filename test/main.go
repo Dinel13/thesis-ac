@@ -18,15 +18,17 @@ import (
 const port string = ":8085"
 
 var ipKrs string = os.Getenv("IP_KRS")
+var ipAuth string = os.Getenv("IP_AUTH")
 
 func main() {
+
+	// krs
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9090", ipKrs), grpc.WithTransportCredentials(
 		insecure.NewCredentials(),
 	))
 	if err != nil {
 		log.Fatalf("can't connect grpc: %v", err)
 	}
-	defer conn.Close()
 
 	gksc := proto.NewKrsServiceClient(conn) // create grpc client from proto
 	gkc := mygrpc.NewKrsGrpcClient(gksc)    // create grpc client from grpc to other services
@@ -34,9 +36,16 @@ func main() {
 	rkh := handlers.NewRestKrsHandlers(ipKrs)
 	gkh := handlers.NewGrpcKrsHandlers(gkc)
 
+	// auth
+	ruh := handlers.NewRestAuthHandlers(ipAuth)
+
+	defer func() {
+		conn.Close()
+	}()
+
 	server := http.Server{
 		Addr:    port,
-		Handler: routes(rkh, gkh),
+		Handler: routes(rkh, gkh, ruh),
 	}
 
 	fmt.Println("Server is running on port", port)
@@ -49,7 +58,7 @@ func main() {
 	}
 }
 
-func routes(rkh, gkh domain.KrsHandlers) http.Handler {
+func routes(rkh, gkh domain.KrsHandlers, ruh domain.AuthHandlers) http.Handler {
 	r := httprouter.New()
 
 	// krs rest
@@ -63,6 +72,10 @@ func routes(rkh, gkh domain.KrsHandlers) http.Handler {
 	r.HandlerFunc(http.MethodPost, "/grpc/krs", gkh.Create)
 	r.HandlerFunc(http.MethodPut, "/grpc/krs/:id", gkh.Update)
 	r.HandlerFunc(http.MethodDelete, "/grpc/krs/:id", gkh.Delete)
+
+	// auth rest
+	r.HandlerFunc(http.MethodPost, "/rest/auth/login", ruh.Login)
+	r.HandlerFunc(http.MethodPost, "/rest/auth/verify", ruh.Verify)
 
 	return r
 }
