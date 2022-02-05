@@ -35,35 +35,17 @@ func startRestServer() {
 	// connect to Reddis database
 	dbClient, krsRepo := startRepoRedis()
 
-	conn, err := grpc.Dial(fmt.Sprintf("%s:9091", urlAuth), grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	connPayment, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer func() {
-		dbClient.Close()
-		conn.Close()
-		connPayment.Close()
-	}()
-
-	clientAuth := proto.NewAuthServiceClient(conn)
-	clientPayment := proto.NewPaymentServiceClient(connPayment)
+	defer dbClient.Close()
 
 	// cs := rest.NewCoursRestHandlers(service.NewKrsService(krsRepo))
 	ks := service.NewKrsService(krsRepo)
 	cs := rest.NewCoursRestHandlers(ks)
-	csg := rest.NewCoursRestGrpcHandlers(clientAuth, clientPayment, ks)
 
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: rest.Routes(cs, csg),
+		Handler: rest.Routes(cs),
 	}
-	err = srv.ListenAndServe()
+	err := srv.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}

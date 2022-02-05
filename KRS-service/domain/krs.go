@@ -41,13 +41,6 @@ type KrsRestHandlers interface {
 	Delete(http.ResponseWriter, *http.Request)
 }
 
-type KrsRestGrpcHandlers interface {
-	Read(http.ResponseWriter, *http.Request)
-	Create(http.ResponseWriter, *http.Request)
-	Update(http.ResponseWriter, *http.Request)
-	Delete(http.ResponseWriter, *http.Request)
-}
-
 type KrsGrpcHandler interface {
 	Read(context.Context, *proto.ReadKRSRequest) (*proto.KRSResponse, error)
 	Create(context.Context, *proto.CreateUpdateKRSRequest) (*proto.KRSResponse, error)

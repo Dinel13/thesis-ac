@@ -110,7 +110,7 @@ All test files for K6 are in **k6** directory. For example, if you want to test 
 Gateway service use to transform from rest to grpc and carry on rest to rest. So we can use jmeter to test the performance both for grpc and rest.
 
 ```bash
-$ test/main
+$  IP_AUTH=127.0.0.1 IP_PAYMENT=127.0.0.1 test/main
 ```
 
 #### Run test use JMeter
