@@ -20,7 +20,7 @@ The main purpose of this thesis is to **Compare the performance of microservice 
 2. **Auth Service** uses nodejs and also golang.
 3. **Payment Service** use golang.
 
-To store data in the database, I use **Redis**. Then use **k6** to test the performance of each service and use **Datadog** to monitor the performance. All the services are deployed in different **EC2 AWS** as well as the test agent then use private IP to communicate.
+To store data in the database, I use **Redis**. Then use **k6** to test the performance of each service and use **Datadog** to monitor the performance. Additionaly i also try use **Jmeter** to load test. All the services are deployed in different **EC2 AWS** as well as the test agent then use private IP to communicate.
 <br>
 
 **System design**
@@ -34,6 +34,7 @@ To store data in the database, I use **Redis**. Then use **k6** to test the perf
 - **EC2 AWS**
 - **K6**
 - **Datadog 0.36.0**
+- **Jmeter 5.4.1**
 - **Linux ubuntu 20.4**
   <br>
 
@@ -42,7 +43,7 @@ To store data in the database, I use **Redis**. Then use **k6** to test the perf
 ### 1. **KRS Service**
 
 ```bash
-$ URL_AUTH=172.31.24.28 URL_PAYMENT=172.31.28.177 KRS-service/main
+$ URL_AUTH=127.0.0.1 URL_PAYMENT=127.0.0.1 KRS-service/main
 ```
 
 ### 2. **Auth Service**
@@ -71,7 +72,9 @@ $ payment-service/main
 
 ## Run test
 
-### 1. Run datadog agent
+### 1. Use K6
+
+#### Run DataDog agent
 
 ```bash
 DOCKER_CONTENT_TRUST=1 \
@@ -88,20 +91,46 @@ sudo docker run -d \
 ```
 
 Don't forget to replace _<YOUR_DATADOG_API_KEY>_ with your datadog api key
-<br>
 
-### 2. Run the test
+#### Run test use K6
 
-All test files are in **test** directory. For example, if you want to test grpc-krs-create in 100 vurtual user in 30 second use the command below.
+All test files for K6 are in **k6** directory. For example, if you want to test grpc-krs-create in 100 vurtual user in 30 second use the command below.
 
 ```bash
- K6_STATSD_ENABLE_TAGS=true k6 run --vus 100 --durations 30s --out statsd --tag test_run_id=1 -e IP=172.31.30.48 test/grpc/krs/create.js
+ K6_STATSD_ENABLE_TAGS=true k6 run --vus 100 --durations 30s --out statsd --tag test_run_id=1 -e IP=172.31.30.48 k6/grpc/krs/create.js
 
 ```
 
 <br>
 
+### 2. Use Jmeter
+
+#### Run gateway service
+
+Gateway service use to transform from rest to grpc and carry on rest to rest. So we can use jmeter to test the performance both for grpc and rest.
+
+```bash
+$ test/main
+```
+
+#### Run test use JMeter
+
+All jmx test file for Jmeter are in **jmx** directory. For example, if you want to test grpc-krs-create in 100 thread second use the command below.
+
+```bash
+jmeter -n -t jmx/100/grpc-krs-create.jmx -l testresults.jtl
+
+```
+
+### 3. Use Locust
+
+Still developing...
+
+<br>
+
 ## Result
+
+### Result for K6 with 100 vurtual user in 30 second
 
 **Grpc**
 ![grpc](https://github.com/dinel13/thesis-ac/blob/main/100.png?raw=true)
@@ -113,6 +142,3 @@ All test files are in **test** directory. For example, if you want to test grpc-
 
 **Datadog**
 ![datadog](https://github.com/dinel13/thesis-ac/blob/main/datadog.png?raw=true)
-
-
-
