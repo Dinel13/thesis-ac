@@ -100,11 +100,11 @@ func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers, rph, gph 
 
 	// auth rest
 	r.HandlerFunc(http.MethodPost, "/rest/login", ruh.Login)
-	r.HandlerFunc(http.MethodPost, "/rest/verify-token", ruh.VerifyToken)
+	r.HandlerFunc(http.MethodGet, "/rest/verify-token", ruh.VerifyToken)
 
 	// auth grpc
 	r.HandlerFunc(http.MethodPost, "/grpc/login", guh.Login)
-	r.HandlerFunc(http.MethodPost, "/grpc/verify-token", guh.VerifyToken)
+	r.HandlerFunc(http.MethodGet, "/grpc/verify-token", guh.VerifyToken)
 
 	// auth rest
 	r.HandlerFunc(http.MethodPost, "/rest/pay", rph.Pay)
