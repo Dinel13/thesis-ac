@@ -2,7 +2,6 @@ package helper
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -50,8 +49,6 @@ func parseTokenJwt(tokenString string, secretKey string) (*jwt.Token, error) {
 
 func ParseToken(tokenString string, secretKey string) error {
 	token, err := parseTokenJwt(tokenString, secretKey)
-
-	fmt.Println(token)
 
 	if err != nil {
 		return err

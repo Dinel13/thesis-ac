@@ -31,7 +31,7 @@ func (h authHandlers) Verify(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteJson(w, http.StatusOK, true, "auth")
+	WriteJson(w, http.StatusOK, true, "isAuth")
 }
 
 // Create is handler for POST /auth to create COurse
