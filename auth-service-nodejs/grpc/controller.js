@@ -4,20 +4,29 @@ const redis = require("../database/redis");
 function checkAccount(user) {}
 
 async function Login(_, callback) {
-  let userExits = await redis.get(_.request.username);
-  userExits = JSON.parse(userExits);
+  let token;
+  try {
+    let userExits = await redis.get(_.request.username);
+    if (!userExits) {
+      throw new Error("User not exits");
+    }
+    userExits = JSON.parse(userExits);
 
-  if (userExits.password !== _.request.password) {
-    return { token: null };
+    if (userExits.password != _.request.password) {
+      throw new Error("Password not match");
+    }
+    token = jwt.sign(
+      {
+        username: userExits.username,
+      },
+      "secretKey@123",
+      { expiresIn: "1d" }
+    );
+  } catch (error) {
+    console.log(error);
+    return callback(null, { token: "" });
   }
-  token = jwt.sign(
-    {
-      username: userExits.username,
-    },
-    "secretKey@123",
-    { expiresIn: "1d" }
-  );
-  callback(null, { token });
+  return callback(null, { token });
 }
 
 async function Verify(_, callback) {
@@ -38,7 +47,7 @@ async function Verify(_, callback) {
       is_auth: false,
     };
   }
-  callback(null, respon);
+  return callback(null, respon);
 }
 
 module.exports = {

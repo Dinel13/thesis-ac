@@ -67,6 +67,9 @@ func Login(req *domain.LoginSignupRequest, ip string) (*domain.LoginSignupRespon
 	if err != nil {
 		return nil, err
 	}
+	if resBody.Token == "" {
+		return nil, fmt.Errorf("gagal login, perikasa username dan password")
+	}
 
 	return resBody, nil
 }

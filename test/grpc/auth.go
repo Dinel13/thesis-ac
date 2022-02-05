@@ -2,6 +2,7 @@ package rest
 
 import (
 	"context"
+	"errors"
 
 	"github.com/dinel13/thesis-ac/test/domain"
 	"github.com/dinel13/thesis-ac/test/proto"
@@ -19,6 +20,10 @@ func (a *authGrpcClient) Login(req *domain.LoginSignupRequest) (*domain.LoginSig
 
 	if err != nil {
 		return nil, err
+	}
+
+	if r.GetToken() == "" {
+		return nil, errors.New("gagal login, pastikan username dan password benar")
 	}
 
 	return &domain.LoginSignupResponse{
