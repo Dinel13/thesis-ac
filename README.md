@@ -110,7 +110,7 @@ All test files for K6 are in **k6** directory. For example, if you want to test 
 Gateway service use to transform from rest to grpc and carry on rest to rest. So we can use jmeter to test the performance both for grpc and rest.
 
 ```bash
-$  IP_AUTH=127.0.0.1 IP_PAYMENT=127.0.0.1 test/main
+$ IP_KRS=127.0.0.1 IP_AUTH=127.0.0.1 IP_PAYMENT=127.0.0.1 test/main
 ```
 
 #### Run test use JMeter
@@ -118,7 +118,7 @@ $  IP_AUTH=127.0.0.1 IP_PAYMENT=127.0.0.1 test/main
 All jmx test file for Jmeter are in **jmx** directory. For example, if you want to test grpc-krs-create in 100 thread second use the command below.
 
 ```bash
-jmeter -n -t jmx/100/grpc-krs-create.jmx -l testresults.jtl
+jmeter.sh -n -t jmx/100/grpc-krs-create.jmx -l testresults.jtl
 
 ```
 

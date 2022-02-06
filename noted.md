@@ -1,89 +1,35 @@
+# protoc
+
 protoc --proto_path=. --python_out=. auth.proto
+protoc --proto_path=proto --java_out=. proto/krs.proto
+protoc proto/krs.proto --go_out=plugins=grpc:.
 
-URL_AUTH=127.0.0.1 PAYMENT_AUTH=127.0.0.1 go run main.go 
 
-// generate 2 file py
-virtualenv -p python3 env
-source env/bin/activate
-pip install grpcio grpcio-tools
-python -m grpc_tools.protoc --proto_path=. ./auth.proto --python_out=. --grpc_python_out=.
 
-ab -k -c 900 -n 80000 127.0.0.1:8080/krs/1
-
--c: ("Concurrency"). Indicates how many clients (people/users) will be hitting the site at the same time. While ab runs, there will be -c clients hitting the site. This is what actually decides the amount of stress your site will suffer during the benchmark.
-
--n: Indicates how many requests are going to be made. This just decides the length of the benchmark. A high -n value with a -c value that your server can support is a good idea to ensure that things don't break under sustained stress: it's not the same to support stress for 5 seconds than for 5 hours.
-
--k: This does the "KeepAlive" funcionality browsers do by nature. You don't need to pass a value for -k as it it "boolean" (meaning: it indicates that you desire for your test to use the Keep Alive header from HTTP and sustain the connection). Since browsers do this and you're likely to want to simulate the stress and flow that your site will have from browsers, it is recommended you do a benchmark with this.
-
+# ghz
 
 ../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.GetKrs   -d '{"id":1}' -n 10000 -c 1000   0.0.0.0:8081
 
-
-buat handler grpc dan rest pake interface
-
-Namun hal ini merepotkan jika dilakukan manual, kita bisa meminta Driver MySQL untuk Golang secara otomatis melakukan parsing dengan menambahkan parameter parseDate=true
-
-
-protoc proto/krs.proto --go_out=plugins=grpc:.
-/home/din/.local/bin/protoc proto/krs.proto --go_out=plugins=grpc:.
-
 ghz/ghz --insecure   --proto ./test/grpc/auth/auth.proto  --call  proto.AuthService.Login   -d '{"username": "salahuddin", "password":"Password123"}' -n 10000 -c 1000   0.0.0.0:9091
 
-// create krs
+create krs
 ../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Create   -d '{"token":       "ffdafa","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 1 -c 1  0.0.0.0:9090
 
-./ghz/ghz --insecure   --proto ./proto/krs/krs.proto   --call  proto.KrsService.Create   -d '{"token":       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDM0NDgxMTcsImV4cCI6MTY0MzUzNDUxN30.sxU6PoCzsezqQ3tM0vu0TvkZWjy2_a2mbfNLE-oiYKk","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 10 -c 1 -O html  172.31.30.48:9090 > report/ghz2.html
-
-
-//kreate payment
+create payment
 ../ghz/ghz --insecure   --proto ./proto/payment.proto   --call  proto.PaymentService.Create   -d '{"id_mahasiswa":1,"jumlah" : 2345, "metode" : "bri"}' -n 1 -c 1   0.0.0.0:9092
 
-//update krs
+update krs
 ../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Update   -d '{"token":       "ffdafa","id_mahasiswa":1,"mata_kuliahs" : [{"kode":     "IF-141","nama":"Pemrograman script", "sks":      3, "dosen":    "Dina","semester": "Semester 7"},{"kode":     "IF-101","nama":     "Pemrograman Script","sks":      3,"dosen":    "Dina","semester": "Semester 7"}]}' -n 1 -c 1   0.0.0.0:9090
 
-//read krs
+read krs
 ../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Read   -d '{"token":       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDI2ODE5OTJ9.hMVVyeZyWg5Jq7gLiM3uKyV5jA_GbwZastQ2CWJzqek","id_mahasiswa":1}' -n 1 -c 1   0.0.0.0:9090
 
 
-// delete krs
+delete krs
 ../ghz/ghz --insecure   --proto ./proto/krs.proto   --call  proto.KrsService.Delete   -d '{"token":       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNheWEiLCJpYXQiOjE2NDI2ODE5OTJ9.hMVVyeZyWg5Jq7gLiM3uKyV5jA_GbwZastQ2CWJzqek","id_mahasiswa":1}' -n 1 -c 1   0.0.0.0:9090
 
 
-./bin/jmeter  -g grpc.jtl -o reportt
-
-protoc --proto_path=proto --java_out=. proto/krs.proto
-
-
-./bin/jmeter -n -t krs.jmx -l testresults.jtl
-
-//todo
-delete krs by id juga mendelete pay by id karena pake sama id di redis
-
-// exmaple data
-{
-	"token":       "ffdafa",
-	"id_mahasiswa":1,
-	"mata_kuliahs" : [
-	 	{
-			"kode":     "IF-141",
-			"nama":     "Pemrograman Script",
-			"sks":      3,
-			"dosen":    "Dina",
-			"semester": "Semester 7"
-		},
-		{
-			"kode":     "IF-101",
-			"nama":     "Pemrograman Script",
-			"sks":      3,
-			"dosen":    "Dina",
-			"semester": "Semester 7"
-		}
-	]
-}
-
-
-// install redis
+# redis
 reddis https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04-id
 
 sudo apt update
@@ -93,21 +39,65 @@ supervised systemd
 sudo systemctl restart redis.service
 sudo systemctl status redis
 
+# docker
+sudo apt install docker.io
 
-DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=ab267e5d46d37d32c7d4b3fad17a0efe DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
-
-sudo service datadog-agent status
-
-
- K6_STATSD_ENABLE_TAGS=true  k6 run --out statsd --tag test_run_id=2 k6/rest/krs/create.js 
-
-
- tekan g di dashbord untuk lihat metric cpu
-
- k6 run --vus 10  -e IP=127.0.0.1 test/rest/krs/create.js 
+# jmeter
+install jmeter
+- pastika nsudah instal jvm
+sudo apt install openjdk-11-jdk
 
 
- sudo apt install docker.io
+wget https://downloads.apache.org//jmeter/binaries/apache-jmeter-5.4.1.tgz
+tar -xvzf apache-jmeter-5.4.1.tgz
+echo 'export PATH="$PATH:/home/ubuntu/apache-jmeter-5.4.1/bin"' >> ~/.bashrc
+source ~/.bashrc
 
- K6_STATSD_ENABLE_TAGS=true k6 run --vus 100 --iterations 100 --out statsd --tag test_run_id=1 -e IP=172.31.30.48 test/grpc/krs/create.js
+jmeter.sh -n -t jmx/100/grpc-krs-create.jmx -l testresults.jtl
+./bin/jmeter  -g grpc.jtl -o reportt
 
+
+# K6
+echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+sudo apt-get update
+sudo apt-get install k6
+
+k6 run script.js
+k6 run --vus 10 --duration 30s script.js
+k6 run --vus 10 --duration 1s -e IP=127.0.0.1 test/rest/auth/login.js 
+
+DOCKER_CONTENT_TRUST=1 \
+sudo docker run -d \
+    --name datadog \
+    -v /var/run/docker.sock:/var/run/docker.sock:ro \
+    -v /proc/:/host/proc/:ro \
+    -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+    -e DD_SITE="datadoghq.com" \
+    -e DD_API_KEY=<YOUR_DATADOG_API_KEY> \
+    -e DD_DOGSTATSD_NON_LOCAL_TRAFFIC=1 \
+    -p 8125:8125/udp \
+    datadog/agent:latest
+
+sudo docker stop newrelic-statsd 
+sudo docker rm newrelic-statsd 
+sudo docker logs newrelic-statsd 
+
+k6 run --vus 1 --duration 1s -e IP=172.31.24.28 test/rest/auth/signup.js
+
+
+K6_STATSD_ENABLE_TAGS=true  k6 run --out statsd --tag test_run_id=2 k6/rest/krs/create.js 
+
+
+tekan g di dashbord untuk lihat metric cpu
+
+k6 run --vus 10  -e IP=127.0.0.1 test/rest/krs/create.js 
+
+
+K6_STATSD_ENABLE_TAGS=true k6 run --vus 100 --iterations 100 --out statsd --tag test_run_id=1 -e IP=172.31.30.48 test/grpc/krs/create.js
+
+# locust
+// generate 2 file py
+virtualenv -p python3 env
+source env/bin/activate
+pip install grpcio grpcio-tools
+python -m grpc_tools.protoc --proto_path=. ./auth.proto --python_out=. --grpc_python_out=.
