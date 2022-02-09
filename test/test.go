@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"time"
 )
 
 var jmeter *string
@@ -87,5 +88,7 @@ func runJmxTest2Jtl(files []fs.FileInfo, sourceDir string, destDir string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// wait 2 seconds before next test
+		time.Sleep(2 * time.Second)
 	}
 }

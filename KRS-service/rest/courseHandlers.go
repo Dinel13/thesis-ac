@@ -195,5 +195,5 @@ func (h krsHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// write the krs to response
-	WriteJson(w, http.StatusOK, nil, "krs")
+	WriteJson(w, http.StatusOK, "success", "krs")
 }
