@@ -1,0 +1,1 @@
+node responTime.js /home/din/result/report/rest/500/krs/create

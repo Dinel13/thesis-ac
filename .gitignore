@@ -6,3 +6,9 @@ auth-service/node_modules/**/*
 .vscode
 
 .env
+
+read-result-puppeter/node_modules
+
+result/jmeter.log
+result/main
+result/report
