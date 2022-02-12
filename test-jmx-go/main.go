@@ -29,16 +29,16 @@ func main() {
 	fmt.Println("sourceDir: ", sourceDir)
 	fmt.Println("destDir: ", destDir)
 
-	// read files
-	files, err := ioutil.ReadDir(sourceDir)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// run jmeter test or convert jtl to html
 	if *mode == "test" {
-		runJmxTest2Jtl(files, sourceDir, destDir)
+
+		runJmxTest2Jtl(sourceDir, destDir)
 	} else if *mode == "convert" {
+		// read files
+		files, err := ioutil.ReadDir(sourceDir)
+		if err != nil {
+			log.Fatal(err)
+		}
 		convertJtl2html(files, sourceDir, destDir)
 	} else {
 		log.Fatal("invalid mode")
@@ -68,39 +68,25 @@ func convertJtl2html(files []fs.FileInfo, sourceDir string, destDir string) {
 
 // runJMeterTest2Jtl run jmeter test and save result to jtl
 // it need files, jmx file path, jtl file path
-func runJmxTest2Jtl(files []fs.FileInfo, sourceDir string, destDir string) {
-	for _, file := range files {
-		log.Println("file: ", file.Name())
-		if file.IsDir() {
-			newFiles, err := ioutil.ReadDir(fmt.Sprintf("%s/%s", sourceDir, file.Name()))
-			if err != nil {
-				log.Fatal(err)
-			}
-			runJmxTest2Jtl(newFiles, fmt.Sprintf("%s/%s", sourceDir, file.Name()), fmt.Sprintf("%s/%s", destDir, file.Name()))
-			continue
-		}
+func runJmxTest2Jtl(file string, destDir string) {
+	// split file name by '-'
+	// exmpale grpc-auth-login.jmx
+	fileName := strings.Split(file, "-")
+	serviceTest := fileName[1]                       //auth atau krs atau payment
+	endpointTest := fileName[2][:len(fileName[2])-4] // remove .jmx mislanya login
 
-		fileJmx := fmt.Sprintf("%s/%s", sourceDir, file.Name())
-
-		// split file name by '-'
-		// exmpale grpc-auth-login.jmx
-		fileName := strings.Split(file.Name(), "-")
-		serviceTest := fileName[1]                       //auth atau krs atau payment
-		endpointTest := fileName[2][:len(fileName[2])-4] // remove .jmx mislanya login
-
-		// loop 10 times
-		for i := 0; i < 10; i++ {
-			fmt.Println("iterasi ke-: ", i+1)
-			cmd := exec.Command(*jmeter, "-n", "-t", fileJmx, "-l", fmt.Sprintf("%s/%s/%s%d.jtl", destDir, serviceTest, endpointTest, i+1))
-			// show the result
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			err := cmd.Run()
-			if err != nil {
-				log.Fatal(err)
-			}
-			time.Sleep(time.Second * 2)
+	// loop 10 times
+	for i := 0; i < 10; i++ {
+		fmt.Println("iterasi ke-: ", i+1)
+		cmd := exec.Command(*jmeter, "-n", "-t", file, "-l", fmt.Sprintf("%s/%s/%s%d.jtl", destDir, serviceTest, endpointTest, i+1))
+		// show the result
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err := cmd.Run()
+		if err != nil {
+			log.Fatal(err)
 		}
 		time.Sleep(time.Second * 2)
 	}
+
 }
