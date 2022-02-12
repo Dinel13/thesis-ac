@@ -1,3 +1,26 @@
+# todo
+1. krs update ada anomal dan error
+2. r 1000 pada 
+3. krs delete rest juga anomaly
+3. auth login grpc 1000 anomaly ke 10
+3. auth verify grpc 1000 anomaly ke 10
+3. auth verify rest 500 anomaly ke 5
+
+3. pay rest 1000 error ke 1
+3. pay rest 100 anomaly ke 2
+3. pay rest 500 anomaly ke 10
+3. pay grpc 500 anomaly ke 3
+3. pay grpc 100 anomaly ke 1,2,7,8
+3. pay grpc 1000 anomaly ke 5
+
+3. pay verify grpc 1000 anomaly ke 1
+3. pay verify grpc 100 anomaly ke 3
+3. pay verify grpc 200 anomaly ke 1,4
+3. pay verify rest 100 anomaly ke 4,6
+3. pay verify rest 1000 anomaly ke 9
+
+
+
 # protoc
 
 protoc --proto_path=. --python_out=. auth.proto
