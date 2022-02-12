@@ -22,9 +22,11 @@ type VerifyResponse struct {
 
 type AuthRepository interface {
 	Login(context.Context, *LoginSignupRequest) error
+	Signup(context.Context, *LoginSignupRequest) error
 }
 
 type AuthService interface {
+	Signup(*LoginSignupRequest) (*LoginSignupResponse, error)
 	Login(*LoginSignupRequest) (*LoginSignupResponse, error)
 	Verify(string) error
 }
@@ -32,6 +34,7 @@ type AuthService interface {
 type AuthRestHandlers interface {
 	Login(http.ResponseWriter, *http.Request)
 	Verify(http.ResponseWriter, *http.Request)
+	Signup(http.ResponseWriter, *http.Request)
 }
 
 type AuthGrpcHandler interface {

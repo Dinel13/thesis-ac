@@ -54,3 +54,23 @@ func (h authHandlers) Login(w http.ResponseWriter, r *http.Request) {
 	// write the auth to response
 	WriteJson(w, http.StatusCreated, c.Token, "token")
 }
+
+func (h authHandlers) Signup(w http.ResponseWriter, r *http.Request) {
+	// get the auth from request body
+	auth := &domain.LoginSignupRequest{}
+	err := ReadJson(r, auth)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	// create the auth
+	c, err := h.service.Signup(auth)
+	if err != nil {
+		WriteJsonError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	// write the auth to response
+	WriteJson(w, http.StatusCreated, c.Token, "token")
+}

@@ -17,7 +17,6 @@ type authRepositoryImpl struct {
 	Rds *redis.Client
 }
 
-//	CreateAuth creates a new auth
 func (m authRepositoryImpl) Login(ctx context.Context, auth *domain.LoginSignupRequest) error {
 	val, err := m.Rds.Get(ctx, auth.Username).Bytes()
 	if err == redis.Nil {
@@ -35,4 +34,19 @@ func (m authRepositoryImpl) Login(ctx context.Context, auth *domain.LoginSignupR
 		}
 		return nil
 	}
+}
+
+// Signup adds a new auth
+func (m authRepositoryImpl) Signup(ctx context.Context, auth *domain.LoginSignupRequest) error {
+	// set user to redis
+	val, err := json.Marshal(auth)
+	if err != nil {
+		return err
+	}
+	err = m.Rds.Set(ctx, auth.Username, val, 0).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

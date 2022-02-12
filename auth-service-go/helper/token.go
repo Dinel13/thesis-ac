@@ -16,7 +16,7 @@ func CreateToken(username string, secretKey string) (string, error) {
 	claims := MyClaims{
 		StandardClaims: jwt.StandardClaims{
 			Issuer:    "auth",
-			ExpiresAt: time.Now().Add(time.Duration(24) * time.Hour).Unix(),
+			ExpiresAt: time.Now().Add(time.Duration(1000) * time.Hour).Unix(),
 		},
 		Username: username,
 	}

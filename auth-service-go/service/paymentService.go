@@ -47,3 +47,25 @@ func (p authService) Login(auth *domain.LoginSignupRequest) (*domain.LoginSignup
 
 	return res, nil
 }
+
+func (p authService) Signup(auth *domain.LoginSignupRequest) (*domain.LoginSignupResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := p.repo.Signup(ctx, auth)
+	if err != nil {
+		return nil, err
+	}
+
+	// create token
+	token, err := helper.CreateToken(auth.Username, "secretKey@123")
+	if err != nil {
+		return nil, err
+	}
+
+	res := &domain.LoginSignupResponse{
+		Token: token,
+	}
+
+	return res, nil
+}

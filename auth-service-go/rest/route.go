@@ -12,6 +12,7 @@ func Routes(ah domain.AuthRestHandlers) http.Handler {
 
 	r.HandlerFunc(http.MethodPost, "/verify", ah.Verify)
 	r.HandlerFunc(http.MethodPost, "/login", ah.Login)
+	r.HandlerFunc(http.MethodPost, "/signup", ah.Signup)
 
 	return r
 }
