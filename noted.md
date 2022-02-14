@@ -19,6 +19,16 @@
 3. pay verify rest 100 anomaly ke 4,6
 3. pay verify rest 1000 anomaly ke 9
 
+4. auth-go login grpc 100 ke 1
+4. auth-go login grpc 500 ke 8
+4. auth-go login grpc 1000 ke 8
+
+4. auth-go verify grpc 100 ke 1
+4. auth-go verify grpc 100 ke 2
+4. auth-go verify grpc 200 ke 2
+
+4. auth-go verify rest 1000 ke 1
+4. auth-go verify rest 1000 ke 5
 
 
 # protoc
@@ -28,7 +38,9 @@ protoc --proto_path=proto --java_out=. proto/krs.proto
 protoc proto/krs.proto --go_out=plugins=grpc:.
 
 # scp
+sudo scp -i Documents/skripsi/skripsi.pem ubuntu@3.1.203.66:/home/ubuntu/thesis-ac/auth-go/grpc/100/login1.jtl ./
 
+sudo scp -i Documents/skripsi/skripsi.pem -r  ubuntu@3.1.203.66:/home/ubuntu/thesis-ac/auth-go ./
 
 # ghz
 
