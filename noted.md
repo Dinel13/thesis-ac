@@ -27,6 +27,7 @@ protoc --proto_path=. --python_out=. auth.proto
 protoc --proto_path=proto --java_out=. proto/krs.proto
 protoc proto/krs.proto --go_out=plugins=grpc:.
 
+# scp
 
 
 # ghz
