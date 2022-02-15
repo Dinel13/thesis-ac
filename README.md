@@ -72,6 +72,12 @@ $ payment-service/main
 
 ## Run test
 
+### 1. **RUN Test Service**
+
+```bash
+$ IP_KRS= IP_AUTH= IP_PAYMENT=  test/main
+```
+
 ### 1. Use K6
 
 #### Run DataDog agent

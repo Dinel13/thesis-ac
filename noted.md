@@ -1,10 +1,4 @@
 # todo
-1. krs update ada anomal dan error
-2. r 1000 pada 
-3. krs delete rest juga anomaly
-3. auth login grpc 1000 anomaly ke 10
-3. auth verify grpc 1000 anomaly ke 10
-3. auth verify rest 500 anomaly ke 5
 
 
 
@@ -15,6 +9,8 @@ protoc --proto_path=proto --java_out=. proto/krs.proto
 protoc proto/krs.proto --go_out=plugins=grpc:.
 
 # scp
+sudo scp -i /home/din/Documents/skripsi/skripsi.pem ubuntu@18.141.203.234:/home/ubuntu/thesis-ac/grpc-auth-1000.jtl ./
+
 sudo scp -i Documents/skripsi/skripsi.pem ubuntu@3.1.203.66:/home/ubuntu/thesis-ac/auth-go/grpc/100/login1.jtl ./
 
 sudo scp -i Documents/skripsi/skripsi.pem -r  ubuntu@3.1.203.66:/home/ubuntu/thesis-ac/auth-go ./
