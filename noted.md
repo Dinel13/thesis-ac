@@ -6,29 +6,6 @@
 3. auth verify grpc 1000 anomaly ke 10
 3. auth verify rest 500 anomaly ke 5
 
-3. pay rest 1000 error ke 1
-3. pay rest 100 anomaly ke 2
-3. pay rest 500 anomaly ke 10
-3. pay grpc 500 anomaly ke 3
-3. pay grpc 100 anomaly ke 1,2,7,8
-3. pay grpc 1000 anomaly ke 5
-
-3. pay verify grpc 1000 anomaly ke 1
-3. pay verify grpc 100 anomaly ke 3
-3. pay verify grpc 200 anomaly ke 1,4
-3. pay verify rest 100 anomaly ke 4,6
-3. pay verify rest 1000 anomaly ke 9
-
-4. auth-go login grpc 100 ke 1
-4. auth-go login grpc 500 ke 8
-4. auth-go login grpc 1000 ke 8
-
-4. auth-go verify grpc 100 ke 1
-4. auth-go verify grpc 100 ke 2
-4. auth-go verify grpc 200 ke 2
-
-4. auth-go verify rest 1000 ke 1
-4. auth-go verify rest 1000 ke 5
 
 
 # protoc

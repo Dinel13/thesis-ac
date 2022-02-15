@@ -6,5 +6,4 @@
 
  test-jmx-go/main -j=jmeter.sh -m=test /home/ubuntu/thesis-ac/jmx-go /home/ubuntu/result-go    
 
-jmeter.sh -n -t jmx/jmx-auth-go/grpc/1000/auth/verify.jmx -l auth-go│
-/grpc/1000-verif10  
+jmeter.sh -n -t jmx/jmx-auth-go/grpc/1000/auth/verify.jmx -l auth-go/grpc/1000/verif10  
