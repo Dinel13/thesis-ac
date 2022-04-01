@@ -6,7 +6,14 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"runtime"
+	_runtime "runtime/pprof"
+	"syscall"
 	"time"
+
+	_ "net/http/pprof"
 
 	"google.golang.org/grpc"
 
@@ -84,8 +91,34 @@ func connectRedis() *redis.Client {
 	return client
 }
 
+var (
+	cpuProfile = "cpdu.prof"
+)
+
 func main() {
+	// Create file to stored the profiling
+	cpuProf, err := os.Create(cpuProfile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cpuProf.Close()
+	runtime.SetCPUProfileRate(400)
+	_runtime.StartCPUProfile(cpuProf)
+	defer _runtime.StopCPUProfile()
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM) // subscribe to system signals
+	onKill := func(c chan os.Signal) {
+		select {
+		case <-c:
+			defer cpuProf.Close()
+			defer _runtime.StopCPUProfile()
+			defer os.Exit(0)
+		}
+	}
+	// try to handle os interrupt(signal terminated)
+	go onKill(c)
 	go StartRestServer()
 	go StartGRPCServer()
 	time.Sleep(113880 * time.Hour)
+	// time.Sleep(10 * time.Second)
 }

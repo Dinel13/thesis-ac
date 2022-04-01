@@ -22,6 +22,17 @@ var ipAuth string = os.Getenv("IP_AUTH")
 var ipPay string = os.Getenv("IP_PAYMENT")
 
 func main() {
+	if ipKrs == "" {
+		log.Fatal("IP_KRS is not set")
+	}
+	if ipAuth == "" {
+		log.Fatal("IP_AUTH is not set")
+	}
+	if ipPay == "" {
+		log.Fatal("IP_PAYMENT is not set")
+	}
+
+	log.Printf("use ipKrs: %s, ipAuth: %s, ipPay: %s", ipKrs, ipAuth, ipPay)
 
 	// krs
 	connKrs, err := grpc.Dial(fmt.Sprintf("%s:9090", ipKrs), grpc.WithTransportCredentials(

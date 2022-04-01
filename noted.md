@@ -110,3 +110,6 @@ virtualenv -p python3 env
 source env/bin/activate
 pip install grpcio grpcio-tools
 python -m grpc_tools.protoc --proto_path=. ./auth.proto --python_out=. --grpc_python_out=.
+
+
+apt-get install graphviz gv
