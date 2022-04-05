@@ -1,0 +1,334 @@
+Statistical profiling result from isolate-0x51d7ac0-38016-v8.log, (564 ticks, 0 unaccounted, 0 excluded).
+
+ [Shared libraries]:
+   ticks  total  nonlib   name
+    422   74.8%          /usr/bin/node
+     15    2.7%          /usr/lib/x86_64-linux-gnu/libc-2.31.so
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+      3    0.5%    2.4%  LazyCompile: *normalizeString path.js:59:25
+
+ [C++]:
+   ticks  total  nonlib   name
+     52    9.2%   40.9%  __lll_lock_wait
+     35    6.2%   27.6%  __write
+      7    1.2%    5.5%  __GI___pthread_mutex_unlock
+      5    0.9%    3.9%  epoll_pwait
+      4    0.7%    3.1%  do_futex_wait.constprop.0
+      3    0.5%    2.4%  std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long)
+      3    0.5%    2.4%  __pthread_cond_timedwait
+      2    0.4%    1.6%  shutdown
+      2    0.4%    1.6%  __pthread_cond_signal
+      2    0.4%    1.6%  __libc_malloc
+      1    0.2%    0.8%  std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const
+      1    0.2%    0.8%  std::ostream::flush()
+      1    0.2%    0.8%  std::ostream& std::ostream::_M_insert<long>(long)
+      1    0.2%    0.8%  std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const
+      1    0.2%    0.8%  operator new(unsigned long)
+      1    0.2%    0.8%  fwrite
+      1    0.2%    0.8%  fputc
+      1    0.2%    0.8%  fflush
+      1    0.2%    0.8%  _IO_file_xsputn
+
+ [Summary]:
+   ticks  total  nonlib   name
+      3    0.5%    2.4%  JavaScript
+    124   22.0%   97.6%  C++
+    102   18.1%   80.3%  GC
+    437   77.5%          Shared libraries
+
+ [C++ entry points]:
+   ticks    cpp   total   name
+     16   69.6%    2.8%  __write
+      1    4.3%    0.2%  std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const
+      1    4.3%    0.2%  std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long)
+      1    4.3%    0.2%  operator new(unsigned long)
+      1    4.3%    0.2%  fwrite
+      1    4.3%    0.2%  fputc
+      1    4.3%    0.2%  __lll_lock_wait
+      1    4.3%    0.2%  __libc_malloc
+
+ [Bottom up (heavy) profile]:
+  Note: percentage shows a share of a particular caller in the total
+  amount of its parent calls.
+  Callers occupying less than 1.0% are not shown.
+
+   ticks parent  name
+    422   74.8%  /usr/bin/node
+    283   67.1%    /usr/bin/node
+     59   20.8%      LazyCompile: ~wrapSafe internal/modules/cjs/loader.js:973:18
+     59  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+     59  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+     59  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:925:33
+     55   19.4%      LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+     50   90.9%        LazyCompile: ~nativeModuleRequire internal/bootstrap/loaders.js:306:29
+      6   12.0%          Eval: ~<anonymous> internal/bootstrap/node.js:1:1
+      3    6.0%          Eval: ~<anonymous> http.js:1:1
+      3  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      3    6.0%          Eval: ~<anonymous> crypto.js:1:1
+      3  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      2    4.0%          LazyCompile: ~setupPrepareStackTrace internal/bootstrap/node.js:254:32
+      2  100.0%            Eval: ~<anonymous> internal/bootstrap/node.js:1:1
+      2    4.0%          Eval: ~<anonymous> stream.js:1:1
+      2  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      2    4.0%          Eval: ~<anonymous> internal/source_map/source_map_cache.js:1:1
+      2  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      2    4.0%          Eval: ~<anonymous> internal/modules/esm/loader.js:1:1
+      2  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      2    4.0%          Eval: ~<anonymous> internal/http2/core.js:1:1
+      2  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      2    4.0%          Eval: ~<anonymous> http2.js:1:1
+      2  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      2    4.0%          Eval: ~<anonymous> events.js:1:1
+      2  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      2    4.0%          Eval: ~<anonymous> _tls_wrap.js:1:1
+      2  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          LazyCompile: ~setupBuffer internal/bootstrap/node.js:302:21
+      1  100.0%            Eval: ~<anonymous> internal/bootstrap/node.js:1:1
+      1    2.0%          LazyCompile: ~initializeCJSLoader internal/bootstrap/pre_execution.js:426:29
+      1  100.0%            LazyCompile: ~prepareMainThreadExecution internal/bootstrap/pre_execution.js:21:36
+      1    2.0%          LazyCompile: ~get dns.js:328:8
+      1  100.0%            /usr/bin/node
+      1    2.0%          LazyCompile: ~createGlobalConsole internal/bootstrap/node.js:319:29
+      1  100.0%            Eval: ~<anonymous> internal/bootstrap/node.js:1:1
+      1    2.0%          Eval: ~<anonymous> tty.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> tls.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/url.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/timers.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/streams/readable.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/process/task_queues.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/process/esm_loader.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/modules/package_json_reader.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/http2/compat.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/fs/promises.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/cluster/master.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/child_process.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> internal/bootstrap/pre_execution.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> buffer.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> assert.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> _http_common.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> _http_client.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1    2.0%          Eval: ~<anonymous> _http_agent.js:1:1
+      1  100.0%            LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      5    9.1%        LazyCompile: ~compileForPublicLoader internal/bootstrap/loaders.js:220:25
+      5  100.0%          LazyCompile: ~loadNativeModule internal/modules/cjs/helpers.js:35:26
+      5  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:724:24
+     24    8.5%      /usr/bin/node
+      3   12.5%        LazyCompile: ~readPackageScope internal/modules/cjs/loader.js:288:26
+      2   66.7%          LazyCompile: ~trySelf internal/modules/cjs/loader.js:408:17
+      2  100.0%            LazyCompile: ~Module._resolveFilename internal/modules/cjs/loader.js:804:35
+      1   33.3%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      1  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:925:33
+      2    8.3%        LazyCompile: ~replaceCaret /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:1029:23
+      2  100.0%          LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:1024:48
+      2  100.0%            /usr/bin/node
+      2    8.3%        LazyCompile: ~mimeMatch /home/din/project/skripsi/auth-service-nodejs/node_modules/type-is/index.js:195:20
+      2  100.0%          LazyCompile: ~typeis /home/din/project/skripsi/auth-service-nodejs/node_modules/type-is/index.js:43:17
+      2  100.0%            LazyCompile: ~typeofrequest /home/din/project/skripsi/auth-service-nodejs/node_modules/type-is/index.js:123:24
+      2    8.3%        LazyCompile: ~isIPv6 internal/net.js:35:16
+      2  100.0%          LazyCompile: ~isIP internal/net.js:39:14
+      1   50.0%            LazyCompile: ~lookupAndConnect net.js:984:26
+      1   50.0%            LazyCompile: ~lookup dns.js:95:16
+      2    8.3%        LazyCompile: ~checkInvalidHeaderChar _http_common.js:230:32
+      2  100.0%          LazyCompile: ~<anonymous> _http_outgoing.js:549:45
+      2  100.0%            LazyCompile: ~hidden internal/errors.js:306:25
+      2    8.3%        LazyCompile: ~Codegen /home/din/project/skripsi/auth-service-nodejs/node_modules/@protobufjs/codegen/index.js:31:21
+      1   50.0%          LazyCompile: ~genVerifyValue /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/verifier.js:20:24
+      1  100.0%            LazyCompile: ~verifier /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/verifier.js:122:18
+      1   50.0%          LazyCompile: ~genValuePartial_fromObject /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/converter.js:20:36
+      1  100.0%            LazyCompile: ~fromObject /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/converter.js:97:43
+      1    4.2%        LazyCompile: ~toIdentifier /home/din/project/skripsi/auth-service-nodejs/node_modules/toidentifier/index.js:24:23
+      1  100.0%          LazyCompile: ~forEachCode /home/din/project/skripsi/auth-service-nodejs/node_modules/http-errors/index.js:265:38
+      1  100.0%            /usr/bin/node
+      1    4.2%        LazyCompile: ~replaceXRange /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:1088:24
+      1  100.0%          LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:1083:41
+      1  100.0%            /usr/bin/node
+      1    4.2%        LazyCompile: ~readPackage internal/modules/cjs/loader.js:257:21
+      1  100.0%          LazyCompile: ~readPackageScope internal/modules/cjs/loader.js:288:26
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      1    4.2%        LazyCompile: ~parseUri /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/grpc-js/build/src/uri-parser.js:27:18
+      1  100.0%          LazyCompile: ~bindAsync /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/grpc-js/build/src/server.js:209:14
+      1  100.0%            LazyCompile: ~startGrpcServer /home/din/project/skripsi/auth-service-nodejs/grpc/app.js:25:25
+      1    4.2%        LazyCompile: ~parse /home/din/project/skripsi/auth-service-nodejs/node_modules/bytes/index.js:141:15
+      1  100.0%          LazyCompile: ~json /home/din/project/skripsi/auth-service-nodejs/node_modules/body-parser/lib/types/json.js:50:15
+      1  100.0%            LazyCompile: ~startRestServer /home/din/project/skripsi/auth-service-nodejs/rest/app.js:4:26
+      1    4.2%        LazyCompile: ~merge /home/din/project/skripsi/auth-service-nodejs/node_modules/merge-descriptors/index.js:34:15
+      1  100.0%          LazyCompile: ~createApplication /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/express.js:37:27
+      1  100.0%            LazyCompile: ~startRestServer /home/din/project/skripsi/auth-service-nodejs/rest/app.js:4:26
+      1    4.2%        LazyCompile: ~iconv._canonicalizeEncoding /home/din/project/skripsi/auth-service-nodejs/node_modules/iconv-lite/lib/index.js:111:39
+      1  100.0%          LazyCompile: ~getCodec /home/din/project/skripsi/auth-service-nodejs/node_modules/iconv-lite/lib/index.js:63:35
+      1  100.0%            LazyCompile: ~getDecoder /home/din/project/skripsi/auth-service-nodejs/node_modules/iconv-lite/lib/index.js:126:39
+      1    4.2%        LazyCompile: ~header /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/response.js:759:29
+      1  100.0%          LazyCompile: ~json /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/response.js:239:25
+      1  100.0%            LazyCompile: ~login /home/din/project/skripsi/auth-service-nodejs/rest/controller.js:23:15
+      1    4.2%        LazyCompile: ~SemVer /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:291:17
+      1  100.0%          LazyCompile: ~Comparator.parse /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:749:39
+      1  100.0%            LazyCompile: ~Comparator /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:714:21
+      1    4.2%        LazyCompile: ~Range.parseRange /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:891:39
+      1  100.0%          LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/node_modules/semver/semver.js:866:53
+      1  100.0%            /usr/bin/node
+      1    4.2%        Eval: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/pipeline.js:1:1
+      1  100.0%          LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+      1  100.0%            LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      7    2.5%      LazyCompile: ~stat internal/modules/cjs/loader.js:145:14
+      4   57.1%        LazyCompile: ~tryFile internal/modules/cjs/loader.js:351:17
+      4  100.0%          LazyCompile: ~tryExtensions internal/modules/cjs/loader.js:367:23
+      4  100.0%            LazyCompile: ~Module._findPath internal/modules/cjs/loader.js:461:28
+      3   42.9%        LazyCompile: ~Module._findPath internal/modules/cjs/loader.js:461:28
+      3  100.0%          LazyCompile: ~Module._resolveFilename internal/modules/cjs/loader.js:804:35
+      3  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:724:24
+      6    2.1%      LazyCompile: ~writevGeneric internal/stream_base_commons.js:118:23
+      6  100.0%        LazyCompile: ~Socket._writeGeneric net.js:761:42
+      6  100.0%          LazyCompile: ~Socket._writev net.js:793:36
+      6  100.0%            LazyCompile: ~doWrite internal/streams/writable.js:367:17
+      4    1.4%      LazyCompile: ~nextTick internal/process/task_queues.js:103:18
+      2   50.0%        LazyCompile: ~resume internal/streams/readable.js:948:16
+      2  100.0%          LazyCompile: ~Readable.resume internal/streams/readable.js:934:37
+      2  100.0%            LazyCompile: ~Readable.on internal/streams/readable.js:847:33
+      1   25.0%        LazyCompile: ~onwrite internal/streams/writable.js:394:17
+      1  100.0%          LazyCompile: ~afterWriteDispatched internal/stream_base_commons.js:151:30
+      1  100.0%            LazyCompile: ~writeGeneric internal/stream_base_commons.js:143:22
+      1   25.0%        LazyCompile: ~<anonymous> internal/streams/destroy.js:39:30
+      1  100.0%          LazyCompile: ~Socket._destroy net.js:655:37
+      1  100.0%            LazyCompile: ~destroy internal/streams/destroy.js:5:17
+      4    1.4%      LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/cluster/index.js:830:67
+      4  100.0%        /usr/bin/node
+      4  100.0%          Eval: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/cluster/index.js:1:1
+      4  100.0%            LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+      3    1.1%      LazyCompile: ~realpathSync fs.js:1718:22
+      3  100.0%        LazyCompile: ~toRealPath internal/modules/cjs/loader.js:360:20
+      3  100.0%          LazyCompile: ~tryFile internal/modules/cjs/loader.js:351:17
+      2   66.7%            LazyCompile: ~tryPackage internal/modules/cjs/loader.js:305:20
+      1   33.3%            LazyCompile: ~tryExtensions internal/modules/cjs/loader.js:367:23
+      3    1.1%      LazyCompile: ~handleWriteReq internal/stream_base_commons.js:47:24
+      3  100.0%        LazyCompile: ~writeGeneric internal/stream_base_commons.js:143:22
+      3  100.0%          LazyCompile: ~Socket._writeGeneric net.js:761:42
+      3  100.0%            LazyCompile: ~Socket._write net.js:798:35
+      3    1.1%      LazyCompile: ~Module._extensions..json internal/modules/cjs/loader.js:1106:39
+      3  100.0%        LazyCompile: ~Module.load internal/modules/cjs/loader.js:925:33
+      3  100.0%          LazyCompile: ~Module._load internal/modules/cjs/loader.js:724:24
+      3  100.0%            LazyCompile: ~Module.require internal/modules/cjs/loader.js:953:36
+
+     52    9.2%  __lll_lock_wait
+      1    1.9%    /usr/bin/node
+      1  100.0%      LazyCompile: ~alloc internal/freelist.js:15:8
+      1  100.0%        LazyCompile: ~connectionListenerInternal _http_server.js:423:36
+      1  100.0%          LazyCompile: ~defaultTriggerAsyncIdScope internal/async_hooks.js:426:36
+      1  100.0%            LazyCompile: ~connectionListener _http_server.js:417:28
+
+     35    6.2%  __write
+     16   45.7%    /usr/bin/node
+      2   12.5%      LazyCompile: ~afterWrite internal/streams/writable.js:456:20
+      2  100.0%        LazyCompile: ~afterWriteTick internal/streams/writable.js:451:24
+      2  100.0%          LazyCompile: ~processTicksAndRejections internal/process/task_queues.js:67:35
+      2   12.5%      /usr/bin/node
+      1   50.0%        LazyCompile: ~getOwn internal/bootstrap/loaders.js:154:16
+      1  100.0%          LazyCompile: ~syncExports internal/bootstrap/loaders.js:261:14
+      1  100.0%            LazyCompile: ~<anonymous> internal/bootstrap/loaders.js:247:15
+      1   50.0%        LazyCompile: ~getAllHandledReflectionObjects /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/build/src/index.js:52:40
+      1  100.0%          LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/build/src/index.js:60:22
+      1  100.0%            /usr/bin/node
+      1    6.3%      LazyCompile: ~socketOnEnd _http_server.js:572:21
+      1  100.0%        LazyCompile: ~emit events.js:349:44
+      1  100.0%          LazyCompile: ~endReadableNT internal/streams/readable.js:1310:23
+      1  100.0%            LazyCompile: ~processTicksAndRejections internal/process/task_queues.js:67:35
+      1    6.3%      LazyCompile: ~onSuccessfulResolution /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/grpc-js/build/src/server.js:384:37
+      1  100.0%        LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/grpc-js/build/src/resolver-dns.js:106:26
+      1  100.0%          LazyCompile: ~processImmediate internal/timers.js:421:28
+      1    6.3%      LazyCompile: ~handle /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/router/layer.js:86:49
+      1  100.0%        LazyCompile: ~trim_prefix /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/router/index.js:288:23
+      1  100.0%          LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/router/index.js:275:64
+      1  100.0%            LazyCompile: ~process_params /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/router/index.js:333:47
+      1    6.3%      LazyCompile: ~from buffer.js:303:28
+      1  100.0%        Eval: ~<anonymous> zlib.js:1:1
+      1  100.0%          LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1  100.0%            LazyCompile: ~compileForPublicLoader internal/bootstrap/loaders.js:220:25
+      1    6.3%      LazyCompile: ~add /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/service.js:118:37
+      1  100.0%        LazyCompile: ~parseMethod /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/parse.js:665:25
+      1  100.0%          LazyCompile: ~parseService_block /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/parse.js:652:53
+      1  100.0%            LazyCompile: ~ifBlock /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/parse.js:279:21
+      1    6.3%      LazyCompile: ~Server.listen net.js:1400:35
+      1  100.0%        LazyCompile: ~listen /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/application.js:616:29
+      1  100.0%          LazyCompile: ~startRestServer /home/din/project/skripsi/auth-service-nodejs/rest/app.js:4:26
+      1  100.0%            Eval: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/index.js:1:1
+      1    6.3%      LazyCompile: ~Redis.sendCommand /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/redis/index.js:623:40
+      1  100.0%        LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/commander.js:103:21
+      1  100.0%          LazyCompile: ~Redis._readyCheck /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/redis/index.js:483:40
+      1  100.0%            LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/redis/event_handler.js:10:21
+      1    6.3%      LazyCompile: ~Redis.parseOptions /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/redis/index.js:195:41
+      1  100.0%        LazyCompile: ~Redis /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/redis/index.js:125:15
+      1  100.0%          Eval: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/database/redis.js:1:1
+      1  100.0%            LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+      1    6.3%      LazyCompile: ~Module._findPath internal/modules/cjs/loader.js:461:28
+      1  100.0%        LazyCompile: ~resolveMainPath internal/modules/run_main.js:12:25
+      1  100.0%          LazyCompile: ~executeUserEntryPoint internal/modules/run_main.js:69:31
+      1  100.0%            Eval: ~<anonymous> internal/main/run_main_module.js:1:1
+      1    6.3%      LazyCompile: ~Codegen /home/din/project/skripsi/auth-service-nodejs/node_modules/@protobufjs/codegen/index.js:31:21
+      1  100.0%        LazyCompile: ~get /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/type.js:154:22
+      1  100.0%          LazyCompile: ~create /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/src/type.js:420:40
+      1  100.0%            LazyCompile: ~toDescriptor /home/din/project/skripsi/auth-service-nodejs/node_modules/@grpc/proto-loader/node_modules/protobufjs/ext/descriptor/index.js:119:52
+      1    6.3%      Eval: ~<anonymous> internal/bootstrap/switches/is_main_thread.js:1:1
+      1    6.3%      Eval: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/DataHandler.js:1:1
+      1  100.0%        LazyCompile: ~Module._compile internal/modules/cjs/loader.js:1026:37
+      1  100.0%          LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      1  100.0%            LazyCompile: ~Module.load internal/modules/cjs/loader.js:925:33
+
+     15    2.7%  /usr/lib/x86_64-linux-gnu/libc-2.31.so
+      9   60.0%    /usr/bin/node
+      1   11.1%      LazyCompile: ~realpathSync fs.js:1718:22
+      1  100.0%        LazyCompile: ~toRealPath internal/modules/cjs/loader.js:360:20
+      1  100.0%          LazyCompile: ~tryFile internal/modules/cjs/loader.js:351:17
+      1  100.0%            LazyCompile: ~tryExtensions internal/modules/cjs/loader.js:367:23
+      1   11.1%      LazyCompile: ~readPackageScope internal/modules/cjs/loader.js:288:26
+      1  100.0%        LazyCompile: ~Module._extensions..js internal/modules/cjs/loader.js:1081:37
+      1  100.0%          LazyCompile: ~Module.load internal/modules/cjs/loader.js:925:33
+      1  100.0%            LazyCompile: ~Module._load internal/modules/cjs/loader.js:724:24
+      1   11.1%      LazyCompile: ~isPlainObject /home/din/project/skripsi/auth-service-nodejs/node_modules/lodash.isplainobject/index.js:125:23
+      1  100.0%        LazyCompile: ~validate /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/sign.js:38:18
+      1  100.0%          LazyCompile: ~validatePayload /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/sign.js:61:25
+      1  100.0%            LazyCompile: ~module.exports /home/din/project/skripsi/auth-service-nodejs/node_modules/jsonwebtoken/sign.js:82:27
+      1   11.1%      LazyCompile: ~handle /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/router/index.js:136:31
+      1  100.0%        LazyCompile: ~handle /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/application.js:158:29
+      1  100.0%          LazyCompile: ~app /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/express.js:38:21
+      1  100.0%            LazyCompile: ~emit events.js:349:44
+      1   11.1%      LazyCompile: ~_implicitHeader _http_server.js:249:68
+      1  100.0%        LazyCompile: ~write_ _http_outgoing.js:704:16
+      1  100.0%          LazyCompile: ~end _http_outgoing.js:795:45
+      1  100.0%            LazyCompile: ~send /home/din/project/skripsi/auth-service-nodejs/node_modules/express/lib/response.js:107:25
+      1   11.1%      LazyCompile: ~Socket.resume net.js:613:35
+      1  100.0%        LazyCompile: ~Readable.on internal/streams/readable.js:847:33
+      1  100.0%          LazyCompile: ~DataHandler /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/DataHandler.js:9:16
+      1  100.0%            LazyCompile: ~<anonymous> /home/din/project/skripsi/auth-service-nodejs/node_modules/ioredis/built/redis/event_handler.js:10:21
+      1   11.1%      Eval: ~<anonymous> internal/modules/cjs/loader.js:1:1
+      1  100.0%        LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1  100.0%          LazyCompile: ~nativeModuleRequire internal/bootstrap/loaders.js:306:29
+      1  100.0%            LazyCompile: ~initializeCJSLoader internal/bootstrap/pre_execution.js:426:29
+      1   11.1%      Eval: ~<anonymous> internal/event_target.js:1:1
+      1  100.0%        LazyCompile: ~compileForInternalLoader internal/bootstrap/loaders.js:273:27
+      1  100.0%          LazyCompile: ~nativeModuleRequire internal/bootstrap/loaders.js:306:29
+      1  100.0%            Eval: ~<anonymous> internal/abort_controller.js:1:1
+      1   11.1%      /usr/bin/node
+      1  100.0%        LazyCompile: ~stat internal/modules/cjs/loader.js:145:14
+      1  100.0%          LazyCompile: ~Module._findPath internal/modules/cjs/loader.js:461:28
+      1  100.0%            LazyCompile: ~Module._resolveFilename internal/modules/cjs/loader.js:804:35
+
+      7    1.2%  __GI___pthread_mutex_unlock
+
