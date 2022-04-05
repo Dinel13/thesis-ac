@@ -7,7 +7,7 @@ auth-service/node_modules/**/*
 
 .env
 
-read-result-puppeter/node_modules
+read-result-puppeter-tools/node_modules
 
 result/jmeter.log
 result/main

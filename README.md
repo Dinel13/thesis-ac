@@ -24,7 +24,10 @@ To store data in the database, I use **Redis**. Then use **k6** to test the perf
 <br>
 
 **System design**
-![sistem design](https://github.com/dinel13/thesis-ac/blob/main/design.jpg?raw=true)
+![sistem design[new]](https://github.com/dinel13/thesis-ac/blob/main/design-new.jpg?raw=true)
+<br >
+
+![sistem design[old]](https://github.com/dinel13/thesis-ac/blob/main/design.jpg?raw=true)
 
 ## Technologies
 
@@ -111,12 +114,18 @@ All test files for K6 are in **k6** directory. For example, if you want to test 
 
 ### 2. Use Jmeter
 
-#### Run gateway service
+#### Run proxy service
 
-Gateway service use to transform from rest to grpc and carry on rest to rest. So we can use jmeter to test the performance both for grpc and rest.
+Proxy service use to transform from rest to grpc and carry on rest to rest. So we can use jmeter to test the performance both for grpc and rest.
 
 ```bash
 $ IP_KRS=127.0.0.1 IP_AUTH=127.0.0.1 IP_PAYMENT=127.0.0.1 test/main
+```
+
+or use the command below to automate laod test.
+
+```bash
+$ test-tools/main -j=/home/din/Downloads/apache-jmeter-5.4.1/bin/jmeter -m="test" ./jmx/1000 ./result/1000
 ```
 
 #### Run test use JMeter
@@ -135,6 +144,21 @@ Still developing...
 <br>
 
 ## Result
+
+### Result for test use Apache JMeter
+
+**Response Time**
+![response time](https://github.com/dinel13/thesis-ac/blob/main/jmeter-response-time.png?raw=true)
+<br>
+
+**Throughput**
+![throughput](https://github.com/dinel13/thesis-ac/blob/main/jmeter-throughput.png?raw=true)
+<br>
+
+**CPU Utilization**
+![CPU Utilization](https://github.com/dinel13/thesis-ac/blob/main/jmeter-cpu.png?raw=true)
+
+<br >
 
 ### Result for K6 with 100 vurtual user in 30 second
 
