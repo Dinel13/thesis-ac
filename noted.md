@@ -65,6 +65,7 @@ source ~/.bashrc
 jmeter.sh -n -t jmx/100/grpc-krs-create.jmx -l testresults.jtl
 ./bin/jmeter  -g grpc.jtl -o reportt
 
+/home/din/Downloads/apache-jmeter-5.4.1/bin/jmeter.sh -nn -t jmx/100/grpc-krs-create.jmx -l testresults.jtl
 
 # K6
 echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
