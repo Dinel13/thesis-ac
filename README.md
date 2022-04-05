@@ -23,10 +23,12 @@ The main purpose of this thesis is to **Compare the performance of microservice 
 To store data in the database, I use **Redis**. Then use **k6** to test the performance of each service and use **Datadog** to monitor the performance. Additionaly i also try use **Jmeter** to load test. All the services are deployed in different **EC2 AWS** as well as the test agent then use private IP to communicate.
 <br>
 
-**System design**
+### System design
+**New design**
 ![sistem design[new]](https://github.com/dinel13/thesis-ac/blob/main/design-new.jpg?raw=true)
 <br >
 
+**Old design**
 ![sistem design[old]](https://github.com/dinel13/thesis-ac/blob/main/design.jpg?raw=true)
 
 ## Technologies
@@ -74,6 +76,12 @@ $ payment-service/main
 <br>
 
 ## Run test
+
+run the cpu watch tool to watch the cpu usage.
+
+```bash
+$ cpu-watch-tool/main -p <pid server> -o <output file>
+```
 
 ### 1. **RUN Test Service**
 
@@ -148,14 +156,17 @@ Still developing...
 ### Result for test use Apache JMeter
 
 **Response Time**
+
 ![response time](https://github.com/dinel13/thesis-ac/blob/main/jmeter-response-time.png?raw=true)
 <br>
 
 **Throughput**
+
 ![throughput](https://github.com/dinel13/thesis-ac/blob/main/jmeter-throughput.png?raw=true)
 <br>
 
 **CPU Utilization**
+
 ![CPU Utilization](https://github.com/dinel13/thesis-ac/blob/main/jmeter-cpu.png?raw=true)
 
 <br >
@@ -163,12 +174,15 @@ Still developing...
 ### Result for K6 with 100 vurtual user in 30 second
 
 **Grpc**
+
 ![grpc](https://github.com/dinel13/thesis-ac/blob/main/100.png?raw=true)
 <br>
 
 **Rest**
+
 ![rest](https://github.com/dinel13/thesis-ac/blob/main/100r.png?raw=true)
 <br>
 
 **Datadog**
+
 ![datadog](https://github.com/dinel13/thesis-ac/blob/main/datadog.png?raw=true)
