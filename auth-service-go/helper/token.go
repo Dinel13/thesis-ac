@@ -59,6 +59,11 @@ func ParseToken(tokenString string, secretKey string) error {
 		return errors.New("token invalid")
 	}
 
+	// cek if claims is empty
+	if claims["exp"] == nil {
+		return errors.New("token invalid, claims exp empty")
+	}
+
 	// look the containts of claims
 	expires_at := int(claims["exp"].(float64))
 
