@@ -20,8 +20,9 @@ import (
 	mygrpc "github.com/dinel13/thesis-ac/krs/grpc"
 )
 
-var urlAuth = os.Getenv("URL_AUTH")
-var urlPay = os.Getenv("URL_PAYMENT")
+var ipAuth = os.Getenv("IP_AUTH")
+var ipPay = os.Getenv("IP_PAYMENT")
+var ipRedis = os.Getenv("IP_REDIS")
 
 // startRestServer starts the REST server
 func startRestServer() {
@@ -63,12 +64,12 @@ func startGRPCServer() {
 	// connect to Reddis database
 	dbClient, krsRepo := startRepoRedis()
 
-	connAuth, err := grpc.Dial(fmt.Sprintf("%s:9091", urlAuth), grpc.WithInsecure())
+	connAuth, err := grpc.Dial(fmt.Sprintf("%s:9091", ipAuth), grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	connPayment, err := grpc.Dial(fmt.Sprintf("%s:9092", urlPay), grpc.WithInsecure())
+	connPayment, err := grpc.Dial(fmt.Sprintf("%s:9092", ipPay), grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -126,17 +127,37 @@ func startRepoRedis() (*redis.Client, domain.KrsRepository) {
 func connectRedis() *redis.Client {
 	log.Println("Connecting to redis...")
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: ipRedis + ":6379",
 	})
-	_, err := client.Ping(context.Background()).Result()
+	res, err := client.Ping(context.Background()).Result()
 	if err != nil {
 		log.Fatal("Cannot connect to redis! Dying...")
 	}
+
+	log.Println(res)
+
+	// cek the response
+	if res != "PONG" {
+		log.Fatal("Cannot connect to redis! Dying...")
+	}
+
 	log.Println("Connected to redis!")
 	return client
 }
 
 func main() {
+
+	if ipAuth == "" {
+		log.Fatal("IP_AUTH is not set")
+	}
+	if ipPay == "" {
+		log.Fatal("IP_PAYMENT is not set")
+	}
+	if ipRedis == "" {
+		log.Fatal("IP_REDIS environment variable not set! Dying...")
+	}
+	log.Printf("use ipAuth: %s, ipPay: %s, ipRedis: %s", ipAuth, ipPay, ipRedis)
+
 	go startRestServer()
 	go startGRPCServer()
 	time.Sleep(113880 * time.Hour)

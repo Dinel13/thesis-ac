@@ -118,3 +118,13 @@ apt-get install graphviz gv
 sudo journalctl -u auth.service
 sudo journalctl --rotate
 sudo journalctl --vacuum-time=1s
+
+
+## aws vpc
+buat vpc
+buat dua subnet : private dan public
+pada private matikan auto asigment ip publik atau bisa di seting pas buat instance ec2 supaya ec2 private tidak punya ip publik
+
+buat route table
+public gunkana internet gateway
+private gunakan NAT gateway - Nat gateway yg dibuat harus mengunakan public subnet

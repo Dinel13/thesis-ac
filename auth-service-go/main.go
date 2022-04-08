@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"time"
 
 	"google.golang.org/grpc"
@@ -20,6 +21,8 @@ import (
 	"github.com/dinel13/thesis-ac/auth/rest"
 	"github.com/dinel13/thesis-ac/auth/service"
 )
+
+var ipRedis = os.Getenv("IP_REDIS")
 
 // StartRestServer starts the REST server
 func StartRestServer() {
@@ -74,7 +77,7 @@ func connectRedis() *redis.Client {
 	// connect to redis
 	log.Println("Connecting to redis...")
 	client := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: ipRedis + ":6379",
 	})
 	_, err := client.Ping(context.Background()).Result()
 	if err != nil {
@@ -85,6 +88,10 @@ func connectRedis() *redis.Client {
 }
 
 func main() {
+	if ipRedis == "" {
+		log.Fatal("IP_REDIS environment variable not set! Dying...")
+	}
+	log.Println("use IP_REDIS: ", ipRedis)
 	go StartRestServer()
 	go StartGRPCServer()
 	time.Sleep(113880 * time.Hour)
