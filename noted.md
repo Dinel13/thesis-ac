@@ -44,6 +44,7 @@ reddis https://www.digitalocean.com/community/tutorials/how-to-install-and-secur
 sudo apt update
 sudo apt install redis-server
 sudo nano /etc/redis/redis.conf
+bind 0.0.0.0 untuk akses remote
 supervised systemd
 sudo systemctl restart redis.service
 sudo systemctl status redis
