@@ -16,7 +16,7 @@ type resDataPayment struct {
 	Payment payment `json:"payment"`
 }
 
-var urlPay = os.Getenv("URL_PAYMENT")
+var urlPay = os.Getenv("IP_PAYMENT")
 
 func verifyPayment(userId int) (bool, error) {
 	var client = &http.Client{

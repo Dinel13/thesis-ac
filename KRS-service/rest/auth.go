@@ -12,7 +12,7 @@ type resData struct {
 	IsAuth bool `json:"isAuth"`
 }
 
-var url = os.Getenv("URL_AUTH")
+var url = os.Getenv("IP_AUTH")
 
 func verifyToken(token string) (bool, error) {
 	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8081/verify", url), nil)
