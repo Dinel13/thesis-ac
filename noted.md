@@ -116,6 +116,7 @@ python -m grpc_tools.protoc --proto_path=. ./auth.proto --python_out=. --grpc_py
 
 apt-get install graphviz gv
 
+
 sudo journalctl -u auth.service
 sudo journalctl --rotate
 sudo journalctl --vacuum-time=1s

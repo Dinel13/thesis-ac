@@ -22,12 +22,17 @@ type Process struct {
 func main() {
 	output := flag.String("o", "", "output file")
 	pid := flag.String("p", "", "pid")
+	tresString := flag.String("t", "", "treshold")
+	tres := 1.0
 	flag.Parse()
 	if *pid == "" {
 		log.Fatal("pid is empty")
 	}
 	if *output == "" {
 		log.Fatal("output file is empty")
+	}
+	if *tresString != "" {
+		tres, _ = strconv.ParseFloat(*tresString, 64)
 	}
 	f, err := os.Create(*output)
 	if err != nil {
@@ -39,7 +44,7 @@ func main() {
 
 	for {
 		process := GetProcessInfoUseTop(*pid)
-		if process == nil || process.cpu <= 0.3 {
+		if process == nil || process.cpu <= tres {
 			continue
 		}
 
