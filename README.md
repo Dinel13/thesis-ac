@@ -48,7 +48,7 @@ To store data in the database, I use **Redis**. Then use **k6** to test the perf
 ### 1. **KRS Service**
 
 ```bash
-$ URL_AUTH=127.0.0.1 URL_PAYMENT=127.0.0.1 KRS-service/main
+$ IP_AUTH=localhost IP_PAYMENT=localhost IP_REDIS=localhost KRS-service/main
 ```
 
 ### 2. **Auth Service**
@@ -56,13 +56,13 @@ $ URL_AUTH=127.0.0.1 URL_PAYMENT=127.0.0.1 KRS-service/main
 #### Use nodejs
 
 ```bash
-$  cd auth-service-nodejs && npm install && npm start
+$  cd auth-service-nodejs && npm install && IP_REDIS=localhost npm start
 ```
 
 #### Use golang
 
 ```bash
-$ auth-service-go/main
+$ IP_REDIS=localhost auth-service-go/main
 ```
 
 <br>
@@ -70,7 +70,7 @@ $ auth-service-go/main
 ### 3. **Payment Service** use golang.
 
 ```bash
-$ payment-service/main
+$ IP_REDIS=localhost payment-service/main
 ```
 
 <br>
@@ -83,10 +83,10 @@ run the cpu watch tool to watch the cpu usage.
 $ cpu-watch-tool/main -p <pid server> -o <output file>
 ```
 
-### 1. **RUN Test Service**
+### 1. **RUN proxy Service**
 
 ```bash
-$ IP_KRS= IP_AUTH= IP_PAYMENT=  test/main
+$ IP_KRS=localhost IP_AUTH=localhost IP_PAYMENT=localhost  proxy/main
 ```
 
 ### 1. Use K6

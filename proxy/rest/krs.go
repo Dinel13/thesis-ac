@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -117,15 +118,16 @@ func DeleteKrs(ip, token string, id int) error {
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("error make request ", err)
 		return err
 	}
 
 	defer response.Body.Close()
 
-	resBody := &domain.KrsResponse{}
+	resBody := &domain.ResKrsDelete{}
 	err = json.NewDecoder(response.Body).Decode(resBody)
 	if err != nil {
+		log.Println("error decoded", err)
 		return err
 	}
 

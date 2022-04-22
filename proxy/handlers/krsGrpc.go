@@ -88,10 +88,6 @@ func (k *grpcKrs) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
-		return
-	}
 	token := r.Header.Get("Authorization")[7:]
 
 	err = k.kgc.DeleteKrs(id, token)

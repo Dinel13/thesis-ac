@@ -89,10 +89,6 @@ func (k *RestKrs) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
-		return
-	}
 	token := r.Header.Get("Authorization")
 
 	err = rest.DeleteKrs(k.ip, token, id)
