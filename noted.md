@@ -1,7 +1,13 @@
 # importtant
 ./thesis-ac/test-tools/main -j=jmeter.sh -m="test" thesis-ac/jmx/red-1000 ./result/redis/1000
 
+./project/thesis-ac/test-tools/main -j=/home/din/aplikasi/jmeter/bin/jmeter -m="convert" ./http2 ./report/http2
+pastikan folder dalalam sumber dan output sama (misalnya sama-sama ada 100) karena jmeter tidak buat auto foldernya
 
+./test -j=/home/din/Downloads/apache-jmeter-5.4.1/bin/jmeter -m="convert" ./rest ./report/rest
+
+# thanks
+https://itnext.io/node-express-letsencrypt-generate-a-free-ssl-certificate-and-run-an-https-server-in-5-minutes-a730fbe528ca 
 
 # todo
 
