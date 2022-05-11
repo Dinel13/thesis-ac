@@ -11,7 +11,7 @@ import (
 )
 
 func VerifyToken(ip, token string) (*domain.VerifyTokenResponse, error) {
-	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8081/verify", ip), nil)
+	request, err := http.NewRequest("POST", fmt.Sprintf("%s/verify", ip), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func Login(req *domain.LoginSignupRequest, ip string) (*domain.LoginSignupRespon
 	if err != nil {
 		return nil, err
 	}
-	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8081/login", ip), bytes.NewBuffer(body))
+	request, err := http.NewRequest("POST", fmt.Sprintf("%s/login", ip), bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}

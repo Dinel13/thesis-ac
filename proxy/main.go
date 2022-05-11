@@ -89,6 +89,7 @@ func main() {
 	fmt.Println("Endpoint for grpc : /grpc")
 	// http.ListenAndServe(port, router)
 	err = server.ListenAndServe()
+	// err = server.ListenAndServeTLS("server.crt", "server.key")
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}

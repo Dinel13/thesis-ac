@@ -1,3 +1,8 @@
+# importtant
+./thesis-ac/test-tools/main -j=jmeter.sh -m="test" thesis-ac/jmx/red-1000 ./result/redis/1000
+
+
+
 # todo
 
 
