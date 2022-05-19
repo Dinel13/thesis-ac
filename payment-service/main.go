@@ -9,11 +9,12 @@ import (
 	"os"
 	"time"
 
-	"google.golang.org/grpc"
-
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/dinel13/thesis-ac/payment/domain"
 	"github.com/dinel13/thesis-ac/payment/repository"
+	"github.com/dinel13/thesis-ac/payment/sqs"
 	"github.com/go-redis/redis/v8"
+	"google.golang.org/grpc"
 
 	mygrpc "github.com/dinel13/thesis-ac/payment/grpc"
 
@@ -88,11 +89,53 @@ func connectRedis() *redis.Client {
 }
 
 func main() {
-	if ipRedis == "" {
-		log.Fatal("IP_REDIS environment variable not set! Dying...")
-	}
-	log.Println("use IP_REDIS: ", ipRedis)
-	go StartRestServer()
-	go StartGRPCServer()
+	sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
+
+	queueURL := "https://sqs.ap-southeast-1.amazonaws.com/511415859101/thesis.fifo"
+	waitTime := int64(20)
+
+	// err := sqs.SendMsg(sess, &msgGrup, &queueURL)
+	// if err != nil {
+	// 	fmt.Println("Got an error sending the message:")
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println("Sent message to queue ")
+	// println("sleep")
+	// time.Sleep(2 * time.Second)
+
+	// var timeout = int64(10)
+	//msgResult, err := sqs.GetMessages(sess, &queueURL, &timeout)
+	//if err != nil {
+	//	fmt.Println("Got an error receiving messages:")
+	//	fmt.Println(err)
+	//	return
+	//}
+	//
+	//fmt.Println("Message ID:     " + *msgResult.Messages[0].MessageId)
+	//fmt.Println("Message ID:     " + *msgResult.Messages[0].Body)
+	//
+	//// snippet-start:[sqs.go.receive_messages.print_handle]
+	//fmt.Println("Message Handle: " + *msgResult.Messages[0].ReceiptHandle)
+
+	//err = sqs.DeleteMessage(sess, &queueURL, msgResult.Messages[0].ReceiptHandle)
+	//if err != nil {
+	//	fmt.Println("Got an error deleting the message:")
+	//	fmt.Println(err)
+	//	return
+	//}
+	//
+	//fmt.Println("Deleted message from queue with URL " + queueURL)
+
+	//if ipRedis == "" {
+	//	log.Fatal("IP_REDIS environment variable not set! Dying...")
+	//}
+	//log.Println("use IP_REDIS: ", ipRedis)
+	//go StartRestServer()
+	//go StartGRPCServer()
+	go sqs.WaitMsgSqs(sess, &queueURL, &waitTime)
 	time.Sleep(113880 * time.Hour)
+
 }

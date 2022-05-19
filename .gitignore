@@ -12,3 +12,8 @@ read-result-puppeter-tools/node_modules
 result/jmeter.log
 result/main
 result/report
+
+
+payment-service/.vscode
+payment-service/.aws
+payment-service/.env
