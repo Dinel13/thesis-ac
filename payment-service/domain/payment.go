@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/dinel13/thesis-ac/payment/proto"
 )
 
@@ -39,4 +40,11 @@ type PaymentRestHandlers interface {
 type PaymentGrpcHandler interface {
 	Create(context.Context, *proto.CreatePaymentRequest) (*proto.PaymentResponse, error)
 	Verify(context.Context, *proto.VerifyPaymentRequest) (*proto.PaymentResponse, error)
+}
+
+type PaymentSQSHandler interface {
+	WaitMsgSqs()
+	GetLPMessages() (*sqs.ReceiveMessageOutput, error)
+	SendMsg(*string, map[string]interface{}) (*string, error)
+	DeleteMessage(*string) error
 }
