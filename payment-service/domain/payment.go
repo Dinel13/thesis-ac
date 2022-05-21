@@ -45,6 +45,6 @@ type PaymentGrpcHandler interface {
 type PaymentSQSHandler interface {
 	WaitMsgSqs()
 	GetLPMessages() (*sqs.ReceiveMessageOutput, error)
-	SendMsg(*string, map[string]interface{}) (*string, error)
+	SendMsg(*string, bool) (*string, error)
 	DeleteMessage(*string) error
 }

@@ -1,24 +1,21 @@
 package sqs
 
 import (
-	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/dinel13/thesis-ac/payment/domain"
+	"github.com/dinel13/thesis-ac/test/domain"
 )
 
-func NewSQSHandler(s domain.PaymentRepository, sess *session.Session, qUrlPay, qUrlKrs *string, waitTime *int64) domain.PaymentSQSHandler {
+func NewSQSHandler(sess *session.Session, in, out *string, waitTime *int64) domain.PaymentSQSHandler {
 	msgGrup := "payment"
 
 	return sqsHandler{
-		repo:     s,
 		sess:     sess,
-		qUrlPay:  qUrlPay,
-		qUrlKrs:  qUrlKrs,
+		in:       in,
+		out:      out,
 		waitTime: waitTime,
 		msgGrup:  &msgGrup,
 	}
@@ -27,18 +24,17 @@ func NewSQSHandler(s domain.PaymentRepository, sess *session.Session, qUrlPay, q
 
 type sqsHandler struct {
 	sess     *session.Session
-	qUrlPay  *string
-	qUrlKrs  *string
+	in       *string
+	out      *string
 	msgGrup  *string
 	waitTime *int64
-	repo     domain.PaymentRepository
 }
 
 func (h sqsHandler) GetLPMessages() (*sqs.ReceiveMessageOutput, error) {
 	svc := sqs.New(h.sess)
 
 	result, err := svc.ReceiveMessage(&sqs.ReceiveMessageInput{
-		QueueUrl: h.qUrlPay,
+		QueueUrl: h.in,
 		AttributeNames: aws.StringSlice([]string{
 			"SentTimestamp",
 		}),
@@ -55,17 +51,8 @@ func (h sqsHandler) GetLPMessages() (*sqs.ReceiveMessageOutput, error) {
 	return result, nil
 }
 
-func (h sqsHandler) SendMsg(msgId *string, msg bool) (*string, error) {
+func (h sqsHandler) SendMsg(msgId, body *string) (*string, error) {
 	svc := sqs.New(h.sess)
-
-	// marshal data to json
-	// jsonData, err := json.Marshal(data)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// jsonDataStr := string(jsonData)
-	msgStr := strconv.FormatBool(msg)
 
 	res, err := svc.SendMessage(&sqs.SendMessageInput{
 		MessageGroupId: h.msgGrup,
@@ -76,13 +63,14 @@ func (h sqsHandler) SendMsg(msgId *string, msg bool) (*string, error) {
 				StringValue: msgId,
 			},
 		},
-		MessageBody: &msgStr,
-		QueueUrl:    h.qUrlKrs,
+		MessageBody: body,
+		QueueUrl:    h.out,
 	})
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Printf("send id %s with body %s", *msgId, *body)
 	return res.MessageId, nil
 }
 
@@ -90,23 +78,24 @@ func (h sqsHandler) DeleteMessage(messageHandle *string) error {
 	svc := sqs.New(h.sess)
 
 	_, err := svc.DeleteMessage(&sqs.DeleteMessageInput{
-		QueueUrl:      h.qUrlPay,
+		QueueUrl:      h.in,
 		ReceiptHandle: messageHandle,
 	})
 	if err != nil {
 		return err
 	}
+	fmt.Println("Deleted message from queue with URL " + *h.in)
 
 	return nil
 }
 
-func (h sqsHandler) WaitMsgSqs() {
+func (h sqsHandler) WaitMsgSqs(id *string) (bool, error) {
+	fmt.Printf("wait for %s", *id)
 	for {
 		msgResult, err := h.GetLPMessages()
 		if err != nil {
 			fmt.Println("Got an error receiving messages:")
-			fmt.Println(err)
-			continue
+			return false, err
 		}
 
 		// cek if message is empty
@@ -115,32 +104,21 @@ func (h sqsHandler) WaitMsgSqs() {
 		}
 
 		var idReq = msgResult.Messages[0].MessageAttributes["ID"].StringValue
-		idMhs, err := strconv.Atoi(*msgResult.Messages[0].Body)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
+		respon := *msgResult.Messages[0].Body
 
-		payment, err := h.repo.Verify(context.Background(), idMhs)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		fmt.Println("Payment: ", payment)
-
-		_, err = h.SendMsg(idReq, payment.IsPay)
-		if err != nil {
-			fmt.Println(err)
+		fmt.Println(*idReq, respon, *id)
+		if *id != *idReq {
+			fmt.Println("tidak sama")
 			continue
 		}
 
 		err = h.DeleteMessage(msgResult.Messages[0].ReceiptHandle)
 		if err != nil {
 			fmt.Println("Got an error deleting the message:")
-			fmt.Println(err)
-			continue
+			return false, err
 		}
 
-		fmt.Println("Deleted message from queue with URL " + *h.qUrlPay)
+		fmt.Printf("wait for %s is FInished", *id)
+		return respon == "true", nil
 	}
 }

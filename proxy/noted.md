@@ -17,5 +17,7 @@ LimitCORE=infinity
 LimitNOFILE=65536
 
 
+IP_KRS=localhost IP_AUTH=localhost IP_PAYMENT=localhost Q_PAY=https://sqs.ap-southeast-1.amazonaws.com/511415859101/thesis.fifo Q_PROXY=https://sqs.ap-southeast-1.amazonaws.com/511415859101/krspay.fifo go run main.go
 
-IP_KRS=172.31.30.48 IP_AUTH=172.31.24.28 IP_PAYMENT=172.31.28.177 ./main 
+
+IP_KRS=172.31.30.48 IP_AUTH=172.31.24.28 IP_PAYMENT=172.31.28.177 Q_PAY=https://sqs.ap-southeast-1.amazonaws.com/511415859101/thesis.fifo Q_PROXY=https://sqs.ap-southeast-1.amazonaws.com/511415859101/krspay.fifo ./main 
