@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "proto";
+
+message MataKuliah {
+	string kode = 1;
+	string nama = 2;
+	int32 sks = 3;
+	string dosen = 4;
+	string semester = 5;
+ }
+
+message Krs {
+   int32 id_mahasiswa = 1;
+   repeated MataKuliah mata_kuliahs = 2;
+}
+
+message Response {
+	string message = 1;
+	uint64 code = 2;
+	repeated MataKuliah mata_kuliahs = 3;
+}
+
+service API {
+	rpc CreateKrs(Krs) returns (Response);
+}

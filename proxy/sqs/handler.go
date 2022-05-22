@@ -104,6 +104,7 @@ func (h sqsHandler) WaitMsgSqs(responChan chan domain.ResponMsgWaitChan, id *str
 
 		// cek if message is empty
 		if len(msgResult.Messages) == 0 {
+			fmt.Println("No messages received, still wait for " + *id)
 			continue
 		}
 

@@ -1,0 +1,1 @@
+IP_AUTH=localhost IP_PAYMENT=localhost IP_REDIS=localhost go run main.go

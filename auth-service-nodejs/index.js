@@ -1,5 +1,5 @@
 const startGrpc  = require("./grpc/app");
-const startRest = require("./rest/http2");
+const startRest = require("./rest/app");
 
 startGrpc();
 startRest();
