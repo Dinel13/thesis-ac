@@ -24,6 +24,11 @@ type PaymentWraperResponse struct {
 	PaymentResponse PaymentResponse `json:"payment"`
 }
 
+type ResponMsgWaitChan struct {
+	IsPay bool  `json:"isPay"`
+	Err   error `json:"err"`
+}
+
 type PaymentHandlers interface {
 	Pay(http.ResponseWriter, *http.Request)
 	VerifyPayment(http.ResponseWriter, *http.Request)
@@ -35,7 +40,7 @@ type PaymentGrpcClients interface {
 }
 
 type PaymentSQSHandler interface {
-	WaitMsgSqs(*string) (bool, error)
+	WaitMsgSqs(chan ResponMsgWaitChan, *string)
 	GetLPMessages() (*sqs.ReceiveMessageOutput, error)
 	SendMsg(*string, *string) (*string, error)
 	DeleteMessage(*string) error

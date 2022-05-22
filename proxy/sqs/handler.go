@@ -89,13 +89,17 @@ func (h sqsHandler) DeleteMessage(messageHandle *string) error {
 	return nil
 }
 
-func (h sqsHandler) WaitMsgSqs(id *string) (bool, error) {
+func (h sqsHandler) WaitMsgSqs(responChan chan domain.ResponMsgWaitChan, id *string) {
 	fmt.Printf("wait for %s", *id)
 	for {
 		msgResult, err := h.GetLPMessages()
 		if err != nil {
 			fmt.Println("Got an error receiving messages:")
-			return false, err
+			responChan <- domain.ResponMsgWaitChan{
+				IsPay: false,
+				Err:   err,
+			}
+			return
 		}
 
 		// cek if message is empty
@@ -115,10 +119,18 @@ func (h sqsHandler) WaitMsgSqs(id *string) (bool, error) {
 		err = h.DeleteMessage(msgResult.Messages[0].ReceiptHandle)
 		if err != nil {
 			fmt.Println("Got an error deleting the message:")
-			return false, err
+			responChan <- domain.ResponMsgWaitChan{
+				IsPay: false,
+				Err:   err,
+			}
+			return
 		}
 
 		fmt.Printf("wait for %s is FInished", *id)
-		return respon == "true", nil
+		responChan <- domain.ResponMsgWaitChan{
+			IsPay: respon == "true",
+			Err:   nil,
+		}
+		return
 	}
 }

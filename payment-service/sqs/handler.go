@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"sync"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -87,6 +88,7 @@ func (h sqsHandler) SendMsg(msgId *string, msg bool) (*string, error) {
 }
 
 func (h sqsHandler) DeleteMessage(messageHandle *string) error {
+	fmt.Println("deleting message... ")
 	svc := sqs.New(h.sess)
 
 	_, err := svc.DeleteMessage(&sqs.DeleteMessageInput{
@@ -96,11 +98,10 @@ func (h sqsHandler) DeleteMessage(messageHandle *string) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
-func (h sqsHandler) WaitMsgSqs() {
+func (h sqsHandler) WaitMsgSqs(wg sync.WaitGroup) {
 	for {
 		msgResult, err := h.GetLPMessages()
 		if err != nil {
@@ -111,6 +112,7 @@ func (h sqsHandler) WaitMsgSqs() {
 
 		// cek if message is empty
 		if len(msgResult.Messages) == 0 {
+			fmt.Println("No messages to process.")
 			continue
 		}
 
@@ -141,6 +143,8 @@ func (h sqsHandler) WaitMsgSqs() {
 			continue
 		}
 
-		fmt.Println("Deleted message from queue with URL " + *h.qUrlPay)
+		fmt.Println("finished request " + *idReq)
 	}
+
+	wg.Done()
 }

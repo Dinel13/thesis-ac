@@ -42,13 +42,16 @@ func (p *paymentSqsHandlers) VerifyPayment(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	respon, err := p.psc.WaitMsgSqs(&timestamp)
-	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+	responChan := make(chan domain.ResponMsgWaitChan)
+	go p.psc.WaitMsgSqs(responChan, &timestamp)
+
+	respon := <-responChan
+	if respon.Err != nil {
+		WriteJsonError(w, respon.Err, http.StatusBadRequest)
 		return
 	}
-
-	WriteJson(w, http.StatusOK, respon, "isPay")
+	WriteJson(w, http.StatusOK, respon.IsPay, "isPay")
+	return
 }
 
 func NewSqsPaymentHandlers(psc domain.PaymentSQSHandler) domain.PaymentHandlers {

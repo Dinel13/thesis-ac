@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"net/http"
+	"sync"
 
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/dinel13/thesis-ac/payment/proto"
@@ -43,7 +44,7 @@ type PaymentGrpcHandler interface {
 }
 
 type PaymentSQSHandler interface {
-	WaitMsgSqs()
+	WaitMsgSqs(sync.WaitGroup)
 	GetLPMessages() (*sqs.ReceiveMessageOutput, error)
 	SendMsg(*string, bool) (*string, error)
 	DeleteMessage(*string) error
