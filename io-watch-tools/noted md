@@ -1,0 +1,3 @@
+top -b -n 2 -d 0.1 -p 9117
+
+go run io.go -o dasd -p 2717
