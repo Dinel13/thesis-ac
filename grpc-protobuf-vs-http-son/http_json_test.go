@@ -2,12 +2,12 @@ package benchmarks
 
 import (
 	"bytes"
-	"encoding/json"
 	"net/http"
 	"testing"
 	"time"
 
 	httpjson "github.com/dinel13/thesis-ac/protobuf-vs-json/http-json"
+	"github.com/mailru/easyjson"
 )
 
 func init() {
@@ -51,10 +51,11 @@ func doPost(client *http.Client, b *testing.B) {
 		},
 	}
 
-	buf := new(bytes.Buffer)
-	json.NewEncoder(buf).Encode(u)
-
-	resp, err := client.Post("http://127.0.0.1:60001/", "application/json", buf)
+	// buf := new(bytes.Buffer)
+	// json.NewEncoder(buf).Encode(u)
+	byte, _ := easyjson.Marshal(u)
+	reader := bytes.NewReader(byte)
+	resp, err := client.Post("http://127.0.0.1:60001/", "application/json", reader)
 	if err != nil {
 		b.Fatalf("http request failed: %v", err)
 	}
@@ -63,7 +64,7 @@ func doPost(client *http.Client, b *testing.B) {
 
 	// We need to parse response to have a fair comparison as gRPC does it
 	var target httpjson.Response
-	decodeErr := json.NewDecoder(resp.Body).Decode(&target)
+	decodeErr := easyjson.UnmarshalFromReader(resp.Body, &target)
 	if decodeErr != nil {
 		b.Fatalf("unable to decode json: %v", decodeErr)
 	}
