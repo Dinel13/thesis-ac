@@ -1,27 +1,17 @@
 package rest
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
-	"time"
+
+	"github.com/dinel13/thesis-ac/krs/domain"
+	"github.com/mailru/easyjson"
 )
-
-type payment struct {
-	IsPay bool `json:"isPay"`
-}
-
-type resDataPayment struct {
-	Payment payment `json:"payment"`
-}
 
 var urlPay = os.Getenv("IP_PAYMENT")
 
-func verifyPayment(userId int) (bool, error) {
-	var client = &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
+func verifyPayment(client *http.Client, userId int) (bool, error) {
 	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8082/verify/%d", urlPay, userId), nil)
 	if err != nil {
 		return false, err
@@ -33,8 +23,8 @@ func verifyPayment(userId int) (bool, error) {
 
 	defer response.Body.Close()
 
-	var dataPayment resDataPayment
-	err = json.NewDecoder(response.Body).Decode(&dataPayment)
+	var dataPayment domain.PaymentData
+	err = easyjson.UnmarshalFromReader(response.Body, &dataPayment)
 	if err != nil {
 		return false, err
 	}

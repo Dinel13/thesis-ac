@@ -1,30 +1,23 @@
 package rest
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
-	"time"
-)
 
-type resData struct {
-	IsAuth bool `json:"isAuth"`
-}
+	"github.com/dinel13/thesis-ac/krs/domain"
+	"github.com/mailru/easyjson"
+)
 
 var url = os.Getenv("IP_AUTH")
 
-func verifyToken(token string) (bool, error) {
+func verifyToken(client *http.Client, token string) (bool, error) {
 	request, err := http.NewRequest("POST", fmt.Sprintf("http://%s:8081/verify", url), nil)
 	if err != nil {
 		return false, err
 	}
 	request.Header.Add("Authorization", token)
 
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err)
@@ -33,11 +26,11 @@ func verifyToken(token string) (bool, error) {
 
 	defer response.Body.Close()
 
-	var data resData
-	err = json.NewDecoder(response.Body).Decode(&data)
+	var authData domain.AuthData
+	err = easyjson.UnmarshalFromReader(response.Body, &authData)
 	if err != nil {
 		return false, err
 	}
 
-	return data.IsAuth, nil
+	return authData.IsAuth, nil
 }
