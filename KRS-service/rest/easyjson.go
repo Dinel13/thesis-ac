@@ -15,7 +15,7 @@ func ReadEasyJson(request *http.Request, data *domain.Krs) error {
 	return nil
 }
 
-func WriteEasyJson(w http.ResponseWriter, status int, data *domain.Krs) error {
+func WriteEasyJson(w http.ResponseWriter, status int, data *domain.KrsWrapper) error {
 	js, err := easyjson.Marshal(data)
 	if err != nil {
 		return err

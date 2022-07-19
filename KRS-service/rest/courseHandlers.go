@@ -63,7 +63,7 @@ func (h krsHandlers) Read(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// write the krs to response
-	WriteEasyJson(w, http.StatusOK, krs)
+	WriteEasyJson(w, http.StatusOK, &domain.KrsWrapper{Krs: *krs})
 }
 
 // Create is handler for POST /krs to create COurse
@@ -106,7 +106,7 @@ func (h krsHandlers) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// write the krs to response
-	WriteEasyJson(w, http.StatusCreated, krsCreated)
+	WriteEasyJson(w, http.StatusCreated, &domain.KrsWrapper{Krs: *krsCreated})
 }
 
 // Update is handler for PUT /krs to update Krs
@@ -158,7 +158,7 @@ func (h krsHandlers) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// write the krs to response
-	WriteEasyJson(w, http.StatusOK, c)
+	WriteEasyJson(w, http.StatusOK, &domain.KrsWrapper{Krs: *c})
 }
 
 // Delete is handler for DELETE /krs/{id} to delete Krs

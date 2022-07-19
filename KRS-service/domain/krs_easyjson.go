@@ -111,7 +111,73 @@ func (v *MataKuliah) UnmarshalJSON(data []byte) error {
 func (v *MataKuliah) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain(l, v)
 }
-func easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain1(in *jlexer.Lexer, out *Krs) {
+func easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain1(in *jlexer.Lexer, out *KrsWrapper) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "krs":
+			(out.Krs).UnmarshalEasyJSON(in)
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain1(out *jwriter.Writer, in KrsWrapper) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"krs\":"
+		out.RawString(prefix[1:])
+		(in.Krs).MarshalEasyJSON(out)
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v KrsWrapper) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain1(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v KrsWrapper) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain1(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *KrsWrapper) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain1(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *KrsWrapper) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain1(l, v)
+}
+func easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain2(in *jlexer.Lexer, out *Krs) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -173,7 +239,7 @@ func easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain1(in *jlexer.Lexer, 
 		in.Consumed()
 	}
 }
-func easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain1(out *jwriter.Writer, in Krs) {
+func easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain2(out *jwriter.Writer, in Krs) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -208,23 +274,23 @@ func easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain1(out *jwriter.Write
 // MarshalJSON supports json.Marshaler interface
 func (v Krs) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain1(&w, v)
+	easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain2(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Krs) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain1(w, v)
+	easyjsonC41e0604EncodeGithubComDinel13ThesisAcKrsDomain2(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Krs) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain1(&r, v)
+	easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain2(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Krs) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain1(l, v)
+	easyjsonC41e0604DecodeGithubComDinel13ThesisAcKrsDomain2(l, v)
 }

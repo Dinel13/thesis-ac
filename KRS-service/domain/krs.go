@@ -20,6 +20,10 @@ type Krs struct {
 	MataKuliahs []*MataKuliah `json:"mata_kuliahs"`
 }
 
+type KrsWrapper struct {
+	Krs Krs `json:"krs"`
+}
+
 type KrsRepository interface {
 	Create(context.Context, *Krs) (*Krs, error)
 	Read(context.Context, int) (*Krs, error)
