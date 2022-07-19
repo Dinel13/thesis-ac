@@ -11,6 +11,8 @@ https://itnext.io/node-express-letsencrypt-generate-a-free-ssl-certificate-and-r
 
 # todo
 
+# easy json
+~/go/bin/easyjson -all model/payment.go
 
 
 # protoc

@@ -7,13 +7,10 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"sync"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/dinel13/thesis-ac/payment/domain"
 	"github.com/dinel13/thesis-ac/payment/repository"
-	"github.com/dinel13/thesis-ac/payment/sqs"
 	"github.com/go-redis/redis/v8"
 	"google.golang.org/grpc"
 
@@ -66,22 +63,6 @@ func StartGRPCServer(paymentRepo domain.PaymentRepository) {
 	}
 }
 
-func StartSQSServer(paymentRepo domain.PaymentRepository) {
-	fmt.Printf("Staring SQS server on url %s\n", qsPay)
-
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
-	waitTime := int64(20)
-
-	ss := sqs.NewSQSHandler(paymentRepo, sess, &qsPay, &qsKRS, &waitTime)
-
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go ss.WaitMsgSqs(wg)
-	wg.Wait()
-}
-
 func startRepoRedis() (*redis.Client, domain.PaymentRepository) {
 	dbClient := connectRedis()
 	crDb := repository.NewPaymentRepoRedisImpl(dbClient)
@@ -106,20 +87,13 @@ func main() {
 	if ipRedis == "" {
 		log.Fatal("IP_REDIS environment variable not set! Dying...")
 	}
-	if qsPay == "" {
-		log.Fatal("Q_PAY environment variable not set! Dying...")
-	}
-	if qsKRS == "" {
-		log.Fatal("Q_KRS environment variable not set! Dying...")
-	}
-	log.Println("use IP_REDIS: ", ipRedis, " Q_PAY: ", qsPay, " Q_KRS: ", qsKRS)
+	log.Println("use IP_REDIS: ", ipRedis)
 
 	dbClient, paymentRepo := startRepoRedis()
 	defer dbClient.Close()
 
 	go StartRestServer(paymentRepo)
 	go StartGRPCServer(paymentRepo)
-	go StartSQSServer(paymentRepo)
 	time.Sleep(113880 * time.Hour)
 
 }
