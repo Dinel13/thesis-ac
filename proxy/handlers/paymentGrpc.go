@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/model"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -13,7 +14,7 @@ type grpcPaymentHandlers struct {
 }
 
 func (g *grpcPaymentHandlers) Pay(w http.ResponseWriter, r *http.Request) {
-	reqBody := &domain.PaymentRequest{}
+	reqBody := &model.PaymentRequest{}
 	err := ReadJson(r, reqBody)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)

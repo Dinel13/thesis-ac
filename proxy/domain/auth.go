@@ -2,20 +2,9 @@ package domain
 
 import (
 	"net/http"
+
+	"github.com/dinel13/thesis-ac/test/model"
 )
-
-type LoginSignupRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type LoginSignupResponse struct {
-	Token string `json:"token"`
-}
-
-type VerifyTokenResponse struct {
-	IsAuth bool `json:"isAuth"`
-}
 
 type AuthHandlers interface {
 	Login(http.ResponseWriter, *http.Request)
@@ -23,6 +12,6 @@ type AuthHandlers interface {
 }
 
 type AuthGrpcClients interface {
-	Login(req *LoginSignupRequest) (*LoginSignupResponse, error)
-	VerifyToken(token string) (*VerifyTokenResponse, error)
+	Login(req *model.LoginSignupRequest) (*model.LoginSignupResponse, error)
+	VerifyToken(token string) (*model.VerifyTokenResponse, error)
 }

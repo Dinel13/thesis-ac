@@ -16,6 +16,7 @@ LimitRSS=infinity
 LimitCORE=infinity
 LimitNOFILE=65536
 
+IP_KRS=localhost IP_AUTH=localhost IP_PAYMENT=localhost go run main.go
 
 IP_KRS=localhost IP_AUTH=localhost IP_PAYMENT=localhost Q_PAY=https://sqs.ap-southeast-1.amazonaws.com/511415859101/thesis.fifo Q_PROXY=https://sqs.ap-southeast-1.amazonaws.com/511415859101/krspay.fifo go run main.go
 

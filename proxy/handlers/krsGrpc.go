@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/model"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -38,7 +39,7 @@ func (k *grpcKrs) Read(w http.ResponseWriter, r *http.Request) {
 }
 
 func (k *grpcKrs) Create(w http.ResponseWriter, r *http.Request) {
-	krs := &domain.Krs{}
+	krs := &model.Krs{}
 	err := ReadJson(r, krs)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
@@ -63,7 +64,7 @@ func (k *grpcKrs) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	krs := &domain.Krs{}
+	krs := &model.Krs{}
 	err = ReadJson(r, krs)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)

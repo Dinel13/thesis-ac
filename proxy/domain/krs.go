@@ -2,28 +2,9 @@ package domain
 
 import (
 	"net/http"
+
+	"github.com/dinel13/thesis-ac/test/model"
 )
-
-type MataKuliah struct {
-	Kode     string `json:"kode"`
-	Nama     string `json:"nama"`
-	Sks      int    `json:"sks"`
-	Dosen    string `json:"dosen"`
-	Semester string `json:"semester"`
-}
-
-type Krs struct {
-	IdMahasiswa int           `json:"id_mahasiswa"`
-	MataKuliahs []*MataKuliah `json:"mata_kuliahs"`
-}
-
-type KrsResponse struct {
-	Krs Krs `json:"krs"`
-}
-
-type ResKrsDelete struct {
-	Status interface{} `json:"status"`
-}
 
 type KrsHandlers interface {
 	Read(http.ResponseWriter, *http.Request)
@@ -33,8 +14,8 @@ type KrsHandlers interface {
 }
 
 type KrsGrpcClients interface {
-	ReadKrs(id int, token string) (*Krs, error)
-	CreateKrs(krs *Krs, token string) (*Krs, error)
-	UpdateKrs(krs *Krs, id int, token string) (*Krs, error)
+	ReadKrs(id int, token string) (*model.Krs, error)
+	CreateKrs(krs *model.Krs, token string) (*model.Krs, error)
+	UpdateKrs(krs *model.Krs, id int, token string) (*model.Krs, error)
 	DeleteKrs(id int, token string) error
 }

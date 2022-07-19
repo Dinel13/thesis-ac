@@ -1,22 +1,28 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/dinel13/thesis-ac/test/domain"
-	"github.com/dinel13/thesis-ac/test/rest"
+	"github.com/dinel13/thesis-ac/test/model"
+	"github.com/dinel13/thesis-ac/test/rest-outbound"
 	"github.com/julienschmidt/httprouter"
 )
 
 func NewRestKrsHandlers(ip string) domain.KrsHandlers {
+	krsClient := &http.Client{Timeout: 15 * time.Second}
 	return &RestKrs{
-		ip: ip,
+		ip:        ip,
+		krsClient: krsClient,
 	}
 }
 
 type RestKrs struct {
-	ip string
+	ip        string
+	krsClient *http.Client
 }
 
 func (k *RestKrs) Read(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +35,7 @@ func (k *RestKrs) Read(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Header.Get("Authorization")
 
-	krs, err := rest.ReadKrs(k.ip, token, id)
+	krs, err := rest.ReadKrs(k.krsClient, k.ip, token, id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -39,7 +45,7 @@ func (k *RestKrs) Read(w http.ResponseWriter, r *http.Request) {
 }
 
 func (k *RestKrs) Create(w http.ResponseWriter, r *http.Request) {
-	krs := &domain.Krs{}
+	krs := &model.Krs{}
 	err := ReadJson(r, krs)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
@@ -47,12 +53,13 @@ func (k *RestKrs) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	token := r.Header.Get("Authorization")
 
-	createdkrs, err := rest.CreateKrs(krs, k.ip, token)
+	log.Println(krs)
+	createdkrs, err := rest.CreateKrs(k.krsClient, krs, k.ip, token)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
 	}
-
+	log.Println(createdkrs.Krs.IdMahasiswa)
 	WriteJson(w, http.StatusOK, createdkrs.Krs, "krs")
 }
 
@@ -64,7 +71,7 @@ func (k *RestKrs) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	krs := &domain.Krs{}
+	krs := &model.Krs{}
 	err = ReadJson(r, krs)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)
@@ -72,7 +79,7 @@ func (k *RestKrs) Update(w http.ResponseWriter, r *http.Request) {
 	}
 	token := r.Header.Get("Authorization")
 
-	updatedkrs, err := rest.UpdateKrs(krs, k.ip, token, id)
+	updatedkrs, err := rest.UpdateKrs(k.krsClient, krs, k.ip, token, id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return
@@ -91,7 +98,7 @@ func (k *RestKrs) Delete(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Header.Get("Authorization")
 
-	err = rest.DeleteKrs(k.ip, token, id)
+	err = rest.DeleteKrs(k.krsClient, k.ip, token, id)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusBadRequest)
 		return

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/model"
 )
 
 type grpcAuthHandlers struct {
@@ -11,7 +12,7 @@ type grpcAuthHandlers struct {
 }
 
 func (g *grpcAuthHandlers) Login(w http.ResponseWriter, r *http.Request) {
-	reqBody := &domain.LoginSignupRequest{}
+	reqBody := &model.LoginSignupRequest{}
 	err := ReadJson(r, reqBody)
 	if err != nil {
 		WriteJsonError(w, err, http.StatusInternalServerError)

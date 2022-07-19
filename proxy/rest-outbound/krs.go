@@ -2,26 +2,20 @@ package rest
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
-	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/model"
+	"github.com/mailru/easyjson"
 )
 
-func ReadKrs(ip, token string, id int) (*domain.KrsResponse, error) {
+func ReadKrs(client *http.Client, ip, token string, id int) (*model.KrsResponse, error) {
 	request, err := http.NewRequest("GET", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
 	if err != nil {
 		return nil, err
 	}
 	request.Header.Add("Authorization", token)
-
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err)
@@ -30,8 +24,8 @@ func ReadKrs(ip, token string, id int) (*domain.KrsResponse, error) {
 
 	defer response.Body.Close()
 
-	resBody := &domain.KrsResponse{}
-	err = json.NewDecoder(response.Body).Decode(resBody)
+	resBody := &model.KrsResponse{}
+	err = easyjson.UnmarshalFromReader(response.Body, resBody)
 	if err != nil {
 		return nil, err
 	}
@@ -39,8 +33,8 @@ func ReadKrs(ip, token string, id int) (*domain.KrsResponse, error) {
 	return resBody, nil
 }
 
-func CreateKrs(krs *domain.Krs, ip, token string) (*domain.KrsResponse, error) {
-	body, err := json.Marshal(krs)
+func CreateKrs(client *http.Client, krs *model.Krs, ip, token string) (*model.KrsResponse, error) {
+	body, err := easyjson.Marshal(krs)
 	if err != nil {
 		return nil, err
 	}
@@ -51,11 +45,6 @@ func CreateKrs(krs *domain.Krs, ip, token string) (*domain.KrsResponse, error) {
 	}
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Add("Authorization", token)
-
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err)
@@ -64,17 +53,18 @@ func CreateKrs(krs *domain.Krs, ip, token string) (*domain.KrsResponse, error) {
 
 	defer response.Body.Close()
 
-	resBody := &domain.KrsResponse{}
-	err = json.NewDecoder(response.Body).Decode(resBody)
+	resBody := &model.KrsResponse{}
+	err = easyjson.UnmarshalFromReader(response.Body, resBody)
 	if err != nil {
 		return nil, err
 	}
 
+	log.Println(resBody.Krs.IdMahasiswa)
 	return resBody, nil
 }
 
-func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.KrsResponse, error) {
-	body, err := json.Marshal(krs)
+func UpdateKrs(client *http.Client, krs *model.Krs, ip, token string, id int) (*model.KrsResponse, error) {
+	body, err := easyjson.Marshal(krs)
 	if err != nil {
 		return nil, err
 	}
@@ -83,11 +73,6 @@ func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.KrsResponse, 
 		return nil, err
 	}
 	request.Header.Add("Authorization", token)
-
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err)
@@ -96,8 +81,8 @@ func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.KrsResponse, 
 
 	defer response.Body.Close()
 
-	resBody := &domain.KrsResponse{}
-	err = json.NewDecoder(response.Body).Decode(resBody)
+	resBody := &model.KrsResponse{}
+	err = easyjson.UnmarshalFromReader(response.Body, resBody)
 	if err != nil {
 		return nil, err
 	}
@@ -105,17 +90,12 @@ func UpdateKrs(krs *domain.Krs, ip, token string, id int) (*domain.KrsResponse, 
 	return resBody, nil
 }
 
-func DeleteKrs(ip, token string, id int) error {
+func DeleteKrs(client *http.Client, ip, token string, id int) error {
 	request, err := http.NewRequest("DELETE", fmt.Sprintf("http://%s:8080/krs/%d", ip, id), nil)
 	if err != nil {
 		return err
 	}
 	request.Header.Add("Authorization", token)
-
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println("error make request ", err)
@@ -124,8 +104,8 @@ func DeleteKrs(ip, token string, id int) error {
 
 	defer response.Body.Close()
 
-	resBody := &domain.ResKrsDelete{}
-	err = json.NewDecoder(response.Body).Decode(resBody)
+	resBody := &model.ResKrsDelete{}
+	err = easyjson.UnmarshalFromReader(response.Body, resBody)
 	if err != nil {
 		log.Println("error decoded", err)
 		return err

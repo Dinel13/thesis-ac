@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/model"
 	"github.com/dinel13/thesis-ac/test/proto"
 )
 
@@ -16,7 +17,7 @@ func NewKrsGrpcClient(s proto.KrsServiceClient) domain.KrsGrpcClients {
 	return &krsGrpcClient{s: s}
 }
 
-func (k *krsGrpcClient) ReadKrs(id int, token string) (*domain.Krs, error) {
+func (k *krsGrpcClient) ReadKrs(id int, token string) (*model.Krs, error) {
 	r, err := k.s.Read(context.Background(), &proto.ReadKRSRequest{
 		Token:       token,
 		IdMahasiswa: int32(id),
@@ -27,9 +28,9 @@ func (k *krsGrpcClient) ReadKrs(id int, token string) (*domain.Krs, error) {
 	}
 
 	// get krs
-	var mataKuliahs []*domain.MataKuliah
+	var mataKuliahs []*model.MataKuliah
 	for _, mataKuliah := range r.GetMataKuliahs() {
-		mataKuliahs = append(mataKuliahs, &domain.MataKuliah{
+		mataKuliahs = append(mataKuliahs, &model.MataKuliah{
 			Kode:     mataKuliah.GetKode(),
 			Nama:     mataKuliah.GetNama(),
 			Sks:      int(mataKuliah.GetSks()),
@@ -38,14 +39,14 @@ func (k *krsGrpcClient) ReadKrs(id int, token string) (*domain.Krs, error) {
 		})
 	}
 
-	return &domain.Krs{
+	return &model.Krs{
 		IdMahasiswa: id,
 		MataKuliahs: mataKuliahs,
 	}, nil
 
 }
 
-func (k *krsGrpcClient) CreateKrs(krs *domain.Krs, token string) (*domain.Krs, error) {
+func (k *krsGrpcClient) CreateKrs(krs *model.Krs, token string) (*model.Krs, error) {
 	// convert to proto
 	var mataKuliahsProto []*proto.MataKuliah
 	for _, mataKuliah := range krs.MataKuliahs {
@@ -69,9 +70,9 @@ func (k *krsGrpcClient) CreateKrs(krs *domain.Krs, token string) (*domain.Krs, e
 	}
 
 	// get krs
-	var mataKuliahs []*domain.MataKuliah
+	var mataKuliahs []*model.MataKuliah
 	for _, mataKuliah := range r.GetMataKuliahs() {
-		mataKuliahs = append(mataKuliahs, &domain.MataKuliah{
+		mataKuliahs = append(mataKuliahs, &model.MataKuliah{
 			Kode:     mataKuliah.GetKode(),
 			Nama:     mataKuliah.GetNama(),
 			Sks:      int(mataKuliah.GetSks()),
@@ -80,13 +81,13 @@ func (k *krsGrpcClient) CreateKrs(krs *domain.Krs, token string) (*domain.Krs, e
 		})
 	}
 
-	return &domain.Krs{
+	return &model.Krs{
 		IdMahasiswa: krs.IdMahasiswa,
 		MataKuliahs: mataKuliahs,
 	}, nil
 }
 
-func (k *krsGrpcClient) UpdateKrs(krs *domain.Krs, id int, token string) (*domain.Krs, error) {
+func (k *krsGrpcClient) UpdateKrs(krs *model.Krs, id int, token string) (*model.Krs, error) {
 	// convert to proto
 	var mataKuliahsProto []*proto.MataKuliah
 	for _, mataKuliah := range krs.MataKuliahs {
@@ -110,9 +111,9 @@ func (k *krsGrpcClient) UpdateKrs(krs *domain.Krs, id int, token string) (*domai
 	}
 
 	// get krs
-	var mataKuliahs []*domain.MataKuliah
+	var mataKuliahs []*model.MataKuliah
 	for _, mataKuliah := range r.GetMataKuliahs() {
-		mataKuliahs = append(mataKuliahs, &domain.MataKuliah{
+		mataKuliahs = append(mataKuliahs, &model.MataKuliah{
 			Kode:     mataKuliah.GetKode(),
 			Nama:     mataKuliah.GetNama(),
 			Sks:      int(mataKuliah.GetSks()),
@@ -121,7 +122,7 @@ func (k *krsGrpcClient) UpdateKrs(krs *domain.Krs, id int, token string) (*domai
 		})
 	}
 
-	return &domain.Krs{
+	return &model.Krs{
 		IdMahasiswa: id,
 		MataKuliahs: mataKuliahs,
 	}, nil

@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/model"
 	"github.com/dinel13/thesis-ac/test/proto"
 )
 
@@ -12,7 +13,7 @@ type authGrpcClient struct {
 	s proto.AuthServiceClient
 }
 
-func (a *authGrpcClient) Login(req *domain.LoginSignupRequest) (*domain.LoginSignupResponse, error) {
+func (a *authGrpcClient) Login(req *model.LoginSignupRequest) (*model.LoginSignupResponse, error) {
 	r, err := a.s.Login(context.Background(), &proto.LoginRequest{
 		Username: req.Username,
 		Password: req.Password,
@@ -26,12 +27,12 @@ func (a *authGrpcClient) Login(req *domain.LoginSignupRequest) (*domain.LoginSig
 		return nil, errors.New("gagal login, pastikan username dan password benar")
 	}
 
-	return &domain.LoginSignupResponse{
+	return &model.LoginSignupResponse{
 		Token: r.GetToken(),
 	}, nil
 }
 
-func (a *authGrpcClient) VerifyToken(token string) (*domain.VerifyTokenResponse, error) {
+func (a *authGrpcClient) VerifyToken(token string) (*model.VerifyTokenResponse, error) {
 	r, err := a.s.Verify(context.Background(), &proto.VerifyRequest{
 		Token: token,
 	})
@@ -40,7 +41,7 @@ func (a *authGrpcClient) VerifyToken(token string) (*domain.VerifyTokenResponse,
 		return nil, err
 	}
 
-	return &domain.VerifyTokenResponse{
+	return &model.VerifyTokenResponse{
 		IsAuth: r.GetIsAuth(),
 	}, nil
 }

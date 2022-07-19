@@ -6,12 +6,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/dinel13/thesis-ac/test/domain"
 	mygrpc "github.com/dinel13/thesis-ac/test/grpc"
 	"github.com/dinel13/thesis-ac/test/handlers"
 	"github.com/dinel13/thesis-ac/test/proto"
-	"github.com/dinel13/thesis-ac/test/sqs"
 	"github.com/julienschmidt/httprouter"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -22,21 +20,6 @@ const port string = ":8085"
 var ipKrs string = os.Getenv("IP_KRS")
 var ipAuth string = os.Getenv("IP_AUTH")
 var ipPay string = os.Getenv("IP_PAYMENT")
-var qsProxy = os.Getenv("Q_PROXY")
-var qsPay = os.Getenv("Q_PAY")
-
-func startSQSServer() domain.PaymentSQSHandler {
-	fmt.Printf("Staring SQS server on url %s\n", qsPay)
-
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
-	waitTime := int64(20)
-
-	ss := sqs.NewSQSHandler(sess, &qsProxy, &qsPay, &waitTime)
-
-	return ss
-}
 
 func main() {
 	if ipKrs == "" {
@@ -48,14 +31,8 @@ func main() {
 	if ipPay == "" {
 		log.Fatal("IP_PAYMENT is not set")
 	}
-	if qsPay == "" {
-		log.Fatal("sqs url pay is not set")
-	}
-	if qsProxy == "" {
-		log.Fatal("sqs url proxy is not set")
-	}
 
-	log.Printf("use ipKrs: %s, ipAuth: %s, ipPay: %s, qsPay : %s", ipKrs, ipAuth, ipPay, qsPay)
+	log.Printf("use ipKrs: %s, ipAuth: %s, ipPay: %s", ipKrs, ipAuth, ipPay)
 
 	// krs
 	connKrs, err := grpc.Dial(fmt.Sprintf("%s:9090", ipKrs), grpc.WithTransportCredentials(
@@ -97,10 +74,6 @@ func main() {
 	gph := handlers.NewGrpcPaymentHandlers(gpc)
 	rph := handlers.NewRestPaymentHandlers(ipPay)
 
-	// sqs
-	sqsPayClient := startSQSServer()
-	sph := handlers.NewSqsPaymentHandlers(sqsPayClient)
-
 	defer func() {
 		connKrs.Close()
 		connAuth.Close()
@@ -108,7 +81,7 @@ func main() {
 
 	server := http.Server{
 		Addr:    port,
-		Handler: routes(rkh, gkh, ruh, guh, rph, gph, sph),
+		Handler: routes(rkh, gkh, ruh, guh, rph, gph),
 	}
 
 	fmt.Println("Server is running on port", port)
@@ -123,7 +96,7 @@ func main() {
 	}
 }
 
-func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers, rph, gph, sph domain.PaymentHandlers) http.Handler {
+func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers, rph, gph domain.PaymentHandlers) http.Handler {
 	r := httprouter.New()
 
 	// krs rest
@@ -153,10 +126,6 @@ func routes(rkh, gkh domain.KrsHandlers, ruh, guh domain.AuthHandlers, rph, gph,
 	// pay grpc
 	r.HandlerFunc(http.MethodPost, "/grpc/pay", gph.Pay)
 	r.HandlerFunc(http.MethodGet, "/grpc/verify-pay/:id", gph.VerifyPayment)
-
-	// pay sqs
-	r.HandlerFunc(http.MethodPost, "/sqs/pay", sph.Pay)
-	r.HandlerFunc(http.MethodGet, "/sqs/verify-pay/:id", sph.VerifyPayment)
 
 	return r
 }

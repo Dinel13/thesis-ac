@@ -2,15 +2,14 @@ package rest
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
-	"github.com/dinel13/thesis-ac/test/domain"
+	"github.com/dinel13/thesis-ac/test/model"
+	"github.com/mailru/easyjson"
 )
 
-func VerifyToken(ip, token string) (*domain.VerifyTokenResponse, error) {
+func VerifyToken(client *http.Client, ip, token string) (*model.VerifyTokenResponse, error) {
 	request, err := http.NewRequest("POST", fmt.Sprintf("%s/verify", ip), nil)
 	if err != nil {
 		return nil, err
@@ -18,10 +17,6 @@ func VerifyToken(ip, token string) (*domain.VerifyTokenResponse, error) {
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Add("Authorization", token)
 
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err)
@@ -30,8 +25,8 @@ func VerifyToken(ip, token string) (*domain.VerifyTokenResponse, error) {
 
 	defer response.Body.Close()
 
-	resBody := &domain.VerifyTokenResponse{}
-	err = json.NewDecoder(response.Body).Decode(resBody)
+	resBody := &model.VerifyTokenResponse{}
+	err = easyjson.UnmarshalFromReader(response.Body, resBody)
 	if err != nil {
 		return nil, err
 	}
@@ -39,8 +34,8 @@ func VerifyToken(ip, token string) (*domain.VerifyTokenResponse, error) {
 	return resBody, nil
 }
 
-func Login(req *domain.LoginSignupRequest, ip string) (*domain.LoginSignupResponse, error) {
-	body, err := json.Marshal(req)
+func Login(client *http.Client, req *model.LoginSignupRequest, ip string) (*model.LoginSignupResponse, error) {
+	body, err := easyjson.Marshal(req)
 	if err != nil {
 		return nil, err
 	}
@@ -50,10 +45,6 @@ func Login(req *domain.LoginSignupRequest, ip string) (*domain.LoginSignupRespon
 	}
 	request.Header.Set("Content-Type", "application/json")
 
-	// send req
-	client := &http.Client{
-		Timeout: time.Duration(15) * time.Second,
-	}
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err)
@@ -62,8 +53,8 @@ func Login(req *domain.LoginSignupRequest, ip string) (*domain.LoginSignupRespon
 
 	defer response.Body.Close()
 
-	resBody := &domain.LoginSignupResponse{}
-	err = json.NewDecoder(response.Body).Decode(resBody)
+	resBody := &model.LoginSignupResponse{}
+	err = easyjson.UnmarshalFromReader(response.Body, resBody)
 	if err != nil {
 		return nil, err
 	}
