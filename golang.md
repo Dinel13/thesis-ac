@@ -1,0 +1,1 @@
+bytes ke io.reader = bytes.NewBuffer atau bytes.NewReader
