@@ -23,6 +23,10 @@ type PaymentResponse struct {
 	IsPay bool `json:"isPay"`
 }
 
+type PaymentWrapper struct {
+	Payment PaymentResponse `json:"payment"`
+}
+
 type PaymentRepository interface {
 	Create(context.Context, *PaymentRequest) (*PaymentResponse, error)
 	Verify(context.Context, int) (*PaymentResponse, error)
