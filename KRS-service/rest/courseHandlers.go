@@ -200,6 +200,6 @@ func (h krsHandlers) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// write the krs to response
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	WriteDelEasyJson(w, http.StatusOK, &domain.ResKrsDelete{Status: "succes"})
+
 }

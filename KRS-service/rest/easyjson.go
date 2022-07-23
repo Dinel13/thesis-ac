@@ -28,6 +28,19 @@ func WriteEasyJson(w http.ResponseWriter, status int, data *domain.KrsWrapper) e
 	return nil
 }
 
+func WriteDelEasyJson(w http.ResponseWriter, status int, data *domain.ResKrsDelete) error {
+	js, err := easyjson.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	w.Write(js)
+
+	return nil
+}
+
 func WriteEasyJsonError(w http.ResponseWriter, err error, status ...int) {
 	statusCode := http.StatusBadRequest
 	if len(status) > 0 {

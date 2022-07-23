@@ -24,6 +24,10 @@ type KrsWrapper struct {
 	Krs Krs `json:"krs"`
 }
 
+type ResKrsDelete struct {
+	Status string `json:"status"`
+}
+
 type KrsRepository interface {
 	Create(context.Context, *Krs) (*Krs, error)
 	Read(context.Context, int) (*Krs, error)
