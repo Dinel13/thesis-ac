@@ -18,5 +18,5 @@ type KrsResponse struct {
 }
 
 type ResKrsDelete struct {
-	Status interface{} `json:"status"`
+	Status string `json:"status"`
 }

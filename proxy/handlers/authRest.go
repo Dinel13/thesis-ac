@@ -16,19 +16,19 @@ type AuthRestHandlers struct {
 
 func (a *AuthRestHandlers) Login(w http.ResponseWriter, r *http.Request) {
 	loginSignupRequest := &model.LoginSignupRequest{}
-	err := ReadJson(r, loginSignupRequest)
+	err := ReadAuthJson(r, loginSignupRequest)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
+		WriteEasyJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	resBody, err := rest.Login(a.authClient, loginSignupRequest, a.ip)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, resBody.Token, "token")
+	WriteSignupJson(w, http.StatusOK, &model.LoginSignupResponse{Token: resBody.Token})
 
 }
 
@@ -37,11 +37,11 @@ func (a *AuthRestHandlers) VerifyToken(w http.ResponseWriter, r *http.Request) {
 
 	resBody, err := rest.VerifyToken(a.authClient, a.ip, token)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, resBody.IsAuth, "isAuth")
+	WriteVerifyJson(w, http.StatusOK, &model.VerifyTokenResponse{IsAuth: resBody.IsAuth})
 }
 
 func NewRestAuthHandlers(ip string) domain.AuthHandlers {

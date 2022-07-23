@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -29,7 +28,7 @@ func (k *RestKrs) Read(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
+		WriteEasyJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 
@@ -37,62 +36,61 @@ func (k *RestKrs) Read(w http.ResponseWriter, r *http.Request) {
 
 	krs, err := rest.ReadKrs(k.krsClient, k.ip, token, id)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, krs.Krs, "krs")
+	WriteKrsJson(w, http.StatusOK, &model.KrsResponse{Krs: krs.Krs})
 }
 
 func (k *RestKrs) Create(w http.ResponseWriter, r *http.Request) {
 	krs := &model.Krs{}
-	err := ReadJson(r, krs)
+	err := ReadKrsJson(r, krs)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
+		WriteEasyJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 	token := r.Header.Get("Authorization")
 
-	log.Println(krs)
 	createdkrs, err := rest.CreateKrs(k.krsClient, krs, k.ip, token)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
-	log.Println(createdkrs.Krs.IdMahasiswa)
-	WriteJson(w, http.StatusOK, createdkrs.Krs, "krs")
+
+	WriteKrsJson(w, http.StatusOK, &model.KrsResponse{Krs: createdkrs.Krs})
 }
 
 func (k *RestKrs) Update(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
+		WriteEasyJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	krs := &model.Krs{}
-	err = ReadJson(r, krs)
+	err = ReadKrsJson(r, krs)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
+		WriteEasyJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 	token := r.Header.Get("Authorization")
 
 	updatedkrs, err := rest.UpdateKrs(k.krsClient, krs, k.ip, token, id)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, updatedkrs.Krs, "krs")
+	WriteKrsJson(w, http.StatusOK, &model.KrsResponse{Krs: updatedkrs.Krs})
 }
 
 func (k *RestKrs) Delete(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
+		WriteEasyJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 
@@ -100,9 +98,9 @@ func (k *RestKrs) Delete(w http.ResponseWriter, r *http.Request) {
 
 	err = rest.DeleteKrs(k.krsClient, k.ip, token, id)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, nil, "krs")
+	WriteDelKrsEasyJson(w, http.StatusOK, &model.ResKrsDelete{Status: "succes"})
 }

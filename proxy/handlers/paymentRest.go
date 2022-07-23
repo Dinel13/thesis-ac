@@ -18,19 +18,19 @@ type paymentRestHandlers struct {
 
 func (p *paymentRestHandlers) Pay(w http.ResponseWriter, r *http.Request) {
 	paymentRequest := &model.PaymentRequest{}
-	err := ReadJson(r, paymentRequest)
+	err := ReadPayJson(r, paymentRequest)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusInternalServerError)
+		WriteEasyJsonError(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	resBody, err := rest.Pay(p.payClient, paymentRequest, p.ip)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, resBody.IsPay, "isPay")
+	WritePayJson(w, http.StatusOK, &model.PaymentWraperResponse{PaymentResponse: *resBody})
 
 }
 
@@ -40,11 +40,11 @@ func (p *paymentRestHandlers) VerifyPayment(w http.ResponseWriter, r *http.Reque
 
 	resBody, err := rest.VerifyPayment(p.payClient, p.ip, id)
 	if err != nil {
-		WriteJsonError(w, err, http.StatusBadRequest)
+		WriteEasyJsonError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	WriteJson(w, http.StatusOK, resBody.IsPay, "isPay")
+	WritePayJson(w, http.StatusOK, &model.PaymentWraperResponse{PaymentResponse: *resBody})
 }
 
 func NewRestPaymentHandlers(ip string) domain.PaymentHandlers {

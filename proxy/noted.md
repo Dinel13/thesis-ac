@@ -1,6 +1,7 @@
 ### run this service
 ``` bash
 IP_KRS= IP_AUTH= IP_PAYMENT ./main
+IP_KRS=localhost IP_AUTH=localhost IP_PAYMENT=localhost go run main.go
 ```
 
 ### run test jmx
